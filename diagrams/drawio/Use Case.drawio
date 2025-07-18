@@ -1,0 +1,276 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36" version="28.0.6">
+  <diagram name="Page-1" id="VUQ5yrR_nOYUEyf6M4Mq">
+    <mxGraphModel dx="3543" dy="2135" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="KLBg-SSJyhI748aDw7hr-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-1" target="KLBg-SSJyhI748aDw7hr-12">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-138" y="620" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-69" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-1" target="KLBg-SSJyhI748aDw7hr-60">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="87" y="855" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-1" value="Doctor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="72" y="570" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-72" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-2" target="KLBg-SSJyhI748aDw7hr-71">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-2" value="Admin" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="10" y="270" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-3" target="KLBg-SSJyhI748aDw7hr-11">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="125" y="535" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-3" target="KLBg-SSJyhI748aDw7hr-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-3" target="KLBg-SSJyhI748aDw7hr-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="90" y="160" />
+              <mxPoint x="90" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-73" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-3" target="KLBg-SSJyhI748aDw7hr-31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-74" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-3" target="KLBg-SSJyhI748aDw7hr-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-80" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-3" target="KLBg-SSJyhI748aDw7hr-21">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="125" y="1215" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-81" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-3" target="KLBg-SSJyhI748aDw7hr-9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="125" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-3" value="Customer" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="110" y="130" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-7" value="Register Patient" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="190" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-8" value="Login" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="290" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-9" value="Lihat Data Dokter" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="385" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-28" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;dashed=1;dashPattern=8 8;jumpStyle=arc;" edge="1" parent="1" target="KLBg-SSJyhI748aDw7hr-27">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="468.536025140917" y="556.0606259886667" as="sourcePoint" />
+            <mxPoint x="970" y="583.9400000000005" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="530" y="556" />
+              <mxPoint x="530" y="584" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-11" target="KLBg-SSJyhI748aDw7hr-33">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="400" y="470" />
+              <mxPoint x="630" y="470" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-11" value="Buat appointment" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="500" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-12" value="- Jadwal Dokter&lt;div&gt;- Spesialis (THT, Ibu Anak)&lt;/div&gt;&lt;div&gt;- Pengalaman&lt;/div&gt;&lt;div&gt;- Harga&lt;/div&gt;&lt;div&gt;- Rating&lt;/div&gt;&lt;div&gt;- Gender&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="-210" y="560" width="145" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-21" value="Lakukan pembayaran" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="1180" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-22" value="Pemilihan spesialis" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="570" y="490" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-24" value="Pemilihan waktu (hari, jam, dsb)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="620" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-25" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="edgeStyle=none;html=1;startArrow=open;endArrow=none;startSize=12;verticalAlign=bottom;dashed=1;labelBackgroundColor=none;rounded=0;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-11" target="KLBg-SSJyhI748aDw7hr-22">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="480" y="470" as="sourcePoint" />
+            <mxPoint x="560" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-26" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="edgeStyle=none;html=1;startArrow=open;endArrow=none;startSize=12;verticalAlign=bottom;dashed=1;labelBackgroundColor=none;rounded=0;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-11" target="KLBg-SSJyhI748aDw7hr-24">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="580" y="520" as="sourcePoint" />
+            <mxPoint x="440" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-27" value="- Minimal 3 jam sebelum waktu appointment&lt;div&gt;- Harus menyertakan data berat badan, tensi&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="577.5" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-29" value="- Nama&lt;div&gt;- Gender&lt;/div&gt;&lt;div&gt;- Tinggi Badan&lt;/div&gt;&lt;div&gt;- Berat badan&lt;/div&gt;&lt;div&gt;- Golongan Darah&lt;/div&gt;" style="whiteSpace=wrap;html=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="65" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-40" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-31" target="KLBg-SSJyhI748aDw7hr-39">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-31" value="API Body Mass Index" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="75" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-58" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-32" target="KLBg-SSJyhI748aDw7hr-57">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-32" value="Ambil nomor antrian offline" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="720" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-33" value="- 2FA menggunakan email" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="380" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-38" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;rounded=0;edgeStyle=orthogonalEdgeStyle;jumpStyle=arc;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-32" target="KLBg-SSJyhI748aDw7hr-8">
+          <mxGeometry x="0.4912" width="160" relative="1" as="geometry">
+            <mxPoint x="310" y="550" as="sourcePoint" />
+            <mxPoint x="470" y="550" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="260" y="755" />
+              <mxPoint x="260" y="325" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-39" value="&lt;div&gt;- Tidak ada batas rate limiter untuk&lt;/div&gt;- Rate limiter untuk guest" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="80" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-43" value="Aturan Dasar:&lt;div style=&quot;&quot;&gt;- Umum:&amp;nbsp;&lt;/div&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;&gt;&lt;div style=&quot;&quot;&gt;- Waktu konsultasi 30 menit&lt;/div&gt;&lt;/blockquote&gt;&lt;div&gt;- Spesialis&lt;/div&gt;&lt;div&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;&gt;- Waktu 60 menit&lt;br&gt;&lt;/blockquote&gt;- Harga Dokter umum dan spesialis berbeda.&lt;br&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/blockquote&gt;Task Scheduling:&lt;/div&gt;&lt;div&gt;- Notifikasi pengingat untuk konsultasi offline 1 jam sebelum appointment.&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-950" y="-115" width="270" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-1" target="KLBg-SSJyhI748aDw7hr-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="90" y="490" />
+              <mxPoint x="90" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-52" value="3 Party API:&lt;div&gt;- BMI.&lt;/div&gt;&lt;div&gt;- Xendit.&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-950" y="95" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-17" value="" style="rounded=0;whiteSpace=wrap;html=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-610" y="-115" width="170" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-56" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-14" target="KLBg-SSJyhI748aDw7hr-55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-14" value="Chat dengan dokter" style="ellipse;whiteSpace=wrap;html=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-595" y="-75" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-18" value="Optional Feature" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-600" y="-105" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-19" value="Resep obat" style="ellipse;whiteSpace=wrap;html=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-595" y="5" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-35" value="SubAccount" style="ellipse;whiteSpace=wrap;html=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-595" y="85" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-55" value="gorilla web socket" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-430" y="-205" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-57" value="Datang ke apotik.&lt;div&gt;Didaftarkan oleh resepsionis terlebih dahulu.&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="725" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-59" value="Kesulitan:&lt;div&gt;- Penentuan kesulitan kompleksitas aplikasi&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-950" y="195" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-83" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-60" target="KLBg-SSJyhI748aDw7hr-82">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-60" value="Manage Data Konsutasi&lt;br&gt;Resep Obat" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="820" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-66" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-61" target="KLBg-SSJyhI748aDw7hr-62">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="885" y="975" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-61" target="KLBg-SSJyhI748aDw7hr-63">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="885" y="1095" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-61" target="KLBg-SSJyhI748aDw7hr-21">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="885" y="1215" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-77" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-61" target="KLBg-SSJyhI748aDw7hr-7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="885" y="225" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-61" value="Receptionist" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="870" y="270" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-62" value="Input data patient" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="940" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-63" value="Terbit tagihan" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="1060" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-65" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;rounded=0;edgeStyle=orthogonalEdgeStyle;jumpStyle=arc;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-63" target="KLBg-SSJyhI748aDw7hr-21">
+          <mxGeometry x="0.386" width="160" relative="1" as="geometry">
+            <mxPoint x="340" y="655" as="sourcePoint" />
+            <mxPoint x="340" y="225" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="400" y="1190" />
+              <mxPoint x="400" y="1190" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-71" value="Management data pasien dokter" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-110" y="470" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-78" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;rounded=0;edgeStyle=orthogonalEdgeStyle;jumpStyle=arc;" edge="1" parent="1" source="KLBg-SSJyhI748aDw7hr-11" target="KLBg-SSJyhI748aDw7hr-63">
+          <mxGeometry x="0.386" width="160" relative="1" as="geometry">
+            <mxPoint x="410" y="1140" as="sourcePoint" />
+            <mxPoint x="410" y="1190" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="400" y="610" />
+              <mxPoint x="280" y="610" />
+              <mxPoint x="280" y="1095" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KLBg-SSJyhI748aDw7hr-82" value="Data Penanganan bisa include dengan harga dengan totalnya. Namun tidak menyertakan ppn/pajak" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="825" width="290" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
