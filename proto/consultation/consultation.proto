@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package consultation;
+
+option go_package = "proto/consultation";
+
+import "google/protobuf/timestamp.proto";
+
+// Base Structure
+// {
+//   "_id": "consul_12345",
+//   "patient_id": "cust_001",
+//   "patient_name": "John Doe",
+//   "doctor_id": "doc_456",
+//   "doctor_name": "dr. Rahmat",
+//   "room_id": "room_78",
+//   "room_name": "Ruang Konsul 1",
+//   "created_by": "user_999",
+//   "symptoms": "Demam dan batuk",
+//   "diagnosis": "Infeksi saluran pernapasan",
+//   "prescription": [
+//     { "name": "Paracetamol", "dose": "3x sehari" },
+//     { "name": "OBH", "dose": "2x sehari" }
+//   ],
+//   "created_at": "2025-07-21T14:00:00Z"
+// }
+
+// ConsultationRequest represents a request for a consultation
+message Prescription {
+  string name = 1; // name of the medicine
+  string dose = 2; // dosage instructions
+}
+
+message ConsultationRequest {
+  string user_id = 1; // unique identifier for the consultation
+  string patient_id = 2; // from master-service
+  string patient_name = 3; // snapshot, optional
+  string doctor_id = 4; // from master-service
+  string doctor_name = 5; // snapshot, optional
+  string room_id = 6; // from master-service
+  string room_name = 7; // snapshot, optional
+  string symptoms = 9;
+  repeated Prescription prescription = 8; // list of prescriptions
+  string diagnosis = 10;
+  string date = 11; // date of the consultation
+}
+
+message ConsultationResponse {
+    string id = 1; // unique identifier for the consultation
+    string user_id = 2; // unique identifier for the consultation
+    string patient_id = 3; // from master-service
+    string patient_name = 4; // snapshot, optional
+    string doctor_id = 5; // from master-service
+    string doctor_name = 6; // snapshot, optional
+    string room_id = 7; // from master-service
+    string room_name = 8; // snapshot, optional
+    string symptoms = 9;
+    repeated Prescription prescription = 10; // list of prescriptions
+    string diagnosis = 11;
+    string date = 12; 
+    google.protobuf.Timestamp created_at = 13;
+    google.protobuf.Timestamp updated_at = 14;
+}
+
+message ConsultationIDRequest {
+  string id = 1; // unique identifier for the consultation
+}
+
+service ConsultationService {
+  // Create a new consultation
+  rpc CreateConsultation(ConsultationRequest) returns (ConsultationResponse);
+  // Get a consultation by ID
+  rpc GetConsultationById(ConsultationIDRequest) returns (ConsultationResponse);
+  // Update an existing consultation
+  rpc UpdateConsultation(ConsultationRequest) returns (ConsultationResponse);
+}

@@ -1,0 +1,17 @@
+{
+  "_id": "consul_12345",
+  "patient_id": "cust_001",
+  "patient_name": "John Doe",
+  "doctor_id": "doc_456",
+  "doctor_name": "dr. Rahmat",
+  "room_id": "room_78",
+  "room_name": "Ruang Konsul 1",
+  "created_by": "user_999",
+  "symptoms": "Demam dan batuk",
+  "diagnosis": "Infeksi saluran pernapasan",
+  "prescription": [
+    { "name": "Paracetamol", "dose": "3x sehari" },
+    { "name": "OBH", "dose": "2x sehari" }
+  ],
+  "created_at": "2025-07-21T14:00:00Z"
+}
