@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package appointment;
+
+option go_package = "appointment-queue-service/internal/appointment/proto/pb";
+
+// ===== MESSAGE =====
+
+message Appointment {
+  uint32 id = 1;
+  uint32 user_id = 2;
+  string user_full_name = 3;
+  uint32 doctor_id = 4;
+  string doctor_name = 5;
+  string doctor_specialization = 6;
+  string appointment_at = 7; // ISO8601 string format (RFC3339)
+  bool is_paid = 8;
+  string status = 9;
+  string created_at = 10;
+  string updated_at = 11;
+}
+
+message AppointmentIDRequest {
+  uint32 id = 1;
+}
+
+message UserAppointmentsRequest {
+  uint32 user_id = 1;
+}
+
+message CreateAppointmentRequest {
+  uint32 user_id = 1;
+  string user_full_name = 2;
+  uint32 doctor_id = 3;
+  string doctor_name = 4;
+  string doctor_specialization = 5;
+  string appointment_at = 6;
+}
+
+message UpdateAppointmentRequest {
+  uint32 id = 1;
+  uint32 user_id = 2;
+  string user_full_name = 3;
+  uint32 doctor_id = 4;
+  string doctor_name = 5;
+  string doctor_specialization = 6;
+  string appointment_at = 7;
+  string status = 8;
+  bool is_paid = 9;
+}
+
+message MarkAsPaidRequest {
+  uint32 id = 1;
+}
+
+message AppointmentResponse {
+  Appointment appointment = 1;
+}
+
+message AppointmentListResponse {
+  repeated Appointment appointments = 1;
+}
+
+message EmptyResponse {}
+
+
+// ===== SERVICE =====
+
+service AppointmentService {
+  rpc GetAppointmentByID(AppointmentIDRequest) returns (AppointmentResponse);
+  rpc GetAppointmentsByUserID(UserAppointmentsRequest) returns (AppointmentListResponse);
+  rpc CreateAppointment(CreateAppointmentRequest) returns (AppointmentResponse);
+  rpc UpdateAppointment(UpdateAppointmentRequest) returns (AppointmentResponse);
+  rpc MarkAppointmentAsPaid(MarkAsPaidRequest) returns (EmptyResponse);
+}
