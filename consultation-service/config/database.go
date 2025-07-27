@@ -2,12 +2,14 @@ package config
 
 import (
 	"context"
+	"database/sql"
 	"log"
 	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 
+	_ "github.com/go-sql-driver/mysql"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -42,4 +44,22 @@ func GetCollection(client *mongo.Client, collectionName string) *mongo.Collectio
 	}
 	collection := client.Database(db).Collection(collectionName)
 	return collection
+}
+
+func MySQLDB() *sql.DB {
+	db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/teman_sehat?parseTime=true&loc=Asia%2FJakarta")
+	if err != nil {
+		panic(err)
+	}
+
+	if err = db.Ping(); err != nil {
+		log.Fatal(err)
+	}
+
+	// See "Important settings" section.
+	db.SetConnMaxLifetime(time.Minute * 3)
+	db.SetMaxOpenConns(10)
+	db.SetMaxIdleConns(10)
+
+	return db
 }
