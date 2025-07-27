@@ -2,9 +2,11 @@ syntax = "proto3";
 
 package consultation;
 
-option go_package = "proto/consultation";
+option go_package = "consultation-service/internal/consultation/delivery/grpc/pb;pb";
 
 import "google/protobuf/timestamp.proto";
+
+import "google/protobuf/wrappers.proto";
 
 // Base Structure
 // {
@@ -25,6 +27,30 @@ import "google/protobuf/timestamp.proto";
 //   "created_at": "2025-07-21T14:00:00Z"
 // }
 
+message UserSnapshot {
+  string id = 1; // unique identifier for the user
+  string name = 2; // name of the user
+  string email = 3; // email of the user
+  string role = 4; // role of the user
+}
+
+message DoctorSnapshot {
+  string id = 1; // unique identifier for the doctor
+  string name = 2; // name of the doctor
+  string specialization = 3; // specialization of the doctor
+}
+
+message PatientSnapshot {
+  string id = 1; // unique identifier for the patient
+  string name = 2; // name of the patient
+  string age = 3; // age of the patient
+}
+
+message RoomSnapshot {
+  string id = 1; // unique identifier for the room
+  string name = 2; // name of the room
+}
+
 // ConsultationRequest represents a request for a consultation
 message Prescription {
   string name = 1; // name of the medicine
@@ -32,32 +58,32 @@ message Prescription {
 }
 
 message ConsultationRequest {
-  string user_id = 1; // unique identifier for the consultation
-  string patient_id = 2; // from master-service
-  string patient_name = 3; // snapshot, optional
-  string doctor_id = 4; // from master-service
-  string doctor_name = 5; // snapshot, optional
-  string room_id = 6; // from master-service
-  string room_name = 7; // snapshot, optional
-  string symptoms = 9;
+  string id = 1;
+  string queue_id = 2;
+  string appointment_id = 3;
+  PatientSnapshot patient = 4; // from master-service
+  DoctorSnapshot doctor = 5; // from master-service
+  RoomSnapshot room = 6; // from master-service
+  string symptoms = 7;
   repeated Prescription prescription = 8; // list of prescriptions
-  string diagnosis = 10;
-  string date = 11; // date of the consultation
+  string diagnosis = 9;
+  string date = 10; // date of the consultation
 }
 
 message ConsultationResponse {
     string id = 1; // unique identifier for the consultation
-    string user_id = 2; // unique identifier for the consultation
-    string patient_id = 3; // from master-service
-    string patient_name = 4; // snapshot, optional
-    string doctor_id = 5; // from master-service
-    string doctor_name = 6; // snapshot, optional
-    string room_id = 7; // from master-service
-    string room_name = 8; // snapshot, optional
-    string symptoms = 9;
-    repeated Prescription prescription = 10; // list of prescriptions
-    string diagnosis = 11;
-    string date = 12; 
+    google.protobuf.StringValue queue_id = 2;
+    google.protobuf.StringValue appointment_id = 3;
+    UserSnapshot user = 4; // user who created the consultation
+    PatientSnapshot patient = 5; // from master-service
+    DoctorSnapshot doctor = 6; // from master-service
+    RoomSnapshot room = 7; // from master-service
+    string symptoms = 8;
+    repeated Prescription prescription = 9; // list of prescriptions
+    string diagnosis = 10;
+    string date = 11;
+    string status = 12;
+    
     google.protobuf.Timestamp created_at = 13;
     google.protobuf.Timestamp updated_at = 14;
 }
@@ -70,7 +96,7 @@ service ConsultationService {
   // Create a new consultation
   rpc CreateConsultation(ConsultationRequest) returns (ConsultationResponse);
   // Get a consultation by ID
-  rpc GetConsultationById(ConsultationIDRequest) returns (ConsultationResponse);
+  rpc FindByIDConsultation(ConsultationIDRequest) returns (ConsultationResponse);
   // Update an existing consultation
   rpc UpdateConsultation(ConsultationRequest) returns (ConsultationResponse);
 }
