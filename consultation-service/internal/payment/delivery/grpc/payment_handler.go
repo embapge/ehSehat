@@ -6,7 +6,6 @@ import (
 	"ehSehat/consultation-service/internal/payment/domain"
 	"ehSehat/libs/utils"
 	"fmt"
-	"log"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
@@ -85,8 +84,6 @@ func (h *paymentHandler) CreatePaymentGRPC(ctx context.Context, req *paymentPb.P
 		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Amount must be greater than zero"))
 	}
 
-	log.Println("masuk ke handler payment")
-
 	payment := &domain.CreatePaymentRequest{
 		ConsultationID: req.ConsultationId,
 		Amount:         req.Amount,
@@ -97,7 +94,6 @@ func (h *paymentHandler) CreatePaymentGRPC(ctx context.Context, req *paymentPb.P
 		return nil, utils.GRPCErrorToHTTPError(err)
 	}
 
-	// Convert domain.PaymentLogs to []*paymentPb.PaymentLog
 	var pbPaymentLogs []*paymentPb.PaymentLog
 	for _, log := range paymentResponse.PaymentLogs {
 		var responseStr string

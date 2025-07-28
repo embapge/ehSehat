@@ -5,6 +5,7 @@ import (
 	consultationPb "ehSehat/consultation-service/internal/consultation/delivery/grpc/pb"
 	"ehSehat/consultation-service/internal/consultation/domain"
 	"ehSehat/libs/utils"
+	"ehSehat/libs/utils/grpcmetadata"
 	"strconv"
 	"time"
 
@@ -46,6 +47,42 @@ func (h *consultationHandler) CreateConsultation(ctx context.Context, req *consu
 		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Prescription is required"))
 	}
 
+	md, _ := grpcmetadata.GetMetadataFromContext(ctx)
+
+	userSnapshot := map[string]interface{}{
+		"ID":    "",
+		"Name":  "",
+		"Email": "",
+		"Role":  "",
+	}
+
+	if v, ok := md["ts-user-id"]; ok && len(v) > 0 {
+		userSnapshot["ID"] = v[0]
+	}
+	if v, ok := md["ts-user-name"]; ok && len(v) > 0 {
+		userSnapshot["Name"] = v[0]
+	}
+	if v, ok := md["ts-user-email"]; ok && len(v) > 0 {
+		userSnapshot["Email"] = v[0]
+	}
+	if v, ok := md["ts-user-role"]; ok && len(v) > 0 {
+		userSnapshot["Role"] = v[0]
+	}
+
+	createdBySnapshot := domain.CreatedBySnapshot{
+		ID:    userSnapshot["ID"].(string),
+		Name:  userSnapshot["Name"].(string),
+		Email: userSnapshot["Email"].(string),
+		Role:  userSnapshot["Role"].(string),
+	}
+
+	updatedBySnapshot := domain.UpdatedBySnapshot{
+		ID:    userSnapshot["ID"].(string),
+		Name:  userSnapshot["Name"].(string),
+		Email: userSnapshot["Email"].(string),
+		Role:  userSnapshot["Role"].(string),
+	}
+
 	dateFormatted, _ := time.Parse("2006-01-02", req.Date)
 
 	prescriptionFormatted := make([]domain.Prescription, len(req.Prescription))
@@ -54,13 +91,6 @@ func (h *consultationHandler) CreateConsultation(ctx context.Context, req *consu
 			MedicineName: p.Name,
 			Dose:         p.Dose,
 		}
-	}
-
-	userSnapshot := domain.UserSnapShot{
-		ID:    "",
-		Name:  "",
-		Email: "",
-		Role:  "",
 	}
 
 	ageInt32 := int32(0)
@@ -90,7 +120,8 @@ func (h *consultationHandler) CreateConsultation(ctx context.Context, req *consu
 	consultation := &domain.Consultation{
 		QueueID:       req.QueueId,
 		AppointmentID: req.AppointmentId,
-		User:          userSnapshot,
+		CreatedBy:     createdBySnapshot,
+		UpdatedBy:     updatedBySnapshot,
 		Patient:       patientSnapshot,
 		Doctor:        doctorSnapshot,
 		Room:          roomSnapshot,
@@ -123,12 +154,6 @@ func (h *consultationHandler) CreateConsultation(ctx context.Context, req *consu
 		Id:            consultation.ID,
 		QueueId:       resQueID,
 		AppointmentId: resAppID,
-		User: &consultationPb.UserSnapshot{
-			Id:    userSnapshot.ID,
-			Name:  userSnapshot.Name,
-			Email: userSnapshot.Email,
-			Role:  userSnapshot.Role,
-		},
 		Patient: &consultationPb.PatientSnapshot{
 			Id:   patientSnapshot.ID,
 			Name: patientSnapshot.Name,
@@ -212,8 +237,39 @@ func (h *consultationHandler) UpdateConsultation(ctx context.Context, req *consu
 		return nil, err
 	}
 
+	md, _ := grpcmetadata.GetMetadataFromContext(ctx)
+
+	userSnapshot := map[string]interface{}{
+		"ID":    "",
+		"Name":  "",
+		"Email": "",
+		"Role":  "",
+	}
+
+	if v, ok := md["ts-user-id"]; ok && len(v) > 0 {
+		userSnapshot["ID"] = v[0]
+	}
+	if v, ok := md["ts-user-name"]; ok && len(v) > 0 {
+		userSnapshot["Name"] = v[0]
+	}
+	if v, ok := md["ts-user-email"]; ok && len(v) > 0 {
+		userSnapshot["Email"] = v[0]
+	}
+	if v, ok := md["ts-user-role"]; ok && len(v) > 0 {
+		userSnapshot["Role"] = v[0]
+	}
+
+	updatedBySnapshot := domain.UpdatedBySnapshot{
+		ID:    userSnapshot["ID"].(string),
+		Name:  userSnapshot["Name"].(string),
+		Email: userSnapshot["Email"].(string),
+		Role:  userSnapshot["Role"].(string),
+	}
+
 	consultation.Symptoms = req.Symptoms
 	consultation.Diagnosis = req.Diagnosis
+	consultation.UpdatedBy = updatedBySnapshot
+	consultation.UpdatedAt = time.Now()
 
 	err = h.app.UpdateConsultation(ctx, consultation)
 	if err != nil {
@@ -234,11 +290,5 @@ func (h *consultationHandler) UpdateConsultation(ctx context.Context, req *consu
 		Id:            consultation.ID,
 		QueueId:       resQueID,
 		AppointmentId: resAppID,
-		User: &consultationPb.UserSnapshot{
-			Id:    consultation.User.ID,
-			Name:  consultation.User.Name,
-			Email: consultation.User.Email,
-			Role:  consultation.User.Role,
-		},
 	}, nil
 }

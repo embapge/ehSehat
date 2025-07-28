@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -47,9 +48,17 @@ func GetCollection(client *mongo.Client, collectionName string) *mongo.Collectio
 }
 
 func MySQLDB() *sql.DB {
-	db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/teman_sehat?parseTime=true&loc=Asia%2FJakarta")
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	pass := os.Getenv("DB_PASSWORD")
+	name := os.Getenv("DB_NAME")
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", user, pass, host, port, name)
+	fmt.Println(dsn, "dsn")
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	if err = db.Ping(); err != nil {

@@ -70,6 +70,10 @@ func (x *xendit) Create(external_id string, amount float64) (interface{}, error)
 	return xenditResponse, nil
 }
 
+func (x *xendit) GetGatewayName() string {
+	return "xendit"
+}
+
 // }
 // req.Header.Set("Content-Type", "application/json")
 // req.Header.Set("Authorization", authHeader)

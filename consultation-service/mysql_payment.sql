@@ -1,6 +1,6 @@
-CREATE DATABASE teman_sehat;
+CREATE DATABASE teman_sehat_payments;
 
-USE teman_sehat;
+USE teman_sehat_payments;
 
 CREATE TABLE IF NOT EXISTS payments (
     id VARCHAR(36) PRIMARY KEY,

@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	consultationDomain "ehSehat/consultation-service/internal/consultation/domain"
 	"ehSehat/consultation-service/internal/payment/domain"
+	"ehSehat/libs/utils/grpcmetadata"
 	"fmt"
-	"log"
 )
 
 type paymentApp struct {
@@ -33,17 +33,35 @@ func (app *paymentApp) CreatePayment(ctx context.Context, paymentReq *domain.Cre
 		return nil, sql.ErrNoRows
 	}
 
-	log.Println("masuk payment app")
-
 	result, err := app.pg.Create(consultation.ID, 600000.0)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Println("masuk payment app")
-
 	paymentLogs := domain.PaymentLog{
 		Response: result,
+	}
+
+	md, _ := grpcmetadata.GetMetadataFromContext(ctx)
+
+	userSnapshot := map[string]string{
+		"ID":    "",
+		"Name":  "",
+		"Email": "",
+		"Role":  "",
+	}
+
+	if v, ok := md["ts-user-id"]; ok && len(v) > 0 {
+		userSnapshot["ID"] = v[0]
+	}
+	if v, ok := md["ts-user-name"]; ok && len(v) > 0 {
+		userSnapshot["Name"] = v[0]
+	}
+	if v, ok := md["ts-user-email"]; ok && len(v) > 0 {
+		userSnapshot["Email"] = v[0]
+	}
+	if v, ok := md["ts-user-role"]; ok && len(v) > 0 {
+		userSnapshot["Role"] = v[0]
 	}
 
 	payment := &domain.Payment{
@@ -55,8 +73,16 @@ func (app *paymentApp) CreatePayment(ctx context.Context, paymentReq *domain.Cre
 		DoctorName:       &consultation.Doctor.Name,
 		Amount:           paymentReq.Amount,
 		Method:           "payment_link",
-		Gateway:          "xendit",
+		Gateway:          app.pg.GetGatewayName(),
 		PaymentLogs:      []domain.PaymentLog{paymentLogs},
+		CreatedBy:        userSnapshot["ID"],
+		CreatedName:      toPtr(userSnapshot["Name"]),
+		CreatedEmail:     toPtr(userSnapshot["Email"]),
+		CreatedRole:      toPtr(userSnapshot["Role"]),
+		UpdatedBy:        userSnapshot["ID"],
+		UpdatedName:      toPtr(userSnapshot["Name"]),
+		UpdatedEmail:     toPtr(userSnapshot["Email"]),
+		UpdatedRole:      toPtr(userSnapshot["Role"]),
 	}
 
 	err = app.paymentRepo.Create(ctx, payment)
@@ -97,3 +123,5 @@ func (app *paymentApp) FindByIDPayment(ctx context.Context, id string) (*domain.
 
 	return payment, nil
 }
+
+func toPtr(s string) *string { return &s }
