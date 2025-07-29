@@ -5,36 +5,23 @@ import (
 	"time"
 )
 
-//   string id = 1; // unique identifier for the consultation
-//     string user_id = 2; // unique identifier for the consultation
-//     string patient_id = 3; // from master-service
-//     string patient_name = 4; // snapshot, optional
-//     string doctor_id = 5; // from master-service
-//     string doctor_name = 6; // snapshot, optional
-//     string room_id = 7; // from master-service
-//     string room_name = 8; // snapshot, optional
-//     string symptoms = 9;
-//     repeated Prescription prescription = 10; // list of prescriptions
-//     string diagnosis = 11;
-//     string date = 12;
-//     google.protobuf.Timestamp created_at = 13;
-//     google.protobuf.Timestamp updated_at = 14;
-
 type Consultation struct {
-	ID           string         `bson:"_id,omitempty" json:"id"`
-	UserID       string         `bson:"user_id" json:"user_id"`
-	PatientID    string         `bson:"patient_id" json:"patient_id"`
-	PatientName  string         `bson:"patient_name,omitempty" json:"patient_name,omitempty"`
-	DoctorID     string         `bson:"doctor_id" json:"doctor_id"`
-	DoctorName   string         `bson:"doctor_name,omitempty" json:"doctor_name,omitempty"`
-	RoomID       string         `bson:"room_id" json:"room_id"`
-	RoomName     string         `bson:"room_name,omitempty" json:"room_name,omitempty"`
-	Symptoms     string         `bson:"symptoms" json:"symptoms"`
-	Prescription []Prescription `bson:"prescription,omitempty" json:"prescription,omitempty"`
-	Diagnosis    string         `bson:"diagnosis" json:"diagnosis"`
-	Date         time.Time      `bson:"date" json:"date"`
-	CreatedAt    time.Time      `bson:"created_at" json:"created_at"`
-	UpdatedAt    time.Time      `bson:"updated_at" json:"updated_at"`
+	ID            string            `bson:"_id,omitempty" json:"id"`
+	QueueID       string            `bson:"queue_id,omitempty" json:"queue_id"`
+	AppointmentID string            `bson:"appointment_id,omitempty" json:"appointment_id"`
+	User          UserSnapShot      `bson:"user,omitempty" json:"user"`
+	Patient       PatientSnapshot   `bson:"patient,omitempty" json:"patient"`
+	Doctor        DoctorSnapshot    `bson:"doctor,omitempty" json:"doctor"`
+	Room          RoomSnapshot      `bson:"room,omitempty" json:"room"`
+	Symptoms      string            `bson:"symptoms" json:"symptoms"`
+	Prescription  []Prescription    `bson:"prescription,omitempty" json:"prescription,omitempty"`
+	Diagnosis     string            `bson:"diagnosis" json:"diagnosis"`
+	Date          time.Time         `bson:"date" json:"date"`
+	Status        string            `bson:"status" json:"status"`
+	CreatedBy     CreatedBySnapshot `bson:"created_by,omitempty" json:"created_by"`
+	CreatedAt     time.Time         `bson:"created_at" json:"created_at"`
+	UpdatedBy     UpdatedBySnapshot `bson:"updated_by,omitempty" json:"updated_by"`
+	UpdatedAt     time.Time         `bson:"updated_at" json:"updated_at"`
 }
 
 type Prescription struct {

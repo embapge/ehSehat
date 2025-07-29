@@ -1,0 +1,13 @@
+CREATE DATABASE IF NOT EXISTS `teman_sehat_auths`;
+
+use `teman_sehat_auths`;
+
+CREATE TABLE IF NOT EXISTS users(
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    role ENUM('admin', 'doctor', 'patient') NOT NULL,
+    password TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL
+);

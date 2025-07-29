@@ -4,7 +4,7 @@
 // - protoc             v6.31.1
 // source: proto/consultation/consultation.proto
 
-package consultation
+package pb
 
 import (
 	context "context"
@@ -19,9 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ConsultationService_CreateConsultation_FullMethodName  = "/consultation.ConsultationService/CreateConsultation"
-	ConsultationService_GetConsultationById_FullMethodName = "/consultation.ConsultationService/GetConsultationById"
-	ConsultationService_UpdateConsultation_FullMethodName  = "/consultation.ConsultationService/UpdateConsultation"
+	ConsultationService_CreateConsultation_FullMethodName   = "/consultation.ConsultationService/CreateConsultation"
+	ConsultationService_FindByIDConsultation_FullMethodName = "/consultation.ConsultationService/FindByIDConsultation"
+	ConsultationService_UpdateConsultation_FullMethodName   = "/consultation.ConsultationService/UpdateConsultation"
 )
 
 // ConsultationServiceClient is the client API for ConsultationService service.
@@ -31,9 +31,9 @@ type ConsultationServiceClient interface {
 	// Create a new consultation
 	CreateConsultation(ctx context.Context, in *ConsultationRequest, opts ...grpc.CallOption) (*ConsultationResponse, error)
 	// Get a consultation by ID
-	GetConsultationById(ctx context.Context, in *ConsultationIDRequest, opts ...grpc.CallOption) (*ConsultationResponse, error)
+	FindByIDConsultation(ctx context.Context, in *ConsultationIDRequest, opts ...grpc.CallOption) (*ConsultationResponse, error)
 	// Update an existing consultation
-	UpdateConsultation(ctx context.Context, in *ConsultationIDRequest, opts ...grpc.CallOption) (*ConsultationResponse, error)
+	UpdateConsultation(ctx context.Context, in *ConsultationRequest, opts ...grpc.CallOption) (*ConsultationResponse, error)
 }
 
 type consultationServiceClient struct {
@@ -54,17 +54,17 @@ func (c *consultationServiceClient) CreateConsultation(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *consultationServiceClient) GetConsultationById(ctx context.Context, in *ConsultationIDRequest, opts ...grpc.CallOption) (*ConsultationResponse, error) {
+func (c *consultationServiceClient) FindByIDConsultation(ctx context.Context, in *ConsultationIDRequest, opts ...grpc.CallOption) (*ConsultationResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ConsultationResponse)
-	err := c.cc.Invoke(ctx, ConsultationService_GetConsultationById_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ConsultationService_FindByIDConsultation_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *consultationServiceClient) UpdateConsultation(ctx context.Context, in *ConsultationIDRequest, opts ...grpc.CallOption) (*ConsultationResponse, error) {
+func (c *consultationServiceClient) UpdateConsultation(ctx context.Context, in *ConsultationRequest, opts ...grpc.CallOption) (*ConsultationResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ConsultationResponse)
 	err := c.cc.Invoke(ctx, ConsultationService_UpdateConsultation_FullMethodName, in, out, cOpts...)
@@ -81,9 +81,9 @@ type ConsultationServiceServer interface {
 	// Create a new consultation
 	CreateConsultation(context.Context, *ConsultationRequest) (*ConsultationResponse, error)
 	// Get a consultation by ID
-	GetConsultationById(context.Context, *ConsultationIDRequest) (*ConsultationResponse, error)
+	FindByIDConsultation(context.Context, *ConsultationIDRequest) (*ConsultationResponse, error)
 	// Update an existing consultation
-	UpdateConsultation(context.Context, *ConsultationIDRequest) (*ConsultationResponse, error)
+	UpdateConsultation(context.Context, *ConsultationRequest) (*ConsultationResponse, error)
 	mustEmbedUnimplementedConsultationServiceServer()
 }
 
@@ -97,10 +97,10 @@ type UnimplementedConsultationServiceServer struct{}
 func (UnimplementedConsultationServiceServer) CreateConsultation(context.Context, *ConsultationRequest) (*ConsultationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateConsultation not implemented")
 }
-func (UnimplementedConsultationServiceServer) GetConsultationById(context.Context, *ConsultationIDRequest) (*ConsultationResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetConsultationById not implemented")
+func (UnimplementedConsultationServiceServer) FindByIDConsultation(context.Context, *ConsultationIDRequest) (*ConsultationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindByIDConsultation not implemented")
 }
-func (UnimplementedConsultationServiceServer) UpdateConsultation(context.Context, *ConsultationIDRequest) (*ConsultationResponse, error) {
+func (UnimplementedConsultationServiceServer) UpdateConsultation(context.Context, *ConsultationRequest) (*ConsultationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateConsultation not implemented")
 }
 func (UnimplementedConsultationServiceServer) mustEmbedUnimplementedConsultationServiceServer() {}
@@ -142,26 +142,26 @@ func _ConsultationService_CreateConsultation_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ConsultationService_GetConsultationById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ConsultationService_FindByIDConsultation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ConsultationIDRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ConsultationServiceServer).GetConsultationById(ctx, in)
+		return srv.(ConsultationServiceServer).FindByIDConsultation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ConsultationService_GetConsultationById_FullMethodName,
+		FullMethod: ConsultationService_FindByIDConsultation_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConsultationServiceServer).GetConsultationById(ctx, req.(*ConsultationIDRequest))
+		return srv.(ConsultationServiceServer).FindByIDConsultation(ctx, req.(*ConsultationIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _ConsultationService_UpdateConsultation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ConsultationIDRequest)
+	in := new(ConsultationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -173,7 +173,7 @@ func _ConsultationService_UpdateConsultation_Handler(srv interface{}, ctx contex
 		FullMethod: ConsultationService_UpdateConsultation_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConsultationServiceServer).UpdateConsultation(ctx, req.(*ConsultationIDRequest))
+		return srv.(ConsultationServiceServer).UpdateConsultation(ctx, req.(*ConsultationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -190,8 +190,8 @@ var ConsultationService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ConsultationService_CreateConsultation_Handler,
 		},
 		{
-			MethodName: "GetConsultationById",
-			Handler:    _ConsultationService_GetConsultationById_Handler,
+			MethodName: "FindByIDConsultation",
+			Handler:    _ConsultationService_FindByIDConsultation_Handler,
 		},
 		{
 			MethodName: "UpdateConsultation",

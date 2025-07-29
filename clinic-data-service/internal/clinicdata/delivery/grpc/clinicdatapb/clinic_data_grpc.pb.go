@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+<<<<<<< HEAD
 	ClinicDataService_CreatePatient_FullMethodName               = "/clinicdata.ClinicDataService/CreatePatient"
 	ClinicDataService_GetPatientByID_FullMethodName              = "/clinicdata.ClinicDataService/GetPatientByID"
 	ClinicDataService_GetAllPatients_FullMethodName              = "/clinicdata.ClinicDataService/GetAllPatients"
@@ -44,6 +45,33 @@ const (
 	ClinicDataService_GetOverrideByDoctorID_FullMethodName       = "/clinicdata.ClinicDataService/GetOverrideByDoctorID"
 	ClinicDataService_UpdateScheduleOverride_FullMethodName      = "/clinicdata.ClinicDataService/UpdateScheduleOverride"
 	ClinicDataService_DeleteScheduleOverride_FullMethodName      = "/clinicdata.ClinicDataService/DeleteScheduleOverride"
+=======
+	ClinicDataService_CreatePatient_FullMethodName              = "/clinicdata.ClinicDataService/CreatePatient"
+	ClinicDataService_GetPatientByID_FullMethodName             = "/clinicdata.ClinicDataService/GetPatientByID"
+	ClinicDataService_GetAllPatients_FullMethodName             = "/clinicdata.ClinicDataService/GetAllPatients"
+	ClinicDataService_UpdatePatient_FullMethodName              = "/clinicdata.ClinicDataService/UpdatePatient"
+	ClinicDataService_DeletePatient_FullMethodName              = "/clinicdata.ClinicDataService/DeletePatient"
+	ClinicDataService_CreateDoctor_FullMethodName               = "/clinicdata.ClinicDataService/CreateDoctor"
+	ClinicDataService_GetDoctorByID_FullMethodName              = "/clinicdata.ClinicDataService/GetDoctorByID"
+	ClinicDataService_GetAllDoctors_FullMethodName              = "/clinicdata.ClinicDataService/GetAllDoctors"
+	ClinicDataService_UpdateDoctor_FullMethodName               = "/clinicdata.ClinicDataService/UpdateDoctor"
+	ClinicDataService_DeleteDoctor_FullMethodName               = "/clinicdata.ClinicDataService/DeleteDoctor"
+	ClinicDataService_CreateSpecialization_FullMethodName       = "/clinicdata.ClinicDataService/CreateSpecialization"
+	ClinicDataService_GetSpecializationByID_FullMethodName      = "/clinicdata.ClinicDataService/GetSpecializationByID"
+	ClinicDataService_GetAllSpecializations_FullMethodName      = "/clinicdata.ClinicDataService/GetAllSpecializations"
+	ClinicDataService_UpdateSpecialization_FullMethodName       = "/clinicdata.ClinicDataService/UpdateSpecialization"
+	ClinicDataService_DeleteSpecialization_FullMethodName       = "/clinicdata.ClinicDataService/DeleteSpecialization"
+	ClinicDataService_CreateRoom_FullMethodName                 = "/clinicdata.ClinicDataService/CreateRoom"
+	ClinicDataService_GetRoomByID_FullMethodName                = "/clinicdata.ClinicDataService/GetRoomByID"
+	ClinicDataService_GetAllRooms_FullMethodName                = "/clinicdata.ClinicDataService/GetAllRooms"
+	ClinicDataService_CreateScheduleFixed_FullMethodName        = "/clinicdata.ClinicDataService/CreateScheduleFixed"
+	ClinicDataService_GetFixedScheduleByDoctorID_FullMethodName = "/clinicdata.ClinicDataService/GetFixedScheduleByDoctorID"
+	ClinicDataService_UpdateScheduleFixed_FullMethodName        = "/clinicdata.ClinicDataService/UpdateScheduleFixed"
+	ClinicDataService_CreateScheduleOverride_FullMethodName     = "/clinicdata.ClinicDataService/CreateScheduleOverride"
+	ClinicDataService_GetOverrideByDoctorID_FullMethodName      = "/clinicdata.ClinicDataService/GetOverrideByDoctorID"
+	ClinicDataService_UpdateScheduleOverride_FullMethodName     = "/clinicdata.ClinicDataService/UpdateScheduleOverride"
+	ClinicDataService_DeleteScheduleOverride_FullMethodName     = "/clinicdata.ClinicDataService/DeleteScheduleOverride"
+>>>>>>> main
 )
 
 // ClinicDataServiceClient is the client API for ClinicDataService service.
@@ -74,8 +102,13 @@ type ClinicDataServiceClient interface {
 	GetAllRooms(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListRoomsResponse, error)
 	// SCHEDULE FIXED
 	CreateScheduleFixed(ctx context.Context, in *CreateScheduleFixedRequest, opts ...grpc.CallOption) (*ScheduleFixed, error)
+<<<<<<< HEAD
 	GetFixedSchedulesByDoctorID(ctx context.Context, in *GetFixedSchedulesByDoctorIDRequest, opts ...grpc.CallOption) (*ListScheduleFixedResponse, error)
 	UpdateScheduleFixed(ctx context.Context, in *UpdateScheduleFixedRequest, opts ...grpc.CallOption) (*ScheduleFixed, error)
+=======
+	GetFixedScheduleByDoctorID(ctx context.Context, in *GetFixedScheduleByDoctorIDRequest, opts ...grpc.CallOption) (*ListScheduleFixedResponse, error)
+	UpdateScheduleFixed(ctx context.Context, in *UpdateScheduleFixedRequest, opts ...grpc.CallOption) (*UpdateScheduleFixedResponse, error)
+>>>>>>> main
 	// SCHEDULE OVERRIDE
 	CreateScheduleOverride(ctx context.Context, in *CreateScheduleOverrideRequest, opts ...grpc.CallOption) (*ScheduleOverride, error)
 	GetOverrideByDoctorID(ctx context.Context, in *GetOverrideByDoctorIDRequest, opts ...grpc.CallOption) (*ListScheduleOverrideResponse, error)
@@ -262,17 +295,28 @@ func (c *clinicDataServiceClient) CreateScheduleFixed(ctx context.Context, in *C
 	return out, nil
 }
 
+<<<<<<< HEAD
 func (c *clinicDataServiceClient) GetFixedSchedulesByDoctorID(ctx context.Context, in *GetFixedSchedulesByDoctorIDRequest, opts ...grpc.CallOption) (*ListScheduleFixedResponse, error) {
 	out := new(ListScheduleFixedResponse)
 	err := c.cc.Invoke(ctx, ClinicDataService_GetFixedSchedulesByDoctorID_FullMethodName, in, out, opts...)
+=======
+func (c *clinicDataServiceClient) GetFixedScheduleByDoctorID(ctx context.Context, in *GetFixedScheduleByDoctorIDRequest, opts ...grpc.CallOption) (*ListScheduleFixedResponse, error) {
+	out := new(ListScheduleFixedResponse)
+	err := c.cc.Invoke(ctx, ClinicDataService_GetFixedScheduleByDoctorID_FullMethodName, in, out, opts...)
+>>>>>>> main
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
+<<<<<<< HEAD
 func (c *clinicDataServiceClient) UpdateScheduleFixed(ctx context.Context, in *UpdateScheduleFixedRequest, opts ...grpc.CallOption) (*ScheduleFixed, error) {
 	out := new(ScheduleFixed)
+=======
+func (c *clinicDataServiceClient) UpdateScheduleFixed(ctx context.Context, in *UpdateScheduleFixedRequest, opts ...grpc.CallOption) (*UpdateScheduleFixedResponse, error) {
+	out := new(UpdateScheduleFixedResponse)
+>>>>>>> main
 	err := c.cc.Invoke(ctx, ClinicDataService_UpdateScheduleFixed_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -344,8 +388,13 @@ type ClinicDataServiceServer interface {
 	GetAllRooms(context.Context, *Empty) (*ListRoomsResponse, error)
 	// SCHEDULE FIXED
 	CreateScheduleFixed(context.Context, *CreateScheduleFixedRequest) (*ScheduleFixed, error)
+<<<<<<< HEAD
 	GetFixedSchedulesByDoctorID(context.Context, *GetFixedSchedulesByDoctorIDRequest) (*ListScheduleFixedResponse, error)
 	UpdateScheduleFixed(context.Context, *UpdateScheduleFixedRequest) (*ScheduleFixed, error)
+=======
+	GetFixedScheduleByDoctorID(context.Context, *GetFixedScheduleByDoctorIDRequest) (*ListScheduleFixedResponse, error)
+	UpdateScheduleFixed(context.Context, *UpdateScheduleFixedRequest) (*UpdateScheduleFixedResponse, error)
+>>>>>>> main
 	// SCHEDULE OVERRIDE
 	CreateScheduleOverride(context.Context, *CreateScheduleOverrideRequest) (*ScheduleOverride, error)
 	GetOverrideByDoctorID(context.Context, *GetOverrideByDoctorIDRequest) (*ListScheduleOverrideResponse, error)
@@ -415,10 +464,17 @@ func (UnimplementedClinicDataServiceServer) GetAllRooms(context.Context, *Empty)
 func (UnimplementedClinicDataServiceServer) CreateScheduleFixed(context.Context, *CreateScheduleFixedRequest) (*ScheduleFixed, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateScheduleFixed not implemented")
 }
+<<<<<<< HEAD
 func (UnimplementedClinicDataServiceServer) GetFixedSchedulesByDoctorID(context.Context, *GetFixedSchedulesByDoctorIDRequest) (*ListScheduleFixedResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFixedSchedulesByDoctorID not implemented")
 }
 func (UnimplementedClinicDataServiceServer) UpdateScheduleFixed(context.Context, *UpdateScheduleFixedRequest) (*ScheduleFixed, error) {
+=======
+func (UnimplementedClinicDataServiceServer) GetFixedScheduleByDoctorID(context.Context, *GetFixedScheduleByDoctorIDRequest) (*ListScheduleFixedResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFixedScheduleByDoctorID not implemented")
+}
+func (UnimplementedClinicDataServiceServer) UpdateScheduleFixed(context.Context, *UpdateScheduleFixedRequest) (*UpdateScheduleFixedResponse, error) {
+>>>>>>> main
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateScheduleFixed not implemented")
 }
 func (UnimplementedClinicDataServiceServer) CreateScheduleOverride(context.Context, *CreateScheduleOverrideRequest) (*ScheduleOverride, error) {
@@ -788,12 +844,18 @@ func _ClinicDataService_CreateScheduleFixed_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+<<<<<<< HEAD
 func _ClinicDataService_GetFixedSchedulesByDoctorID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetFixedSchedulesByDoctorIDRequest)
+=======
+func _ClinicDataService_GetFixedScheduleByDoctorID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFixedScheduleByDoctorIDRequest)
+>>>>>>> main
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
+<<<<<<< HEAD
 		return srv.(ClinicDataServiceServer).GetFixedSchedulesByDoctorID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
@@ -802,6 +864,16 @@ func _ClinicDataService_GetFixedSchedulesByDoctorID_Handler(srv interface{}, ctx
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClinicDataServiceServer).GetFixedSchedulesByDoctorID(ctx, req.(*GetFixedSchedulesByDoctorIDRequest))
+=======
+		return srv.(ClinicDataServiceServer).GetFixedScheduleByDoctorID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClinicDataService_GetFixedScheduleByDoctorID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClinicDataServiceServer).GetFixedScheduleByDoctorID(ctx, req.(*GetFixedScheduleByDoctorIDRequest))
+>>>>>>> main
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -980,8 +1052,13 @@ var ClinicDataService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ClinicDataService_CreateScheduleFixed_Handler,
 		},
 		{
+<<<<<<< HEAD
 			MethodName: "GetFixedSchedulesByDoctorID",
 			Handler:    _ClinicDataService_GetFixedSchedulesByDoctorID_Handler,
+=======
+			MethodName: "GetFixedScheduleByDoctorID",
+			Handler:    _ClinicDataService_GetFixedScheduleByDoctorID_Handler,
+>>>>>>> main
 		},
 		{
 			MethodName: "UpdateScheduleFixed",

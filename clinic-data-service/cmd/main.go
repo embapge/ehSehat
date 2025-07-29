@@ -27,13 +27,17 @@ func main() {
 	doctorRepo := infra.NewPGDoctorRepository(db)
 	specRepo := infra.NewPGSpecializationRepository(db)
 	roomRepo := infra.NewPGRoomRepository(db)
+<<<<<<< HEAD
 	scheduleFixedRepo := infra.NewPGScheduleFixedRepository(db)
+=======
+>>>>>>> main
 
 	// STEP 4: Init Services (app layer)
 	patientService := app.NewPatientService(patientRepo)
 	doctorService := app.NewDoctorService(doctorRepo)
 	specService := app.NewSpecializationService(specRepo)
 	roomService := app.NewRoomService(roomRepo)
+<<<<<<< HEAD
 	scheduleFixedService := app.NewScheduleFixedService(scheduleFixedRepo)
 
 	// STEP 5: Init Handler (delivery layer)
@@ -44,6 +48,11 @@ func main() {
 		roomService,
 		scheduleFixedService,
 	)
+=======
+
+	// STEP 5: Init Handler (delivery layer)
+	handler := grpcHandler.NewGRPCHandler(patientService, doctorService, specService, roomService)
+>>>>>>> main
 
 	// STEP 6: Setup gRPC server
 	port := os.Getenv("GRPC_PORT")

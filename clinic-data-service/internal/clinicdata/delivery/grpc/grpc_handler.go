@@ -11,7 +11,10 @@ type GRPCHandler struct {
 	doctorService         app.DoctorService
 	specializationService app.SpecializationService
 	roomService           app.RoomService
+<<<<<<< HEAD
 	scheduleFixedService  app.ScheduleFixedService
+=======
+>>>>>>> main
 }
 
 func NewGRPCHandler(
@@ -19,13 +22,19 @@ func NewGRPCHandler(
 	doctorSvc app.DoctorService,
 	specSvc app.SpecializationService,
 	roomSvc app.RoomService,
+<<<<<<< HEAD
 	scheduleFixedSvc app.ScheduleFixedService,
+=======
+>>>>>>> main
 ) *GRPCHandler {
 	return &GRPCHandler{
 		patientService:        patientSvc,
 		doctorService:         doctorSvc,
 		specializationService: specSvc,
 		roomService:           roomSvc,
+<<<<<<< HEAD
 		scheduleFixedService:  scheduleFixedSvc,
+=======
+>>>>>>> main
 	}
 }

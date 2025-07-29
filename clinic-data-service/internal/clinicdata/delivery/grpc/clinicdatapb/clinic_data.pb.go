@@ -1938,7 +1938,10 @@ type CreateScheduleFixedRequest struct {
 	DayOfWeek     int32                  `protobuf:"varint,3,opt,name=day_of_week,json=dayOfWeek,proto3" json:"day_of_week,omitempty"`
 	StartTime     string                 `protobuf:"bytes,4,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
 	EndTime       string                 `protobuf:"bytes,5,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
+<<<<<<< HEAD
 	Status        string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
+=======
+>>>>>>> main
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2008,6 +2011,7 @@ func (x *CreateScheduleFixedRequest) GetEndTime() string {
 	return ""
 }
 
+<<<<<<< HEAD
 func (x *CreateScheduleFixedRequest) GetStatus() string {
 	if x != nil {
 		return x.Status
@@ -2015,14 +2019,22 @@ func (x *CreateScheduleFixedRequest) GetStatus() string {
 	return ""
 }
 
+=======
+>>>>>>> main
 type UpdateScheduleFixedRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	RoomId        string                 `protobuf:"bytes,2,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
+<<<<<<< HEAD
 	DayOfWeek     int32                  `protobuf:"varint,3,opt,name=day_of_week,json=dayOfWeek,proto3" json:"day_of_week,omitempty"`
 	StartTime     string                 `protobuf:"bytes,4,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
 	EndTime       string                 `protobuf:"bytes,5,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
 	Status        string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
+=======
+	StartTime     string                 `protobuf:"bytes,3,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
+	EndTime       string                 `protobuf:"bytes,4,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
+	Status        string                 `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
+>>>>>>> main
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2071,6 +2083,7 @@ func (x *UpdateScheduleFixedRequest) GetRoomId() string {
 	return ""
 }
 
+<<<<<<< HEAD
 func (x *UpdateScheduleFixedRequest) GetDayOfWeek() int32 {
 	if x != nil {
 		return x.DayOfWeek
@@ -2078,6 +2091,8 @@ func (x *UpdateScheduleFixedRequest) GetDayOfWeek() int32 {
 	return 0
 }
 
+=======
+>>>>>>> main
 func (x *UpdateScheduleFixedRequest) GetStartTime() string {
 	if x != nil {
 		return x.StartTime
@@ -2099,20 +2114,30 @@ func (x *UpdateScheduleFixedRequest) GetStatus() string {
 	return ""
 }
 
+<<<<<<< HEAD
 type GetFixedSchedulesByDoctorIDRequest struct {
+=======
+type GetFixedScheduleByDoctorIDRequest struct {
+>>>>>>> main
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	DoctorId      string                 `protobuf:"bytes,1,opt,name=doctor_id,json=doctorId,proto3" json:"doctor_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
+<<<<<<< HEAD
 func (x *GetFixedSchedulesByDoctorIDRequest) Reset() {
 	*x = GetFixedSchedulesByDoctorIDRequest{}
+=======
+func (x *GetFixedScheduleByDoctorIDRequest) Reset() {
+	*x = GetFixedScheduleByDoctorIDRequest{}
+>>>>>>> main
 	mi := &file_proto_clinic_data_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
+<<<<<<< HEAD
 func (x *GetFixedSchedulesByDoctorIDRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
@@ -2120,6 +2145,15 @@ func (x *GetFixedSchedulesByDoctorIDRequest) String() string {
 func (*GetFixedSchedulesByDoctorIDRequest) ProtoMessage() {}
 
 func (x *GetFixedSchedulesByDoctorIDRequest) ProtoReflect() protoreflect.Message {
+=======
+func (x *GetFixedScheduleByDoctorIDRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFixedScheduleByDoctorIDRequest) ProtoMessage() {}
+
+func (x *GetFixedScheduleByDoctorIDRequest) ProtoReflect() protoreflect.Message {
+>>>>>>> main
 	mi := &file_proto_clinic_data_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2131,12 +2165,21 @@ func (x *GetFixedSchedulesByDoctorIDRequest) ProtoReflect() protoreflect.Message
 	return mi.MessageOf(x)
 }
 
+<<<<<<< HEAD
 // Deprecated: Use GetFixedSchedulesByDoctorIDRequest.ProtoReflect.Descriptor instead.
 func (*GetFixedSchedulesByDoctorIDRequest) Descriptor() ([]byte, []int) {
 	return file_proto_clinic_data_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *GetFixedSchedulesByDoctorIDRequest) GetDoctorId() string {
+=======
+// Deprecated: Use GetFixedScheduleByDoctorIDRequest.ProtoReflect.Descriptor instead.
+func (*GetFixedScheduleByDoctorIDRequest) Descriptor() ([]byte, []int) {
+	return file_proto_clinic_data_proto_rawDescGZIP(), []int{32}
+}
+
+func (x *GetFixedScheduleByDoctorIDRequest) GetDoctorId() string {
+>>>>>>> main
 	if x != nil {
 		return x.DoctorId
 	}
@@ -2187,6 +2230,77 @@ func (x *ListScheduleFixedResponse) GetSchedules() []*ScheduleFixed {
 	return nil
 }
 
+<<<<<<< HEAD
+=======
+type UpdateScheduleFixedResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	DoctorId      string                 `protobuf:"bytes,2,opt,name=doctor_id,json=doctorId,proto3" json:"doctor_id,omitempty"`
+	DayOfWeek     int32                  `protobuf:"varint,3,opt,name=day_of_week,json=dayOfWeek,proto3" json:"day_of_week,omitempty"`
+	Message       string                 `protobuf:"bytes,4,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateScheduleFixedResponse) Reset() {
+	*x = UpdateScheduleFixedResponse{}
+	mi := &file_proto_clinic_data_proto_msgTypes[34]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateScheduleFixedResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateScheduleFixedResponse) ProtoMessage() {}
+
+func (x *UpdateScheduleFixedResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_clinic_data_proto_msgTypes[34]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateScheduleFixedResponse.ProtoReflect.Descriptor instead.
+func (*UpdateScheduleFixedResponse) Descriptor() ([]byte, []int) {
+	return file_proto_clinic_data_proto_rawDescGZIP(), []int{34}
+}
+
+func (x *UpdateScheduleFixedResponse) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *UpdateScheduleFixedResponse) GetDoctorId() string {
+	if x != nil {
+		return x.DoctorId
+	}
+	return ""
+}
+
+func (x *UpdateScheduleFixedResponse) GetDayOfWeek() int32 {
+	if x != nil {
+		return x.DayOfWeek
+	}
+	return 0
+}
+
+func (x *UpdateScheduleFixedResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+>>>>>>> main
 // SCHEDULE OVERRIDE
 type ScheduleOverride struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -2203,7 +2317,11 @@ type ScheduleOverride struct {
 
 func (x *ScheduleOverride) Reset() {
 	*x = ScheduleOverride{}
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[34]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[35]
+>>>>>>> main
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2215,7 +2333,11 @@ func (x *ScheduleOverride) String() string {
 func (*ScheduleOverride) ProtoMessage() {}
 
 func (x *ScheduleOverride) ProtoReflect() protoreflect.Message {
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[34]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[35]
+>>>>>>> main
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2228,7 +2350,11 @@ func (x *ScheduleOverride) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScheduleOverride.ProtoReflect.Descriptor instead.
 func (*ScheduleOverride) Descriptor() ([]byte, []int) {
+<<<<<<< HEAD
 	return file_proto_clinic_data_proto_rawDescGZIP(), []int{34}
+=======
+	return file_proto_clinic_data_proto_rawDescGZIP(), []int{35}
+>>>>>>> main
 }
 
 func (x *ScheduleOverride) GetId() string {
@@ -2294,7 +2420,11 @@ type CreateScheduleOverrideRequest struct {
 
 func (x *CreateScheduleOverrideRequest) Reset() {
 	*x = CreateScheduleOverrideRequest{}
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[35]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[36]
+>>>>>>> main
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2306,7 +2436,11 @@ func (x *CreateScheduleOverrideRequest) String() string {
 func (*CreateScheduleOverrideRequest) ProtoMessage() {}
 
 func (x *CreateScheduleOverrideRequest) ProtoReflect() protoreflect.Message {
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[35]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[36]
+>>>>>>> main
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2319,7 +2453,11 @@ func (x *CreateScheduleOverrideRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateScheduleOverrideRequest.ProtoReflect.Descriptor instead.
 func (*CreateScheduleOverrideRequest) Descriptor() ([]byte, []int) {
+<<<<<<< HEAD
 	return file_proto_clinic_data_proto_rawDescGZIP(), []int{35}
+=======
+	return file_proto_clinic_data_proto_rawDescGZIP(), []int{36}
+>>>>>>> main
 }
 
 func (x *CreateScheduleOverrideRequest) GetDoctorId() string {
@@ -2377,7 +2515,11 @@ type UpdateScheduleOverrideRequest struct {
 
 func (x *UpdateScheduleOverrideRequest) Reset() {
 	*x = UpdateScheduleOverrideRequest{}
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[36]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[37]
+>>>>>>> main
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2389,7 +2531,11 @@ func (x *UpdateScheduleOverrideRequest) String() string {
 func (*UpdateScheduleOverrideRequest) ProtoMessage() {}
 
 func (x *UpdateScheduleOverrideRequest) ProtoReflect() protoreflect.Message {
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[36]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[37]
+>>>>>>> main
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2402,7 +2548,11 @@ func (x *UpdateScheduleOverrideRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateScheduleOverrideRequest.ProtoReflect.Descriptor instead.
 func (*UpdateScheduleOverrideRequest) Descriptor() ([]byte, []int) {
+<<<<<<< HEAD
 	return file_proto_clinic_data_proto_rawDescGZIP(), []int{36}
+=======
+	return file_proto_clinic_data_proto_rawDescGZIP(), []int{37}
+>>>>>>> main
 }
 
 func (x *UpdateScheduleOverrideRequest) GetId() string {
@@ -2449,7 +2599,11 @@ type DeleteScheduleOverrideRequest struct {
 
 func (x *DeleteScheduleOverrideRequest) Reset() {
 	*x = DeleteScheduleOverrideRequest{}
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[37]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[38]
+>>>>>>> main
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2461,7 +2615,11 @@ func (x *DeleteScheduleOverrideRequest) String() string {
 func (*DeleteScheduleOverrideRequest) ProtoMessage() {}
 
 func (x *DeleteScheduleOverrideRequest) ProtoReflect() protoreflect.Message {
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[37]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[38]
+>>>>>>> main
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2474,7 +2632,11 @@ func (x *DeleteScheduleOverrideRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteScheduleOverrideRequest.ProtoReflect.Descriptor instead.
 func (*DeleteScheduleOverrideRequest) Descriptor() ([]byte, []int) {
+<<<<<<< HEAD
 	return file_proto_clinic_data_proto_rawDescGZIP(), []int{37}
+=======
+	return file_proto_clinic_data_proto_rawDescGZIP(), []int{38}
+>>>>>>> main
 }
 
 func (x *DeleteScheduleOverrideRequest) GetId() string {
@@ -2493,7 +2655,11 @@ type GetOverrideByDoctorIDRequest struct {
 
 func (x *GetOverrideByDoctorIDRequest) Reset() {
 	*x = GetOverrideByDoctorIDRequest{}
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[38]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[39]
+>>>>>>> main
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2505,7 +2671,11 @@ func (x *GetOverrideByDoctorIDRequest) String() string {
 func (*GetOverrideByDoctorIDRequest) ProtoMessage() {}
 
 func (x *GetOverrideByDoctorIDRequest) ProtoReflect() protoreflect.Message {
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[38]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[39]
+>>>>>>> main
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2518,7 +2688,11 @@ func (x *GetOverrideByDoctorIDRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOverrideByDoctorIDRequest.ProtoReflect.Descriptor instead.
 func (*GetOverrideByDoctorIDRequest) Descriptor() ([]byte, []int) {
+<<<<<<< HEAD
 	return file_proto_clinic_data_proto_rawDescGZIP(), []int{38}
+=======
+	return file_proto_clinic_data_proto_rawDescGZIP(), []int{39}
+>>>>>>> main
 }
 
 func (x *GetOverrideByDoctorIDRequest) GetDoctorId() string {
@@ -2537,7 +2711,11 @@ type ListScheduleOverrideResponse struct {
 
 func (x *ListScheduleOverrideResponse) Reset() {
 	*x = ListScheduleOverrideResponse{}
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[39]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[40]
+>>>>>>> main
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2549,7 +2727,11 @@ func (x *ListScheduleOverrideResponse) String() string {
 func (*ListScheduleOverrideResponse) ProtoMessage() {}
 
 func (x *ListScheduleOverrideResponse) ProtoReflect() protoreflect.Message {
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[39]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[40]
+>>>>>>> main
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2562,7 +2744,11 @@ func (x *ListScheduleOverrideResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListScheduleOverrideResponse.ProtoReflect.Descriptor instead.
 func (*ListScheduleOverrideResponse) Descriptor() ([]byte, []int) {
+<<<<<<< HEAD
 	return file_proto_clinic_data_proto_rawDescGZIP(), []int{39}
+=======
+	return file_proto_clinic_data_proto_rawDescGZIP(), []int{40}
+>>>>>>> main
 }
 
 func (x *ListScheduleOverrideResponse) GetOverrides() []*ScheduleOverride {
@@ -2584,7 +2770,11 @@ type UpdateScheduleOverrideResponse struct {
 
 func (x *UpdateScheduleOverrideResponse) Reset() {
 	*x = UpdateScheduleOverrideResponse{}
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[40]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[41]
+>>>>>>> main
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2596,7 +2786,11 @@ func (x *UpdateScheduleOverrideResponse) String() string {
 func (*UpdateScheduleOverrideResponse) ProtoMessage() {}
 
 func (x *UpdateScheduleOverrideResponse) ProtoReflect() protoreflect.Message {
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[40]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[41]
+>>>>>>> main
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2609,7 +2803,11 @@ func (x *UpdateScheduleOverrideResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateScheduleOverrideResponse.ProtoReflect.Descriptor instead.
 func (*UpdateScheduleOverrideResponse) Descriptor() ([]byte, []int) {
+<<<<<<< HEAD
 	return file_proto_clinic_data_proto_rawDescGZIP(), []int{40}
+=======
+	return file_proto_clinic_data_proto_rawDescGZIP(), []int{41}
+>>>>>>> main
 }
 
 func (x *UpdateScheduleOverrideResponse) GetId() string {
@@ -2652,7 +2850,11 @@ type DeleteScheduleOverrideResponse struct {
 
 func (x *DeleteScheduleOverrideResponse) Reset() {
 	*x = DeleteScheduleOverrideResponse{}
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[41]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[42]
+>>>>>>> main
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2664,7 +2866,11 @@ func (x *DeleteScheduleOverrideResponse) String() string {
 func (*DeleteScheduleOverrideResponse) ProtoMessage() {}
 
 func (x *DeleteScheduleOverrideResponse) ProtoReflect() protoreflect.Message {
+<<<<<<< HEAD
 	mi := &file_proto_clinic_data_proto_msgTypes[41]
+=======
+	mi := &file_proto_clinic_data_proto_msgTypes[42]
+>>>>>>> main
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2677,7 +2883,11 @@ func (x *DeleteScheduleOverrideResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteScheduleOverrideResponse.ProtoReflect.Descriptor instead.
 func (*DeleteScheduleOverrideResponse) Descriptor() ([]byte, []int) {
+<<<<<<< HEAD
 	return file_proto_clinic_data_proto_rawDescGZIP(), []int{41}
+=======
+	return file_proto_clinic_data_proto_rawDescGZIP(), []int{42}
+>>>>>>> main
 }
 
 func (x *DeleteScheduleOverrideResponse) GetId() string {
@@ -2852,13 +3062,18 @@ const file_proto_clinic_data_proto_rawDesc = "" +
 	"\n" +
 	"start_time\x18\x05 \x01(\tR\tstartTime\x12\x19\n" +
 	"\bend_time\x18\x06 \x01(\tR\aendTime\x12\x16\n" +
+<<<<<<< HEAD
 	"\x06status\x18\a \x01(\tR\x06status\"\xc4\x01\n" +
+=======
+	"\x06status\x18\a \x01(\tR\x06status\"\xac\x01\n" +
+>>>>>>> main
 	"\x1aCreateScheduleFixedRequest\x12\x1b\n" +
 	"\tdoctor_id\x18\x01 \x01(\tR\bdoctorId\x12\x17\n" +
 	"\aroom_id\x18\x02 \x01(\tR\x06roomId\x12\x1e\n" +
 	"\vday_of_week\x18\x03 \x01(\x05R\tdayOfWeek\x12\x1d\n" +
 	"\n" +
 	"start_time\x18\x04 \x01(\tR\tstartTime\x12\x19\n" +
+<<<<<<< HEAD
 	"\bend_time\x18\x05 \x01(\tR\aendTime\x12\x16\n" +
 	"\x06status\x18\x06 \x01(\tR\x06status\"\xb7\x01\n" +
 	"\x1aUpdateScheduleFixedRequest\x12\x0e\n" +
@@ -2873,6 +3088,25 @@ const file_proto_clinic_data_proto_rawDesc = "" +
 	"\tdoctor_id\x18\x01 \x01(\tR\bdoctorId\"T\n" +
 	"\x19ListScheduleFixedResponse\x127\n" +
 	"\tschedules\x18\x01 \x03(\v2\x19.clinicdata.ScheduleFixedR\tschedules\"\xca\x01\n" +
+=======
+	"\bend_time\x18\x05 \x01(\tR\aendTime\"\x97\x01\n" +
+	"\x1aUpdateScheduleFixedRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\aroom_id\x18\x02 \x01(\tR\x06roomId\x12\x1d\n" +
+	"\n" +
+	"start_time\x18\x03 \x01(\tR\tstartTime\x12\x19\n" +
+	"\bend_time\x18\x04 \x01(\tR\aendTime\x12\x16\n" +
+	"\x06status\x18\x05 \x01(\tR\x06status\"@\n" +
+	"!GetFixedScheduleByDoctorIDRequest\x12\x1b\n" +
+	"\tdoctor_id\x18\x01 \x01(\tR\bdoctorId\"T\n" +
+	"\x19ListScheduleFixedResponse\x127\n" +
+	"\tschedules\x18\x01 \x03(\v2\x19.clinicdata.ScheduleFixedR\tschedules\"\x84\x01\n" +
+	"\x1bUpdateScheduleFixedResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
+	"\tdoctor_id\x18\x02 \x01(\tR\bdoctorId\x12\x1e\n" +
+	"\vday_of_week\x18\x03 \x01(\x05R\tdayOfWeek\x12\x18\n" +
+	"\amessage\x18\x04 \x01(\tR\amessage\"\xca\x01\n" +
+>>>>>>> main
 	"\x10ScheduleOverride\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
 	"\tdoctor_id\x18\x02 \x01(\tR\bdoctorId\x12\x17\n" +
@@ -2912,7 +3146,11 @@ const file_proto_clinic_data_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
 	"\tdoctor_id\x18\x02 \x01(\tR\bdoctorId\x12\x1e\n" +
 	"\vday_of_week\x18\x03 \x01(\x05R\tdayOfWeek\x12\x18\n" +
+<<<<<<< HEAD
 	"\amessage\x18\x04 \x01(\tR\amessage2\x93\x11\n" +
+=======
+	"\amessage\x18\x04 \x01(\tR\amessage2\x9f\x11\n" +
+>>>>>>> main
 	"\x11ClinicDataService\x12F\n" +
 	"\rCreatePatient\x12 .clinicdata.CreatePatientRequest\x1a\x13.clinicdata.Patient\x12H\n" +
 	"\x0eGetPatientByID\x12!.clinicdata.GetPatientByIDRequest\x1a\x13.clinicdata.Patient\x12E\n" +
@@ -2933,9 +3171,15 @@ const file_proto_clinic_data_proto_rawDesc = "" +
 	"CreateRoom\x12\x1d.clinicdata.CreateRoomRequest\x1a\x10.clinicdata.Room\x12?\n" +
 	"\vGetRoomByID\x12\x1e.clinicdata.GetRoomByIDRequest\x1a\x10.clinicdata.Room\x12?\n" +
 	"\vGetAllRooms\x12\x11.clinicdata.Empty\x1a\x1d.clinicdata.ListRoomsResponse\x12X\n" +
+<<<<<<< HEAD
 	"\x13CreateScheduleFixed\x12&.clinicdata.CreateScheduleFixedRequest\x1a\x19.clinicdata.ScheduleFixed\x12t\n" +
 	"\x1bGetFixedSchedulesByDoctorID\x12..clinicdata.GetFixedSchedulesByDoctorIDRequest\x1a%.clinicdata.ListScheduleFixedResponse\x12X\n" +
 	"\x13UpdateScheduleFixed\x12&.clinicdata.UpdateScheduleFixedRequest\x1a\x19.clinicdata.ScheduleFixed\x12a\n" +
+=======
+	"\x13CreateScheduleFixed\x12&.clinicdata.CreateScheduleFixedRequest\x1a\x19.clinicdata.ScheduleFixed\x12r\n" +
+	"\x1aGetFixedScheduleByDoctorID\x12-.clinicdata.GetFixedScheduleByDoctorIDRequest\x1a%.clinicdata.ListScheduleFixedResponse\x12f\n" +
+	"\x13UpdateScheduleFixed\x12&.clinicdata.UpdateScheduleFixedRequest\x1a'.clinicdata.UpdateScheduleFixedResponse\x12a\n" +
+>>>>>>> main
 	"\x16CreateScheduleOverride\x12).clinicdata.CreateScheduleOverrideRequest\x1a\x1c.clinicdata.ScheduleOverride\x12k\n" +
 	"\x15GetOverrideByDoctorID\x12(.clinicdata.GetOverrideByDoctorIDRequest\x1a(.clinicdata.ListScheduleOverrideResponse\x12o\n" +
 	"\x16UpdateScheduleOverride\x12).clinicdata.UpdateScheduleOverrideRequest\x1a*.clinicdata.UpdateScheduleOverrideResponse\x12o\n" +
@@ -2953,6 +3197,7 @@ func file_proto_clinic_data_proto_rawDescGZIP() []byte {
 	return file_proto_clinic_data_proto_rawDescData
 }
 
+<<<<<<< HEAD
 var file_proto_clinic_data_proto_msgTypes = make([]protoimpl.MessageInfo, 42)
 var file_proto_clinic_data_proto_goTypes = []any{
 	(*Empty)(nil),                              // 0: clinicdata.Empty
@@ -2997,6 +3242,53 @@ var file_proto_clinic_data_proto_goTypes = []any{
 	(*ListScheduleOverrideResponse)(nil),       // 39: clinicdata.ListScheduleOverrideResponse
 	(*UpdateScheduleOverrideResponse)(nil),     // 40: clinicdata.UpdateScheduleOverrideResponse
 	(*DeleteScheduleOverrideResponse)(nil),     // 41: clinicdata.DeleteScheduleOverrideResponse
+=======
+var file_proto_clinic_data_proto_msgTypes = make([]protoimpl.MessageInfo, 43)
+var file_proto_clinic_data_proto_goTypes = []any{
+	(*Empty)(nil),                             // 0: clinicdata.Empty
+	(*Patient)(nil),                           // 1: clinicdata.Patient
+	(*CreatePatientRequest)(nil),              // 2: clinicdata.CreatePatientRequest
+	(*UpdatePatientRequest)(nil),              // 3: clinicdata.UpdatePatientRequest
+	(*GetPatientByIDRequest)(nil),             // 4: clinicdata.GetPatientByIDRequest
+	(*DeletePatientRequest)(nil),              // 5: clinicdata.DeletePatientRequest
+	(*ListPatientsResponse)(nil),              // 6: clinicdata.ListPatientsResponse
+	(*DeletePatientResponse)(nil),             // 7: clinicdata.DeletePatientResponse
+	(*UpdatePatientResponse)(nil),             // 8: clinicdata.UpdatePatientResponse
+	(*Doctor)(nil),                            // 9: clinicdata.Doctor
+	(*CreateDoctorRequest)(nil),               // 10: clinicdata.CreateDoctorRequest
+	(*UpdateDoctorRequest)(nil),               // 11: clinicdata.UpdateDoctorRequest
+	(*GetDoctorByIDRequest)(nil),              // 12: clinicdata.GetDoctorByIDRequest
+	(*DeleteDoctorRequest)(nil),               // 13: clinicdata.DeleteDoctorRequest
+	(*ListDoctorsResponse)(nil),               // 14: clinicdata.ListDoctorsResponse
+	(*UpdateDoctorResponse)(nil),              // 15: clinicdata.UpdateDoctorResponse
+	(*DeleteDoctorResponse)(nil),              // 16: clinicdata.DeleteDoctorResponse
+	(*Specialization)(nil),                    // 17: clinicdata.Specialization
+	(*CreateSpecializationRequest)(nil),       // 18: clinicdata.CreateSpecializationRequest
+	(*UpdateSpecializationRequest)(nil),       // 19: clinicdata.UpdateSpecializationRequest
+	(*GetSpecializationByIDRequest)(nil),      // 20: clinicdata.GetSpecializationByIDRequest
+	(*DeleteSpecializationRequest)(nil),       // 21: clinicdata.DeleteSpecializationRequest
+	(*UpdateSpecializationResponse)(nil),      // 22: clinicdata.UpdateSpecializationResponse
+	(*DeleteSpecializationResponse)(nil),      // 23: clinicdata.DeleteSpecializationResponse
+	(*ListSpecializationsResponse)(nil),       // 24: clinicdata.ListSpecializationsResponse
+	(*Room)(nil),                              // 25: clinicdata.Room
+	(*CreateRoomRequest)(nil),                 // 26: clinicdata.CreateRoomRequest
+	(*GetRoomByIDRequest)(nil),                // 27: clinicdata.GetRoomByIDRequest
+	(*ListRoomsResponse)(nil),                 // 28: clinicdata.ListRoomsResponse
+	(*ScheduleFixed)(nil),                     // 29: clinicdata.ScheduleFixed
+	(*CreateScheduleFixedRequest)(nil),        // 30: clinicdata.CreateScheduleFixedRequest
+	(*UpdateScheduleFixedRequest)(nil),        // 31: clinicdata.UpdateScheduleFixedRequest
+	(*GetFixedScheduleByDoctorIDRequest)(nil), // 32: clinicdata.GetFixedScheduleByDoctorIDRequest
+	(*ListScheduleFixedResponse)(nil),         // 33: clinicdata.ListScheduleFixedResponse
+	(*UpdateScheduleFixedResponse)(nil),       // 34: clinicdata.UpdateScheduleFixedResponse
+	(*ScheduleOverride)(nil),                  // 35: clinicdata.ScheduleOverride
+	(*CreateScheduleOverrideRequest)(nil),     // 36: clinicdata.CreateScheduleOverrideRequest
+	(*UpdateScheduleOverrideRequest)(nil),     // 37: clinicdata.UpdateScheduleOverrideRequest
+	(*DeleteScheduleOverrideRequest)(nil),     // 38: clinicdata.DeleteScheduleOverrideRequest
+	(*GetOverrideByDoctorIDRequest)(nil),      // 39: clinicdata.GetOverrideByDoctorIDRequest
+	(*ListScheduleOverrideResponse)(nil),      // 40: clinicdata.ListScheduleOverrideResponse
+	(*UpdateScheduleOverrideResponse)(nil),    // 41: clinicdata.UpdateScheduleOverrideResponse
+	(*DeleteScheduleOverrideResponse)(nil),    // 42: clinicdata.DeleteScheduleOverrideResponse
+>>>>>>> main
 }
 var file_proto_clinic_data_proto_depIdxs = []int32{
 	1,  // 0: clinicdata.ListPatientsResponse.patients:type_name -> clinicdata.Patient
@@ -3004,7 +3296,11 @@ var file_proto_clinic_data_proto_depIdxs = []int32{
 	17, // 2: clinicdata.ListSpecializationsResponse.specializations:type_name -> clinicdata.Specialization
 	25, // 3: clinicdata.ListRoomsResponse.rooms:type_name -> clinicdata.Room
 	29, // 4: clinicdata.ListScheduleFixedResponse.schedules:type_name -> clinicdata.ScheduleFixed
+<<<<<<< HEAD
 	34, // 5: clinicdata.ListScheduleOverrideResponse.overrides:type_name -> clinicdata.ScheduleOverride
+=======
+	35, // 5: clinicdata.ListScheduleOverrideResponse.overrides:type_name -> clinicdata.ScheduleOverride
+>>>>>>> main
 	2,  // 6: clinicdata.ClinicDataService.CreatePatient:input_type -> clinicdata.CreatePatientRequest
 	4,  // 7: clinicdata.ClinicDataService.GetPatientByID:input_type -> clinicdata.GetPatientByIDRequest
 	0,  // 8: clinicdata.ClinicDataService.GetAllPatients:input_type -> clinicdata.Empty
@@ -3024,12 +3320,21 @@ var file_proto_clinic_data_proto_depIdxs = []int32{
 	27, // 22: clinicdata.ClinicDataService.GetRoomByID:input_type -> clinicdata.GetRoomByIDRequest
 	0,  // 23: clinicdata.ClinicDataService.GetAllRooms:input_type -> clinicdata.Empty
 	30, // 24: clinicdata.ClinicDataService.CreateScheduleFixed:input_type -> clinicdata.CreateScheduleFixedRequest
+<<<<<<< HEAD
 	32, // 25: clinicdata.ClinicDataService.GetFixedSchedulesByDoctorID:input_type -> clinicdata.GetFixedSchedulesByDoctorIDRequest
 	31, // 26: clinicdata.ClinicDataService.UpdateScheduleFixed:input_type -> clinicdata.UpdateScheduleFixedRequest
 	35, // 27: clinicdata.ClinicDataService.CreateScheduleOverride:input_type -> clinicdata.CreateScheduleOverrideRequest
 	38, // 28: clinicdata.ClinicDataService.GetOverrideByDoctorID:input_type -> clinicdata.GetOverrideByDoctorIDRequest
 	36, // 29: clinicdata.ClinicDataService.UpdateScheduleOverride:input_type -> clinicdata.UpdateScheduleOverrideRequest
 	37, // 30: clinicdata.ClinicDataService.DeleteScheduleOverride:input_type -> clinicdata.DeleteScheduleOverrideRequest
+=======
+	32, // 25: clinicdata.ClinicDataService.GetFixedScheduleByDoctorID:input_type -> clinicdata.GetFixedScheduleByDoctorIDRequest
+	31, // 26: clinicdata.ClinicDataService.UpdateScheduleFixed:input_type -> clinicdata.UpdateScheduleFixedRequest
+	36, // 27: clinicdata.ClinicDataService.CreateScheduleOverride:input_type -> clinicdata.CreateScheduleOverrideRequest
+	39, // 28: clinicdata.ClinicDataService.GetOverrideByDoctorID:input_type -> clinicdata.GetOverrideByDoctorIDRequest
+	37, // 29: clinicdata.ClinicDataService.UpdateScheduleOverride:input_type -> clinicdata.UpdateScheduleOverrideRequest
+	38, // 30: clinicdata.ClinicDataService.DeleteScheduleOverride:input_type -> clinicdata.DeleteScheduleOverrideRequest
+>>>>>>> main
 	1,  // 31: clinicdata.ClinicDataService.CreatePatient:output_type -> clinicdata.Patient
 	1,  // 32: clinicdata.ClinicDataService.GetPatientByID:output_type -> clinicdata.Patient
 	6,  // 33: clinicdata.ClinicDataService.GetAllPatients:output_type -> clinicdata.ListPatientsResponse
@@ -3049,12 +3354,21 @@ var file_proto_clinic_data_proto_depIdxs = []int32{
 	25, // 47: clinicdata.ClinicDataService.GetRoomByID:output_type -> clinicdata.Room
 	28, // 48: clinicdata.ClinicDataService.GetAllRooms:output_type -> clinicdata.ListRoomsResponse
 	29, // 49: clinicdata.ClinicDataService.CreateScheduleFixed:output_type -> clinicdata.ScheduleFixed
+<<<<<<< HEAD
 	33, // 50: clinicdata.ClinicDataService.GetFixedSchedulesByDoctorID:output_type -> clinicdata.ListScheduleFixedResponse
 	29, // 51: clinicdata.ClinicDataService.UpdateScheduleFixed:output_type -> clinicdata.ScheduleFixed
 	34, // 52: clinicdata.ClinicDataService.CreateScheduleOverride:output_type -> clinicdata.ScheduleOverride
 	39, // 53: clinicdata.ClinicDataService.GetOverrideByDoctorID:output_type -> clinicdata.ListScheduleOverrideResponse
 	40, // 54: clinicdata.ClinicDataService.UpdateScheduleOverride:output_type -> clinicdata.UpdateScheduleOverrideResponse
 	41, // 55: clinicdata.ClinicDataService.DeleteScheduleOverride:output_type -> clinicdata.DeleteScheduleOverrideResponse
+=======
+	33, // 50: clinicdata.ClinicDataService.GetFixedScheduleByDoctorID:output_type -> clinicdata.ListScheduleFixedResponse
+	34, // 51: clinicdata.ClinicDataService.UpdateScheduleFixed:output_type -> clinicdata.UpdateScheduleFixedResponse
+	35, // 52: clinicdata.ClinicDataService.CreateScheduleOverride:output_type -> clinicdata.ScheduleOverride
+	40, // 53: clinicdata.ClinicDataService.GetOverrideByDoctorID:output_type -> clinicdata.ListScheduleOverrideResponse
+	41, // 54: clinicdata.ClinicDataService.UpdateScheduleOverride:output_type -> clinicdata.UpdateScheduleOverrideResponse
+	42, // 55: clinicdata.ClinicDataService.DeleteScheduleOverride:output_type -> clinicdata.DeleteScheduleOverrideResponse
+>>>>>>> main
 	31, // [31:56] is the sub-list for method output_type
 	6,  // [6:31] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name
@@ -3073,7 +3387,11 @@ func file_proto_clinic_data_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_clinic_data_proto_rawDesc), len(file_proto_clinic_data_proto_rawDesc)),
 			NumEnums:      0,
+<<<<<<< HEAD
 			NumMessages:   42,
+=======
+			NumMessages:   43,
+>>>>>>> main
 			NumExtensions: 0,
 			NumServices:   1,
 		},

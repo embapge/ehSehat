@@ -4,6 +4,7 @@ import "time"
 
 // Patient represents the patient entity in the domain layer
 type Patient struct {
+<<<<<<< HEAD
 	ID          string
 	UserID      *string
 	Name        string
@@ -13,12 +14,25 @@ type Patient struct {
 	PhoneNumber *string
 	Address     *string
 
+=======
+	ID           string
+	UserID       *string
+	Name         string
+	Email        string
+	BirthDate    string
+	Gender       string
+	PhoneNumber  *string
+	Address      *string
+>>>>>>> main
 	CreatedBy    *string
 	CreatedName  string
 	CreatedEmail string
 	CreatedRole  string
 	CreatedAt    time.Time
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
 	UpdatedBy    *string
 	UpdatedName  string
 	UpdatedEmail string

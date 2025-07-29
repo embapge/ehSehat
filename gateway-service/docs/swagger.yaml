@@ -1,0 +1,629 @@
+basePath: /
+definitions:
+  http.AuthResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      token:
+        type: string
+    type: object
+  http.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  http.RegisterRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        minLength: 8
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  main.AuthResponse:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      id:
+        example: uuid-string
+        type: string
+      name:
+        example: John Doe
+        type: string
+      token:
+        example: jwt-token-string
+        type: string
+    type: object
+  main.CreatePaymentRequest:
+    properties:
+      amount:
+        type: number
+    type: object
+  main.CreateProductRequest:
+    properties:
+      name:
+        type: string
+      price:
+        type: number
+      stock:
+        type: integer
+    type: object
+  main.CreateTransactionRequest:
+    properties:
+      product_id:
+        type: string
+      quantity:
+        type: integer
+    type: object
+  main.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  main.LoginRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      password:
+        example: secret
+        type: string
+    type: object
+  main.PaymentResponse:
+    properties:
+      amount:
+        type: number
+      created_at:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  main.ProductResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      stock:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  main.RegisterRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      name:
+        example: John Doe
+        type: string
+      password:
+        example: secret
+        type: string
+    type: object
+  main.TransactionResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      payment_id:
+        type: string
+      product_id:
+        type: string
+      quantity:
+        type: integer
+      status:
+        type: string
+      total:
+        type: number
+      updated_at:
+        type: string
+    type: object
+  main.UpdateProductRequest:
+    properties:
+      name:
+        type: string
+      price:
+        type: number
+      stock:
+        type: integer
+    type: object
+host: 34.101.116.9:8000
+info:
+  contact: {}
+  description: API Gateway for Shopping and Payment Services
+  title: Gateway API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login user via auth-service
+      parameters:
+      - description: Login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/main.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.AuthResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: Login via Auth Service
+      tags:
+      - auth
+  /payments:
+    get:
+      description: Retrieve all payments via payment-service
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.PaymentResponse'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get all payments
+      tags:
+      - payments
+    post:
+      consumes:
+      - application/json
+      description: Create payment via payment-service
+      parameters:
+      - description: Create Payment
+        in: body
+        name: payment
+        required: true
+        schema:
+          $ref: '#/definitions/main.CreatePaymentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.PaymentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create payment
+      tags:
+      - payments
+  /payments/{id}:
+    delete:
+      description: Delete payment via payment-service
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete payment by ID
+      tags:
+      - payments
+    get:
+      description: Retrieve payment by ID via payment-service
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.PaymentResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get payment by ID
+      tags:
+      - payments
+  /products:
+    get:
+      description: Get all products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.ProductResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get all products
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      description: Create a new product with the input payload
+      parameters:
+      - description: Create Product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/main.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new product
+      tags:
+      - products
+  /products/{id}:
+    delete:
+      description: Delete a product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a product
+      tags:
+      - products
+    get:
+      description: Get product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get product by ID
+      tags:
+      - products
+    put:
+      consumes:
+      - application/json
+      description: Update a product with the input payload
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update Product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/main.UpdateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update a product
+      tags:
+      - products
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register new user via auth-service
+      parameters:
+      - description: User registration data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/main.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: Register via Auth Service
+      tags:
+      - auth
+  /transactions:
+    get:
+      description: Get all transactions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.TransactionResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get all transactions
+      tags:
+      - transactions
+    post:
+      consumes:
+      - application/json
+      description: Create a new transaction and payment
+      parameters:
+      - description: Create Transaction
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/main.CreateTransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.TransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new transaction
+      tags:
+      - transactions
+  /transactions/{id}:
+    delete:
+      description: Delete a transaction by ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a transaction
+      tags:
+      - transactions
+    get:
+      description: Get transaction by ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.TransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get transaction by ID
+      tags:
+      - transactions
+    put:
+      consumes:
+      - application/json
+      description: Update a transaction with the input payload
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update Transaction
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/main.CreateTransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.TransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update a transaction
+      tags:
+      - transactions
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
