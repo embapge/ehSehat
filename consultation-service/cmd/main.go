@@ -4,8 +4,13 @@ import (
 	"ehSehat/consultation-service/config"
 	"ehSehat/consultation-service/internal/consultation/app"
 	grpc2 "ehSehat/consultation-service/internal/consultation/delivery/grpc"
+	consultationPb "ehSehat/consultation-service/internal/consultation/delivery/grpc/pb"
+	"ehSehat/consultation-service/internal/consultation/domain"
 	"ehSehat/consultation-service/internal/consultation/infra"
-	consultationPb "ehSehat/proto/consultation"
+	paymentApp "ehSehat/consultation-service/internal/payment/app"
+	grpc3 "ehSehat/consultation-service/internal/payment/delivery/grpc"
+	paymentPb "ehSehat/consultation-service/internal/payment/delivery/grpc/pb"
+	paymentInfra "ehSehat/consultation-service/internal/payment/infra"
 	"log"
 	"net"
 	"os"
@@ -25,12 +30,19 @@ func main() {
 		log.Fatal("gRPC port is empty")
 	}
 
-	db := config.MongoDB()
+	mongo := config.MongoDB()
+	mySQL := config.MySQLDB()
 
-	consultationCollection := config.GetCollection(db, "consultations")
+	consultationCollection := config.GetCollection(mongo, "consultations")
 	consultationRepo := infra.NewMongoConsultation(consultationCollection)
 	consultationApp := app.NewConsultationApp(consultationRepo)
 	consultationHandler := grpc2.NewConsultationHandler(consultationApp)
+
+	paymentRepo := paymentInfra.NewMySQLPayment(mySQL)
+	gateway := paymentInfra.NewXendit()
+	var consultationService domain.ConsultationService = consultationApp
+	appPayment := paymentApp.NewPaymentApp(paymentRepo, consultationService, gateway)
+	paymentHandler := grpc3.NewPaymentHandler(appPayment)
 
 	go func() {
 		lis, err := net.Listen("tcp", ":"+grpcPort)
@@ -40,6 +52,7 @@ func main() {
 
 		s := grpc.NewServer()
 
+		paymentPb.RegisterPaymentServiceServer(s, paymentHandler)
 		consultationPb.RegisterConsultationServiceServer(s, consultationHandler)
 		log.Println("gRPC Consultation Service running at:" + grpcPort)
 		if err := s.Serve(lis); err != nil {
@@ -47,6 +60,5 @@ func main() {
 		}
 	}()
 
-	// Block main goroutine - ga langsung exit
 	select {}
 }

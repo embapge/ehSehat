@@ -2,9 +2,14 @@ package grpc
 
 import (
 	"context"
+	consultationPb "ehSehat/consultation-service/internal/consultation/delivery/grpc/pb"
 	"ehSehat/consultation-service/internal/consultation/domain"
-	consultationPb "ehSehat/proto/consultation"
+	"ehSehat/libs/utils"
+	"ehSehat/libs/utils/grpcmetadata"
+	"strconv"
 	"time"
+
+	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 type consultationHandler struct {
@@ -16,48 +21,68 @@ func NewConsultationHandler(app domain.ConsultationService) *consultationHandler
 	return &consultationHandler{app: app}
 }
 
-// My proto file
-// message Prescription {
-//   string name = 1; // name of the medicine
-//   string dose = 2; // dosage instructions
-// }
-
-// message ConsultationRequest {
-//   string user_id = 1; // unique identifier for the consultation
-//   string patient_id = 2; // from master-service
-//   string patient_name = 3; // snapshot, optional
-//   string doctor_id = 4; // from master-service
-//   string doctor_name = 5; // snapshot, optional
-//   string room_id = 6; // from master-service
-//   string room_name = 7; // snapshot, optional
-//   string symptoms = 9;
-//   repeated Prescription prescription = 8; // list of prescriptions
-//   string diagnosis = 10;
-//   string date = 11; // date of the consultation
-// }
-
-// message ConsultationResponse {
-//     string id = 1; // unique identifier for the consultation
-//     string user_id = 2; // unique identifier for the consultation
-//     string patient_id = 3; // from master-service
-//     string patient_name = 4; // snapshot, optional
-//     string doctor_id = 5; // from master-service
-//     string doctor_name = 6; // snapshot, optional
-//     string room_id = 7; // from master-service
-//     string room_name = 8; // snapshot, optional
-//     string symptoms = 9;
-//     repeated Prescription prescription = 10; // list of prescriptions
-//     string diagnosis = 11;
-//     string date = 12;
-//     google.protobuf.Timestamp created_at = 13;
-//     google.protobuf.Timestamp updated_at = 14;
-// }
-
-// message ConsultationIDRequest {
-//   string id = 1; // unique identifier for the consultation
-// }
-
 func (h *consultationHandler) CreateConsultation(ctx context.Context, req *consultationPb.ConsultationRequest) (*consultationPb.ConsultationResponse, error) {
+	if req == nil {
+		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Request cannot be nil"))
+	}
+	if req.Patient == nil || req.Patient.Id == "" || req.Patient.Name == "" {
+		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Patient fields are required"))
+	}
+	if req.Room == nil || req.Room.Id == "" || req.Room.Name == "" {
+		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Room fields are required"))
+	}
+	if req.Doctor == nil || req.Doctor.Id == "" || req.Doctor.Name == "" {
+		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Doctor fields are required"))
+	}
+	if req.Symptoms == "" {
+		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Symptoms are required"))
+	}
+	if req.Diagnosis == "" {
+		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Diagnosis is required"))
+	}
+	if req.Date == "" {
+		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Date is required"))
+	}
+	if len(req.Prescription) == 0 {
+		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Prescription is required"))
+	}
+
+	md, _ := grpcmetadata.GetMetadataFromContext(ctx)
+
+	userSnapshot := map[string]interface{}{
+		"ID":    "",
+		"Name":  "",
+		"Email": "",
+		"Role":  "",
+	}
+
+	if v, ok := md["ts-user-id"]; ok && len(v) > 0 {
+		userSnapshot["ID"] = v[0]
+	}
+	if v, ok := md["ts-user-name"]; ok && len(v) > 0 {
+		userSnapshot["Name"] = v[0]
+	}
+	if v, ok := md["ts-user-email"]; ok && len(v) > 0 {
+		userSnapshot["Email"] = v[0]
+	}
+	if v, ok := md["ts-user-role"]; ok && len(v) > 0 {
+		userSnapshot["Role"] = v[0]
+	}
+
+	createdBySnapshot := domain.CreatedBySnapshot{
+		ID:    userSnapshot["ID"].(string),
+		Name:  userSnapshot["Name"].(string),
+		Email: userSnapshot["Email"].(string),
+		Role:  userSnapshot["Role"].(string),
+	}
+
+	updatedBySnapshot := domain.UpdatedBySnapshot{
+		ID:    userSnapshot["ID"].(string),
+		Name:  userSnapshot["Name"].(string),
+		Email: userSnapshot["Email"].(string),
+		Role:  userSnapshot["Role"].(string),
+	}
+
 	dateFormatted, _ := time.Parse("2006-01-02", req.Date)
 
 	prescriptionFormatted := make([]domain.Prescription, len(req.Prescription))
@@ -68,18 +93,42 @@ func (h *consultationHandler) CreateConsultation(ctx context.Context, req *consu
 		}
 	}
 
+	ageInt32 := int32(0)
+	if req.Patient.Age != "" {
+		if ageInt, err := strconv.Atoi(req.Patient.Age); err == nil {
+			ageInt32 = int32(ageInt)
+		}
+	}
+
+	patientSnapshot := domain.PatientSnapshot{
+		ID:   req.Patient.Id,
+		Name: req.Patient.Name,
+		Age:  ageInt32,
+	}
+
+	doctorSnapshot := domain.DoctorSnapshot{
+		ID:             req.Doctor.Id,
+		Name:           req.Doctor.Name,
+		Specialization: req.Doctor.Specialization,
+	}
+
+	roomSnapshot := domain.RoomSnapshot{
+		ID:   req.Room.Id,
+		Name: req.Room.Name,
+	}
+
 	consultation := &domain.Consultation{
-		UserID:       req.UserId,
-		PatientID:    req.PatientId,
-		PatientName:  req.PatientName,
-		DoctorID:     req.DoctorId,
-		DoctorName:   req.DoctorName,
-		RoomID:       req.RoomId,
-		RoomName:     req.RoomName,
-		Symptoms:     req.Symptoms,
-		Prescription: prescriptionFormatted,
-		Diagnosis:    req.Diagnosis,
-		Date:         dateFormatted,
+		QueueID:       req.QueueId,
+		AppointmentID: req.AppointmentId,
+		CreatedBy:     createdBySnapshot,
+		UpdatedBy:     updatedBySnapshot,
+		Patient:       patientSnapshot,
+		Doctor:        doctorSnapshot,
+		Room:          roomSnapshot,
+		Symptoms:      req.Symptoms,
+		Prescription:  prescriptionFormatted,
+		Diagnosis:     req.Diagnosis,
+		Date:          dateFormatted,
 	}
 
 	err := h.app.CreateConsultation(ctx, consultation)
@@ -87,19 +136,43 @@ func (h *consultationHandler) CreateConsultation(ctx context.Context, req *consu
 		return nil, err
 	}
 
+	var resQueID *wrapperspb.StringValue
+	if consultation.QueueID != "" {
+		resQueID = wrapperspb.String(consultation.QueueID)
+	} else {
+		resQueID = nil
+	}
+
+	var resAppID *wrapperspb.StringValue
+	if consultation.AppointmentID != "" {
+		resAppID = wrapperspb.String(consultation.AppointmentID)
+	} else {
+		resAppID = nil
+	}
+
 	return &consultationPb.ConsultationResponse{
-		Id:           consultation.ID,
-		UserId:       consultation.UserID,
-		PatientId:    consultation.PatientID,
-		PatientName:  consultation.PatientName,
-		DoctorId:     consultation.DoctorID,
-		DoctorName:   consultation.DoctorName,
-		RoomId:       consultation.RoomID,
-		RoomName:     consultation.RoomName,
+		Id:            consultation.ID,
+		QueueId:       resQueID,
+		AppointmentId: resAppID,
+		Patient: &consultationPb.PatientSnapshot{
+			Id:   patientSnapshot.ID,
+			Name: patientSnapshot.Name,
+			Age:  strconv.Itoa(int(patientSnapshot.Age)),
+		},
+		Doctor: &consultationPb.DoctorSnapshot{
+			Id:             doctorSnapshot.ID,
+			Name:           doctorSnapshot.Name,
+			Specialization: doctorSnapshot.Specialization,
+		},
+		Room: &consultationPb.RoomSnapshot{
+			Id:   roomSnapshot.ID,
+			Name: roomSnapshot.Name,
+		},
 		Symptoms:     consultation.Symptoms,
 		Prescription: req.Prescription,
 		Diagnosis:    consultation.Diagnosis,
 		Date:         consultation.Date.Format("2006-01-02"),
+		Status:       consultation.Status,
 	}, nil
 }
 
@@ -117,18 +190,105 @@ func (h *consultationHandler) FindByIDConsultation(ctx context.Context, req *con
 		}
 	}
 
+	userSnapshot := &consultationPb.UserSnapshot{
+		Id:    consultation.User.ID,
+		Name:  consultation.User.Name,
+		Email: consultation.User.Email,
+		Role:  consultation.User.Role,
+	}
+
+	patientSnap := &consultationPb.PatientSnapshot{
+		Id:   consultation.Patient.ID,
+		Name: consultation.Patient.Name,
+		Age:  strconv.Itoa(int(consultation.Patient.Age)),
+	}
+
+	doctorSnap := &consultationPb.DoctorSnapshot{
+		Id:             consultation.Doctor.ID,
+		Name:           consultation.Doctor.Name,
+		Specialization: consultation.Doctor.Specialization,
+	}
+
+	roomSnap := &consultationPb.RoomSnapshot{
+		Id:   consultation.Room.ID,
+		Name: consultation.Room.Name,
+	}
+
 	return &consultationPb.ConsultationResponse{
 		Id:           consultation.ID,
-		UserId:       consultation.UserID,
-		PatientId:    consultation.PatientID,
-		PatientName:  consultation.PatientName,
-		DoctorId:     consultation.DoctorID,
-		DoctorName:   consultation.DoctorName,
-		RoomId:       consultation.RoomID,
-		RoomName:     consultation.RoomName,
+		User:         userSnapshot,
+		Patient:      patientSnap,
+		Doctor:       doctorSnap,
+		Room:         roomSnap,
 		Symptoms:     consultation.Symptoms,
 		Prescription: prescriptionFormatted,
 		Diagnosis:    consultation.Diagnosis,
 		Date:         consultation.Date.Format("2006-01-02"),
+	}, nil
+}
+
+func (h *consultationHandler) UpdateConsultation(ctx context.Context, req *consultationPb.ConsultationRequest) (*consultationPb.ConsultationResponse, error) {
+	if req.Id == "" {
+		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Consultation ID is required"))
+	}
+
+	consultation, err := h.app.FindByIDConsultation(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	md, _ := grpcmetadata.GetMetadataFromContext(ctx)
+
+	userSnapshot := map[string]interface{}{
+		"ID":    "",
+		"Name":  "",
+		"Email": "",
+		"Role":  "",
+	}
+
+	if v, ok := md["ts-user-id"]; ok && len(v) > 0 {
+		userSnapshot["ID"] = v[0]
+	}
+	if v, ok := md["ts-user-name"]; ok && len(v) > 0 {
+		userSnapshot["Name"] = v[0]
+	}
+	if v, ok := md["ts-user-email"]; ok && len(v) > 0 {
+		userSnapshot["Email"] = v[0]
+	}
+	if v, ok := md["ts-user-role"]; ok && len(v) > 0 {
+		userSnapshot["Role"] = v[0]
+	}
+
+	updatedBySnapshot := domain.UpdatedBySnapshot{
+		ID:    userSnapshot["ID"].(string),
+		Name:  userSnapshot["Name"].(string),
+		Email: userSnapshot["Email"].(string),
+		Role:  userSnapshot["Role"].(string),
+	}
+
+	consultation.Symptoms = req.Symptoms
+	consultation.Diagnosis = req.Diagnosis
+	consultation.UpdatedBy = updatedBySnapshot
+	consultation.UpdatedAt = time.Now()
+
+	err = h.app.UpdateConsultation(ctx, consultation)
+	if err != nil {
+		return nil, err
+	}
+
+	var resQueID *wrapperspb.StringValue
+	if consultation.QueueID != "" {
+		resQueID = wrapperspb.String(consultation.QueueID)
+	}
+
+	var resAppID *wrapperspb.StringValue
+	if consultation.AppointmentID != "" {
+		resAppID = wrapperspb.String(consultation.AppointmentID)
+	}
+
+	return &consultationPb.ConsultationResponse{
+		Id:            consultation.ID,
+		QueueId:       resQueID,
+		AppointmentId: resAppID,
 	}, nil
 }
