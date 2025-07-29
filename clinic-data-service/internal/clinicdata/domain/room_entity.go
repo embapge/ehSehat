@@ -4,25 +4,16 @@ import "time"
 
 // Room represents the room entity in the domain layer
 type Room struct {
-<<<<<<< HEAD
 	ID       string
 	Name     string
 	IsActive bool
 
-=======
-	ID           string
-	Name         string
-	IsActive     bool
->>>>>>> main
 	CreatedBy    *string
 	CreatedName  string
 	CreatedEmail string
 	CreatedRole  string
 	CreatedAt    time.Time
-<<<<<<< HEAD
 
-=======
->>>>>>> main
 	UpdatedBy    *string
 	UpdatedName  string
 	UpdatedEmail string
