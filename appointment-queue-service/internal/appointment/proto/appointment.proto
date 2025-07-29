@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package appointment;
 
-option go_package = "appointment-queue-service/internal/appointment/proto/pb";
+option go_package = "appointment/pb;pb";
 
 // ===== MESSAGE =====
 

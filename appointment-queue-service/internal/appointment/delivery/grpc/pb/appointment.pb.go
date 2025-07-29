@@ -649,7 +649,7 @@ const file_appointment_proto_rawDesc = "" +
 	"\x17GetAppointmentsByUserID\x12$.appointment.UserAppointmentsRequest\x1a$.appointment.AppointmentListResponse\x12\\\n" +
 	"\x11CreateAppointment\x12%.appointment.CreateAppointmentRequest\x1a .appointment.AppointmentResponse\x12\\\n" +
 	"\x11UpdateAppointment\x12%.appointment.UpdateAppointmentRequest\x1a .appointment.AppointmentResponse\x12S\n" +
-	"\x15MarkAppointmentAsPaid\x12\x1e.appointment.MarkAsPaidRequest\x1a\x1a.appointment.EmptyResponseB9Z7appointment-queue-service/internal/appointment/proto/pbb\x06proto3"
+	"\x15MarkAppointmentAsPaid\x12\x1e.appointment.MarkAsPaidRequest\x1a\x1a.appointment.EmptyResponseB\x13Z\x11appointment/pb;pbb\x06proto3"
 
 var (
 	file_appointment_proto_rawDescOnce sync.Once
