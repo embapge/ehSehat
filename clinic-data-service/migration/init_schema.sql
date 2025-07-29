@@ -74,3 +74,23 @@ CREATE TABLE IF NOT EXISTS doctors (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- =========================
+-- CREATE TABLE: rooms
+-- =========================
+
+CREATE TABLE IF NOT EXISTS rooms (
+  id UUID PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  is_active BOOLEAN DEFAULT TRUE,
+
+  created_by UUID,
+  created_name VARCHAR(100),
+  created_email VARCHAR(100),
+  created_role VARCHAR(20),
+  updated_by UUID,
+  updated_name VARCHAR(100),
+  updated_email VARCHAR(100),
+  updated_role VARCHAR(20),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
