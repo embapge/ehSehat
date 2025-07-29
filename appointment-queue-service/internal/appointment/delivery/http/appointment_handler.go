@@ -18,7 +18,7 @@ func NewAppointmentHandler(router *httprouter.Router, app app.AppointmentApp) {
 	handler := &AppointmentHandler{App: app}
 
 	router.GET("/appointments/:id", handler.FindByID)
-	router.GET("/appointments/user/:user_id", handler.FindByUserID)
+	router.GET("/appointments-by-user/:user_id", handler.FindByUserID)
 	router.POST("/appointments", handler.Create)
 	router.PUT("/appointments/:id", handler.Update)
 	router.PUT("/appointments/:id/mark-paid", handler.MarkAsPaid)
