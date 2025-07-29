@@ -12,11 +12,13 @@ type Patient struct {
 	Gender       string
 	PhoneNumber  *string
 	Address      *string
+
 	CreatedBy    *string
 	CreatedName  string
 	CreatedEmail string
 	CreatedRole  string
 	CreatedAt    time.Time
+	
 	UpdatedBy    *string
 	UpdatedName  string
 	UpdatedEmail string
