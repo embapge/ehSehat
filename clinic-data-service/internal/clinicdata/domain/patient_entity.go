@@ -4,21 +4,21 @@ import "time"
 
 // Patient represents the patient entity in the domain layer
 type Patient struct {
-	ID           string
-	UserID       *string
-	Name         string
-	Email        string
-	BirthDate    string
-	Gender       string
-	PhoneNumber  *string
-	Address      *string
+	ID          string
+	UserID      *string
+	Name        string
+	Email       string
+	BirthDate   string
+	Gender      string
+	PhoneNumber *string
+	Address     *string
 
 	CreatedBy    *string
 	CreatedName  string
 	CreatedEmail string
 	CreatedRole  string
 	CreatedAt    time.Time
-	
+
 	UpdatedBy    *string
 	UpdatedName  string
 	UpdatedEmail string
