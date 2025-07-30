@@ -4,6 +4,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 
 	"google.golang.org/grpc"
 
@@ -32,6 +33,16 @@ func main() {
 	// DB
 	db := config.DBInit()
 
+	grpcPort := os.Getenv("GRPC_PORT")
+	if grpcPort == "" {
+		log.Fatal("gRPC port is empty")
+	}
+
+	queuePort := os.Getenv("QUEUE_PORT")
+	if queuePort == "" {
+		log.Fatal("Queue port is empty")
+	}
+
 	// --- Queue ---
 	qRepo := queueRepo.NewQueueRepository(db)
 	qService := queueRepo.NewQueueService(qRepo)
@@ -59,13 +70,13 @@ func main() {
 		}
 		grpcServer := grpc.NewServer()
 		pb.RegisterAppointmentServiceServer(grpcServer, appointmentGRPC.NewAppointmentHandler(aApp))
-		log.Printf("🚀 gRPC server running at :%s", grpcPort)
+		log.Println("🚀 gRPC server running at :" + grpcPort)
 		if err := grpcServer.Serve(lis); err != nil {
 			log.Fatalf("❌ Failed to serve gRPC: %v", err)
 		}
 	}()
 
 	// --- Start HTTP Server ---
-	log.Printf("✅ HTTP server running at :%s", httpPort)
-	log.Fatal(http.ListenAndServe(":"+httpPort, router))
+	log.Println("✅ HTTP server running at :" + queuePort)
+	log.Fatal(http.ListenAndServe(":"+queuePort, router))
 }

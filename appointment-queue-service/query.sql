@@ -1,3 +1,7 @@
+CREATE DATABASE teman_sehat_appointment_queues;
+
+USE teman_sehat_appointment_queues;
+
 CREATE TABLE appointments (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
