@@ -8,6 +8,7 @@ import (
 )
 
 type AppointmentRepository interface {
+	FindAll(ctx context.Context) ([]*AppointmentModel, error)
 	FindByID(ctx context.Context, id uint) (*AppointmentModel, error)
 	FindByUserID(ctx context.Context, userID uint) ([]*AppointmentModel, error)
 	Create(ctx context.Context, appointment *AppointmentModel) error
@@ -21,6 +22,14 @@ type appointmentRepository struct {
 
 func NewAppointmentRepository(db *gorm.DB) AppointmentRepository {
 	return &appointmentRepository{db: db}
+}
+
+func (r *appointmentRepository) FindAll(ctx context.Context) ([]*AppointmentModel, error) {
+	var appointments []*AppointmentModel
+	if err := r.db.WithContext(ctx).Find(&appointments).Error; err != nil {
+		return nil, err
+	}
+	return appointments, nil
 }
 
 func (r *appointmentRepository) FindByID(ctx context.Context, id uint) (*AppointmentModel, error) {
@@ -44,7 +53,6 @@ func (r *appointmentRepository) FindByUserID(ctx context.Context, userID uint) (
 func (r *appointmentRepository) Create(ctx context.Context, a *AppointmentModel) error {
 	now := time.Now()
 	a.CreatedAt = now
-	a.UpdatedAt = now
 	if err := r.db.WithContext(ctx).Create(a).Error; err != nil {
 		return err
 	}

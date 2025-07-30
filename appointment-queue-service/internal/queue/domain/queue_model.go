@@ -18,4 +18,9 @@ type QueueModel struct {
 	StartFrom            time.Time `json:"start_from"`     // estimasi masuk ruangan
 	Status               string    `json:"status"`         // active, fail, done
 	CreatedAt            time.Time `json:"created_at"`
+	UpdatedAt            time.Time `json:"updated_at"`
+}
+
+func (QueueModel) TableName() string {
+	return "queues"
 }
