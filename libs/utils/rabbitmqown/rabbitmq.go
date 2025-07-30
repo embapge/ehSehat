@@ -1,4 +1,4 @@
-package config
+package rabbitmqown
 
 import (
 	"fmt"
@@ -9,13 +9,13 @@ import (
 
 var MQConn *amqp.Connection
 
-// InitRabbitMQ: inisialisasi koneksi dan channel
 func InitRabbitMQ() (*amqp.Connection, *amqp.Channel, error) {
 	host := os.Getenv("RABBITMQ_HOST")
 	port := os.Getenv("RABBITMQ_PORT")
 	user := os.Getenv("RABBITMQ_USER")
 	pass := os.Getenv("RABBITMQ_PASS")
 
+	// Format DSN
 	dsn := fmt.Sprintf("amqp://%s:%s@%s:%s/", user, pass, host, port)
 	conn, err := amqp.Dial(dsn)
 	if err != nil {

@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	"ehSehat/libs/utils"
@@ -55,7 +56,7 @@ func (r *queueRepository) Create(ctx context.Context, q *QueueModel) error {
 }
 
 func (r *queueRepository) Update(ctx context.Context, q *QueueModel) error {
-	q.CreatedAt = time.Now() // jika yang dimaksud updatedAt sebaiknya buat field khusus
+	q.UpdatedAt = time.Now()
 	if err := r.db.WithContext(ctx).Save(q).Error; err != nil {
 		return err
 	}
@@ -65,15 +66,19 @@ func (r *queueRepository) Update(ctx context.Context, q *QueueModel) error {
 func (r *queueRepository) GetNextQueueNumber(ctx context.Context, doctorID uint) (int, error) {
 	start, end := utils.TodayStartEnd()
 
-	var maxQueueNumber int
+	var max sql.NullInt64
 	err := r.db.WithContext(ctx).
 		Model(&QueueModel{}).
 		Select("MAX(queue_number)").
 		Where("doctor_id = ? AND created_at BETWEEN ? AND ?", doctorID, start, end).
-		Scan(&maxQueueNumber).Error
+		Scan(&max).Error
 	if err != nil {
 		return 0, err
 	}
 
-	return maxQueueNumber + 1, nil
+	if !max.Valid {
+		return 1, nil
+	}
+
+	return int(max.Int64) + 1, nil
 }

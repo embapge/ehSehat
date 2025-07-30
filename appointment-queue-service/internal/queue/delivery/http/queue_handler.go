@@ -18,14 +18,14 @@ type QueueHandler struct {
 func NewQueueHandler(router *httprouter.Router, app app.QueueApp) {
 	handler := &QueueHandler{App: app}
 
-	router.GET("/queues/:id", handler.FindByID)
-	router.GET("/queues/today/:doctor_id", handler.FindTodayByDoctor)
-	router.POST("/queues", handler.Create)
-	router.PUT("/queues/:id", handler.Update)
+	router.GET("/queues/:id", handler.FindByIDQueue)
+	router.GET("/queues-today/:doctor_id", handler.FindTodayByDoctor)
+	router.POST("/queues", handler.CreateQueue)
+	router.PUT("/queues/:id", handler.UpdateQueue)
 	router.POST("/queues/generate", handler.GenerateNextQueue)
 }
 
-func (h *QueueHandler) FindByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *QueueHandler) FindByIDQueue(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := strconv.Atoi(ps.ByName("id"))
 	if err != nil {
 		http.Error(w, "invalid id", http.StatusBadRequest)
@@ -55,7 +55,7 @@ func (h *QueueHandler) FindTodayByDoctor(w http.ResponseWriter, r *http.Request,
 	json.NewEncoder(w).Encode(queues)
 }
 
-func (h *QueueHandler) Create(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func (h *QueueHandler) CreateQueue(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var q domain.QueueModel
 	if err := json.NewDecoder(r.Body).Decode(&q); err != nil {
 		http.Error(w, "invalid JSON", http.StatusBadRequest)
@@ -71,7 +71,7 @@ func (h *QueueHandler) Create(w http.ResponseWriter, r *http.Request, _ httprout
 	json.NewEncoder(w).Encode(q)
 }
 
-func (h *QueueHandler) Update(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *QueueHandler) UpdateQueue(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var q domain.QueueModel
 	if err := json.NewDecoder(r.Body).Decode(&q); err != nil {
 		http.Error(w, "invalid JSON", http.StatusBadRequest)

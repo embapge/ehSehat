@@ -11,7 +11,7 @@ func ExtractAudit(ctx context.Context) (id, name, email, role string) {
 	if !ok {
 		return "", "", "", ""
 	}
-	return get(md, "x-user-id"), get(md, "x-user-name"), get(md, "x-user-email"), get(md, "x-user-role")
+	return get(md, "ts-user-id"), get(md, "ts-user-name"), get(md, "ts-user-email"), get(md, "ts-user-role")
 }
 
 func get(md metadata.MD, key string) string {

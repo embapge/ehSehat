@@ -9,16 +9,21 @@ import (
 	"strconv"
 	"time"
 
+	amqp "github.com/rabbitmq/amqp091-go"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 type consultationHandler struct {
 	consultationPb.UnimplementedConsultationServiceServer
 	app domain.ConsultationService
+	ch  *amqp.Channel
 }
 
-func NewConsultationHandler(app domain.ConsultationService) *consultationHandler {
-	return &consultationHandler{app: app}
+func NewConsultationHandler(app domain.ConsultationService, ch *amqp.Channel) *consultationHandler {
+	return &consultationHandler{
+		app: app,
+		ch:  ch,
+	}
 }
 
 func (h *consultationHandler) CreateConsultation(ctx context.Context, req *consultationPb.ConsultationRequest) (*consultationPb.ConsultationResponse, error) {

@@ -6,9 +6,10 @@ import (
 )
 
 type AppointmentService interface {
-	GetAllByUser(ctx context.Context, userID uint) ([]*AppointmentModel, error)
-	GetByID(ctx context.Context, id uint) (*AppointmentModel, error)
-	Create(ctx context.Context, appointment *AppointmentModel) (*AppointmentModel, error)
+	FindAll(ctx context.Context) ([]*AppointmentModel, error)
+	FindByUserID(ctx context.Context, userID uint) ([]*AppointmentModel, error)
+	FindByID(ctx context.Context, id uint) (*AppointmentModel, error)
+	CreateAppointment(ctx context.Context, appointment *AppointmentModel) (*AppointmentModel, error)
 	Update(ctx context.Context, id uint, appointment *AppointmentModel) (*AppointmentModel, error)
 	MarkAsPaid(ctx context.Context, id uint) error
 }
@@ -21,21 +22,25 @@ func NewAppointmentService(r AppointmentRepository) AppointmentService {
 	return &appointmentService{repo: r}
 }
 
-func (s *appointmentService) GetAllByUser(ctx context.Context, userID uint) ([]*AppointmentModel, error) {
+func (s *appointmentService) FindAll(ctx context.Context) ([]*AppointmentModel, error) {
+	return s.repo.FindAll(ctx)
+}
+
+func (s *appointmentService) FindByUserID(ctx context.Context, userID uint) ([]*AppointmentModel, error) {
 	if userID == 0 {
 		return nil, errors.New("user_id tidak valid")
 	}
 	return s.repo.FindByUserID(ctx, userID)
 }
 
-func (s *appointmentService) GetByID(ctx context.Context, id uint) (*AppointmentModel, error) {
+func (s *appointmentService) FindByID(ctx context.Context, id uint) (*AppointmentModel, error) {
 	if id == 0 {
 		return nil, errors.New("id tidak valid")
 	}
 	return s.repo.FindByID(ctx, id)
 }
 
-func (s *appointmentService) Create(ctx context.Context, a *AppointmentModel) (*AppointmentModel, error) {
+func (s *appointmentService) CreateAppointment(ctx context.Context, a *AppointmentModel) (*AppointmentModel, error) {
 	if a.UserID == 0 || a.DoctorID == 0 || a.AppointmentAt.IsZero() {
 		return nil, errors.New("user_id, doctor_id, dan appointment_at wajib diisi")
 	}

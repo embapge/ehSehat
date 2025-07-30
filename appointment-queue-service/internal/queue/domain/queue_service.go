@@ -39,7 +39,9 @@ func (s *queueService) CreateQueue(ctx context.Context, q *QueueModel) error {
 	}
 	q.Status = "active"
 	q.CreatedAt = time.Now()
-
+	if q.StartFrom.IsZero() {
+		q.StartFrom = time.Now().Add(5 * time.Minute)
+	}
 	// Ambil nomor antrian berikutnya
 	nextNumber, err := s.repo.GetNextQueueNumber(ctx, q.DoctorID)
 	if err != nil {

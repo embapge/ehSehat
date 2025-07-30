@@ -5,71 +5,26 @@ import (
 	paymentPb "ehSehat/consultation-service/internal/payment/delivery/grpc/pb"
 	"ehSehat/consultation-service/internal/payment/domain"
 	"ehSehat/libs/utils"
+	"ehSehat/libs/utils/rabbitmqown"
+	"encoding/json"
 	"fmt"
+	"os"
 
+	amqp "github.com/rabbitmq/amqp091-go"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
-// message PaymentLog {
-//   string id = 1;
-//   string payment_id = 2;
-//   google.protobuf.StringValue response = 3; // Use StringValue to allow nullability
-//   google.protobuf.Timestamp created_at = 4;
-//   google.protobuf.Timestamp updated_at = 5;
-// }
-
-// message PaymentRequest {
-//   string consultation_id = 1;
-//   double amount = 2;
-//   string method = 3; // e.g., "credit_card", "bank_transfer"
-// }
-
-// message PaymentResponse {
-//   string id = 1;
-//   string consultation_id = 2;
-//   google.protobuf.Timestamp consultation_date = 3;
-//   string patient_id = 4;
-//   google.protobuf.StringValue patient_name = 5;
-//   string doctor_id = 6;
-//   google.protobuf.StringValue doctor_name = 7;
-//   double amount = 8;
-//   google.protobuf.StringValue method = 9;
-//   google.protobuf.StringValue gateway = 10;
-//   repeated PaymentLog payment_log = 11;
-//   google.protobuf.StringValue status = 12;
-//   google.protobuf.StringValue created_by = 13;
-//   google.protobuf.StringValue created_name = 14;
-//   google.protobuf.StringValue created_email = 15;
-//   google.protobuf.StringValue created_role = 16;
-//   google.protobuf.Timestamp created_at = 17;
-//   google.protobuf.StringValue updated_by = 18;
-//   google.protobuf.StringValue updated_name = 19;
-//   google.protobuf.StringValue updated_email = 20;
-//   google.protobuf.StringValue updated_role = 21;
-//   google.protobuf.Timestamp updated_at = 22;
-// }
-
-// message PaymentUpdateRequest {
-//   string id = 1; // unique identifier for the payment
-//   double amount = 2; // updated amount
-//   string status = 3; // updated status
-// }
-
-// service PaymentService {
-//   rpc CreatePaymentGRPC(PaymentRequest) returns (PaymentResponse);
-//   rpc GetPaymentByIdGRPC(google.protobuf.StringValue) returns (PaymentResponse);
-//   rpc UpdatePaymentGRPC(PaymentUpdateRequest) returns (PaymentResponse);
-// }
-
 type paymentHandler struct {
 	paymentPb.UnimplementedPaymentServiceServer
 	app domain.PaymentService
+	ch  *amqp.Channel
 }
 
-func NewPaymentHandler(app domain.PaymentService) *paymentHandler {
+func NewPaymentHandler(app domain.PaymentService, ch *amqp.Channel) *paymentHandler {
 	return &paymentHandler{
 		app: app,
+		ch:  ch,
 	}
 }
 
@@ -107,6 +62,55 @@ func (h *paymentHandler) CreatePaymentGRPC(ctx context.Context, req *paymentPb.P
 			PaymentId: log.PaymentID,
 			Response:  wrapperspb.String(responseStr),
 		})
+	}
+
+	// Example: Extract "invoice_url" from the marshaled response if needed
+	var invoiceURL string
+	if len(paymentResponse.PaymentLogs) > 0 {
+		if paymentResponse.PaymentLogs[0].Response != nil {
+			responseBytes, err := json.Marshal(paymentResponse.PaymentLogs[0].Response)
+			if err == nil {
+				var responseMap map[string]interface{}
+				if err := json.Unmarshal(responseBytes, &responseMap); err == nil {
+					if url, ok := responseMap["invoice_url"].(string); ok {
+						invoiceURL = url
+					}
+				}
+			}
+		}
+	}
+
+	consultationContext, _ := json.Marshal(paymentResponse)
+	payload := rabbitmqown.RabbitPayload{
+		Channel: "email",
+		// Recipient:     consultation.Patient.ID, // Assuming recipient is the patient ID
+		Recipient:     "baratagusti.bg@gmail.com", // Assuming recipient is the patient ID
+		TemplateName:  "paymentCreated",           // Example template name
+		Subject:       "Payment Created!",
+		Body:          fmt.Sprintf("Your payment has been created. Please refer to this link to paid consultation: %v, sebesar %v", invoiceURL, paymentResponse.Amount),
+		SourceService: "consultationService",
+		ReferenceID:   paymentResponse.ID,  // Use the ID field directly from paymentResponse
+		Context:       consultationContext, // Additional context can be added here if needed
+		Status:        "pending",           // Initial status
+		ErrorMessage:  "",                  // No error message initially
+		RetryCount:    0,                   // Initial retry count
+	}
+
+	payloadBytes, _ := json.Marshal(payload)
+
+	err = h.ch.Publish(
+		"",                        // default exchange
+		os.Getenv("RABBIT_QUEUE"), // routing key (queue name)
+		false,                     // mandatory
+		false,                     // immediate
+		amqp.Publishing{
+			ContentType: "application/json",
+			Body:        payloadBytes,
+		},
+	)
+
+	if err != nil {
+		return nil, err
 	}
 
 	return &paymentPb.PaymentResponse{
