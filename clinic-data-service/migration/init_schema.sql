@@ -94,3 +94,53 @@ CREATE TABLE IF NOT EXISTS rooms (
   created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+-- ======================================
+-- TABLE: schedule_fixed
+-- ======================================
+CREATE TABLE IF NOT EXISTS schedule_fixed (
+  id UUID PRIMARY KEY,
+  doctor_id UUID NOT NULL REFERENCES doctors(id),
+  room_id UUID NOT NULL REFERENCES rooms(id),
+  day_of_week INT NOT NULL CHECK (day_of_week BETWEEN 1 AND 7),
+  start_time TIME NOT NULL,
+  end_time TIME NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'active',
+
+  created_by UUID,
+  created_name VARCHAR(100),
+  created_email VARCHAR(100),
+  created_role VARCHAR(20),
+  updated_by UUID,
+  updated_name VARCHAR(100),
+  updated_email VARCHAR(100),
+  updated_role VARCHAR(20),
+
+  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ======================================
+-- TABLE: schedule_override
+-- ======================================
+CREATE TABLE IF NOT EXISTS schedule_overrides (
+  id UUID PRIMARY KEY,
+  doctor_id UUID NOT NULL REFERENCES doctors(id),
+  room_id UUID NOT NULL REFERENCES rooms(id),
+  day_of_week INT NOT NULL CHECK (day_of_week BETWEEN 1 AND 7),
+  start_time TIME NOT NULL,
+  end_time TIME NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'active',
+
+  created_by UUID,
+  created_name VARCHAR(100),
+  created_email VARCHAR(100),
+  created_role VARCHAR(20),
+  updated_by UUID,
+  updated_name VARCHAR(100),
+  updated_email VARCHAR(100),
+  updated_role VARCHAR(20),
+
+  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
