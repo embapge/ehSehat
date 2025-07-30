@@ -11,6 +11,7 @@ import (
 	grpc3 "ehSehat/consultation-service/internal/payment/delivery/grpc"
 	paymentPb "ehSehat/consultation-service/internal/payment/delivery/grpc/pb"
 	paymentInfra "ehSehat/consultation-service/internal/payment/infra"
+	"ehSehat/libs/utils/rabbitmqown"
 	"log"
 	"net"
 	"os"
@@ -33,16 +34,36 @@ func main() {
 	mongo := config.MongoDB()
 	mySQL := config.MySQLDB()
 
+	conn, ch, err := rabbitmqown.InitRabbitMQ()
+	if err != nil {
+		log.Fatalf("Failed to initialize RabbitMQ: %v", err)
+	}
+
+	defer func() {
+		if err := conn.Close(); err != nil {
+			log.Printf("Failed to close RabbitMQ connection: %v", err)
+		}
+		if err := ch.Close(); err != nil {
+			log.Printf("Failed to close RabbitMQ channel: %v", err)
+		}
+	}()
+
+	queueName := os.Getenv("RABBIT_QUEUE")
+	_, err = rabbitmqown.DeclareQueue(ch, queueName)
+	if err != nil {
+		log.Fatalf("Failed to declare RabbitMQ queue: %v", err)
+	}
+
 	consultationCollection := config.GetCollection(mongo, "consultations")
 	consultationRepo := infra.NewMongoConsultation(consultationCollection)
 	consultationApp := app.NewConsultationApp(consultationRepo)
-	consultationHandler := grpc2.NewConsultationHandler(consultationApp)
+	consultationHandler := grpc2.NewConsultationHandler(consultationApp, ch)
 
 	paymentRepo := paymentInfra.NewMySQLPayment(mySQL)
 	gateway := paymentInfra.NewXendit()
 	var consultationService domain.ConsultationService = consultationApp
 	appPayment := paymentApp.NewPaymentApp(paymentRepo, consultationService, gateway)
-	paymentHandler := grpc3.NewPaymentHandler(appPayment)
+	paymentHandler := grpc3.NewPaymentHandler(appPayment, ch)
 
 	go func() {
 		lis, err := net.Listen("tcp", ":"+grpcPort)
