@@ -47,21 +47,25 @@ func main() {
 	queueHTTP.NewQueueHandler(router, qApp)
 	appointmentHTTP.NewAppointmentHandler(router, aApp)
 
+	// Get ports from env
+	httpPort := config.GetEnv("HTTP_PORT", "8080")
+	grpcPort := config.GetEnv("GRPC_PORT", "50051")
+
 	// --- gRPC Server ---
 	go func() {
-		lis, err := net.Listen("tcp", ":50051")
+		lis, err := net.Listen("tcp", ":"+grpcPort)
 		if err != nil {
 			log.Fatalf("❌ Failed to listen: %v", err)
 		}
 		grpcServer := grpc.NewServer()
 		pb.RegisterAppointmentServiceServer(grpcServer, appointmentGRPC.NewAppointmentHandler(aApp))
-		log.Println("🚀 gRPC server running at :50051")
+		log.Printf("🚀 gRPC server running at :%s", grpcPort)
 		if err := grpcServer.Serve(lis); err != nil {
 			log.Fatalf("❌ Failed to serve gRPC: %v", err)
 		}
 	}()
 
 	// --- Start HTTP Server ---
-	log.Println("✅ HTTP server running at :8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Printf("✅ HTTP server running at :%s", httpPort)
+	log.Fatal(http.ListenAndServe(":"+httpPort, router))
 }
