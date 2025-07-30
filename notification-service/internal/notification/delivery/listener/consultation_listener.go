@@ -1,21 +1,25 @@
 package listener
 
-import "ehSehat/notification-service/internal/notification/domain"
+import (
+	"ehSehat/libs/utils/rabbitmqown"
+	"ehSehat/notification-service/internal/notification/domain"
+)
 
 type consultationListener struct {
-	// Add fields as necessary for the listener
-	payload *domain.Notification
-	app     domain.NotificationService
+	app domain.NotificationService
 }
 
-func NewConsultationListener(payload *domain.Notification, app domain.NotificationService) *consultationListener {
+func NewConsultationListener(app domain.NotificationService) *consultationListener {
 	return &consultationListener{
-		payload: payload,
-		app:     app,
+		app: app,
 	}
 }
 
-func (l *consultationListener) Handle() error {
+func (l *consultationListener) Handle(payload *rabbitmqown.RabbitPayload) error {
+	switch payload.TemplateName {
+	case "paymentCreated":
+		l.app.CreateNotification(payload)
+	}
 
 	return nil
 }
