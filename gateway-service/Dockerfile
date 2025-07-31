@@ -11,7 +11,7 @@ RUN go build -o gateway-service cmd/main.go
 FROM alpine:latest
 WORKDIR /app
 COPY --from=build /app/gateway-service/gateway-service ./gateway-service
-# COPY gateway-service/.env .env
+COPY gateway-service/.env .env
 
 EXPOSE 8000
 CMD ["./gateway-service"]
