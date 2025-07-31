@@ -263,7 +263,6 @@ func (x *RoomSnapshot) GetName() string {
 	return ""
 }
 
-// ConsultationRequest represents a request for a consultation
 type Prescription struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"` // name of the medicine
@@ -327,7 +326,8 @@ type ConsultationRequest struct {
 	Symptoms      string                 `protobuf:"bytes,7,opt,name=symptoms,proto3" json:"symptoms,omitempty"`
 	Prescription  []*Prescription        `protobuf:"bytes,8,rep,name=prescription,proto3" json:"prescription,omitempty"` // list of prescriptions
 	Diagnosis     string                 `protobuf:"bytes,9,opt,name=diagnosis,proto3" json:"diagnosis,omitempty"`
-	Date          string                 `protobuf:"bytes,10,opt,name=date,proto3" json:"date,omitempty"` // date of the consultation
+	Date          string                 `protobuf:"bytes,10,opt,name=date,proto3" json:"date,omitempty"`     // date of the consultation
+	Amount        string                 `protobuf:"bytes,11,opt,name=amount,proto3" json:"amount,omitempty"` // amount for the consultation
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -432,6 +432,13 @@ func (x *ConsultationRequest) GetDate() string {
 	return ""
 }
 
+func (x *ConsultationRequest) GetAmount() string {
+	if x != nil {
+		return x.Amount
+	}
+	return ""
+}
+
 type ConsultationResponse struct {
 	state         protoimpl.MessageState  `protogen:"open.v1"`
 	Id            string                  `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // unique identifier for the consultation
@@ -446,8 +453,10 @@ type ConsultationResponse struct {
 	Diagnosis     string                  `protobuf:"bytes,10,opt,name=diagnosis,proto3" json:"diagnosis,omitempty"`
 	Date          string                  `protobuf:"bytes,11,opt,name=date,proto3" json:"date,omitempty"`
 	Status        string                  `protobuf:"bytes,12,opt,name=status,proto3" json:"status,omitempty"`
-	CreatedAt     *timestamppb.Timestamp  `protobuf:"bytes,13,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp  `protobuf:"bytes,14,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Amount        string                  `protobuf:"bytes,13,opt,name=amount,proto3" json:"amount,omitempty"`                                 // amount for the consultation
+	TotalPayment  string                  `protobuf:"bytes,14,opt,name=total_payment,json=totalPayment,proto3" json:"total_payment,omitempty"` // total payment amount
+	CreatedAt     *timestamppb.Timestamp  `protobuf:"bytes,15,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp  `protobuf:"bytes,16,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -566,6 +575,20 @@ func (x *ConsultationResponse) GetStatus() string {
 	return ""
 }
 
+func (x *ConsultationResponse) GetAmount() string {
+	if x != nil {
+		return x.Amount
+	}
+	return ""
+}
+
+func (x *ConsultationResponse) GetTotalPayment() string {
+	if x != nil {
+		return x.TotalPayment
+	}
+	return ""
+}
+
 func (x *ConsultationResponse) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreatedAt
@@ -647,7 +670,7 @@ const file_proto_consultation_consultation_proto_rawDesc = "" +
 	"\x04name\x18\x02 \x01(\tR\x04name\"6\n" +
 	"\fPrescription\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
-	"\x04dose\x18\x02 \x01(\tR\x04dose\"\x94\x03\n" +
+	"\x04dose\x18\x02 \x01(\tR\x04dose\"\xac\x03\n" +
 	"\x13ConsultationRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
 	"\bqueue_id\x18\x02 \x01(\tR\aqueueId\x12%\n" +
@@ -659,7 +682,8 @@ const file_proto_consultation_consultation_proto_rawDesc = "" +
 	"\fprescription\x18\b \x03(\v2\x1a.consultation.PrescriptionR\fprescription\x12\x1c\n" +
 	"\tdiagnosis\x18\t \x01(\tR\tdiagnosis\x12\x12\n" +
 	"\x04date\x18\n" +
-	" \x01(\tR\x04date\"\x8f\x05\n" +
+	" \x01(\tR\x04date\x12\x16\n" +
+	"\x06amount\x18\v \x01(\tR\x06amount\"\xcc\x05\n" +
 	"\x14ConsultationResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x127\n" +
 	"\bqueue_id\x18\x02 \x01(\v2\x1c.google.protobuf.StringValueR\aqueueId\x12C\n" +
@@ -673,11 +697,13 @@ const file_proto_consultation_consultation_proto_rawDesc = "" +
 	"\tdiagnosis\x18\n" +
 	" \x01(\tR\tdiagnosis\x12\x12\n" +
 	"\x04date\x18\v \x01(\tR\x04date\x12\x16\n" +
-	"\x06status\x18\f \x01(\tR\x06status\x129\n" +
+	"\x06status\x18\f \x01(\tR\x06status\x12\x16\n" +
+	"\x06amount\x18\r \x01(\tR\x06amount\x12#\n" +
+	"\rtotal_payment\x18\x0e \x01(\tR\ftotalPayment\x129\n" +
 	"\n" +
-	"created_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"'\n" +
+	"updated_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"'\n" +
 	"\x15ConsultationIDRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id2\xb0\x02\n" +
 	"\x13ConsultationService\x12[\n" +

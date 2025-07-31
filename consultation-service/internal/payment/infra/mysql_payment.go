@@ -23,11 +23,6 @@ func (m *mysqlPayment) Create(ctx context.Context, payment *domain.Payment) erro
 		return err
 	}
 
-	paymentUUID, err := uuid.NewUUID()
-	if err != nil {
-		return err
-	}
-	payment.ID = paymentUUID.String()
 	result, err := tx.ExecContext(ctx, `
 		INSERT INTO payments 
 		(id, consultation_id, consultation_date, patient_id, patient_name, doctor_id, doctor_name, amount, method, gateway, status, created_by, created_name, created_email, created_role, updated_by, updated_name, updated_email, updated_role) 

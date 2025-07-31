@@ -35,7 +35,11 @@ func (l *consultationListener) Start() {
 				log.Printf("Failed to unmarshal RabbitMQ message: %v", err)
 				continue
 			}
-			l.app.CreateNotification(&payload)
+			err := l.app.CreateNotification(&payload)
+			if err != nil {
+				log.Printf("Failed to send notification email: %v", err)
+				continue
+			}
 			log.Printf("Received message")
 		}
 	}()

@@ -37,7 +37,13 @@ func (app *paymentApp) CreatePayment(ctx context.Context, paymentReq *domain.Cre
 		return nil, sql.ErrNoRows
 	}
 
-	result, err := app.pg.Create(consultation.ID, 600000.0)
+	paymentUUID, err := uuid.NewUUID()
+	if err != nil {
+		return nil, err
+	}
+	paymentNewID := paymentUUID.String()
+
+	result, err := app.pg.Create(paymentNewID, paymentReq.Amount)
 	if err != nil {
 		return nil, err
 	}
@@ -69,6 +75,7 @@ func (app *paymentApp) CreatePayment(ctx context.Context, paymentReq *domain.Cre
 	}
 
 	payment := &domain.Payment{
+		ID:               paymentNewID,
 		ConsultationID:   consultation.ID,
 		ConsultationDate: &consultation.Date,
 		PatientID:        consultation.Patient.ID,
@@ -156,6 +163,86 @@ func (app *paymentApp) HandlePaymentWebhook(ctx context.Context, webhook *domain
 		return err
 	}
 
+	payment, err := app.paymentRepo.FindByID(ctx, webhook.PaymentID)
+	if err != nil {
+		return err
+	}
+	if payment == nil || payment.ID == "" {
+		return fmt.Errorf("payment not found for id: %s", webhook.PaymentID)
+	}
+
+	md, _ := grpcmetadata.GetMetadataFromContext(ctx)
+
+	userSnapshot := map[string]string{
+		"ID":    "",
+		"Name":  "",
+		"Email": "",
+		"Role":  "",
+	}
+
+	if v, ok := md["ts-user-id"]; ok && len(v) > 0 {
+		userSnapshot["ID"] = v[0]
+	}
+	if v, ok := md["ts-user-name"]; ok && len(v) > 0 {
+		userSnapshot["Name"] = v[0]
+	}
+	if v, ok := md["ts-user-email"]; ok && len(v) > 0 {
+		userSnapshot["Email"] = v[0]
+	}
+	if v, ok := md["ts-user-role"]; ok && len(v) > 0 {
+		userSnapshot["Role"] = v[0]
+	}
+
+	fmt.Println("masuk sini")
+
+	var paymentStatus string
+	switch webhook.EventType {
+	case "PAID":
+		paymentStatus = "completed"
+	case "FAILED":
+		paymentStatus = "failed"
+	default:
+		paymentStatus = "pending"
+	}
+
+	paymentUpdateRequest := &domain.UpdatePaymentRequest{
+		Status:       paymentStatus,
+		UpdatedBy:    userSnapshot["ID"],
+		UpdatedName:  toPtr(userSnapshot["Name"]),
+		UpdatedEmail: toPtr(userSnapshot["Email"]),
+		UpdatedRole:  toPtr(userSnapshot["Role"]),
+	}
+
+	err = app.paymentRepo.Update(ctx, payment.ID, paymentUpdateRequest)
+
+	if err != nil {
+		fmt.Println("ERROR updating payment:", err.Error())
+		return err
+	}
+	fmt.Println("masuk sini1")
+
+	consultation, err := app.consultationApp.FindByIDConsultation(ctx, payment.ConsultationID)
+	if err != nil {
+		fmt.Println("ERROR find Consultation:", err.Error())
+		return err
+	}
+
+	consultation.Status = paymentStatus
+	consultation.TotalPayment = payment.Amount
+	consultation.UpdatedBy = consultationDomain.UpdatedBySnapshot{
+		ID:    userSnapshot["ID"],
+		Name:  userSnapshot["Name"],
+		Email: userSnapshot["Email"],
+		Role:  userSnapshot["Role"],
+	}
+
+	err = app.consultationApp.UpdateConsultation(ctx, consultation)
+	if err != nil {
+		fmt.Println("ERROR update Consultation:", err.Error())
+		return err
+	}
+
+	fmt.Println("masuk sini2")
 	return nil
 }
 

@@ -66,7 +66,8 @@ func (s *doctorService) Create(doctor *domain.Doctor) (*domain.Doctor, error) {
 		return nil, fmt.Errorf("rabbitmq channel is not open")
 	}
 	replyQueue, err := s.ch.QueueDeclare(
-		"AuthDoctorCreated", true, false, false, false, nil, // durable, non-exclusive, non-auto-delete
+		"",                            // empty name, RabbitMQ akan generate nama unik
+		false, true, true, false, nil, // exclusive, auto-delete
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to declare reply queue: %v", err)
