@@ -18,6 +18,8 @@ type Consultation struct {
 	Diagnosis     string            `bson:"diagnosis" json:"diagnosis"`
 	Date          time.Time         `bson:"date" json:"date"`
 	Status        string            `bson:"status" json:"status"`
+	Amount        float64           `bson:"amount" json:"amount"`               // Amount for the consultation
+	TotalPayment  float64           `bson:"total_payment" json:"total_payment"` // Total payment amount
 	CreatedBy     CreatedBySnapshot `bson:"created_by,omitempty" json:"created_by"`
 	CreatedAt     time.Time         `bson:"created_at" json:"created_at"`
 	UpdatedBy     UpdatedBySnapshot `bson:"updated_by,omitempty" json:"updated_by"`

@@ -59,7 +59,8 @@ func (s *patientService) Create(p *domain.Patient) (*domain.Patient, error) {
 
 	// Buatkan command reply rabbitMQ untuk membuat data user terlebih dahulu dengan menyertakan domain.Doctor dan mengembalikan userId
 	replyQueue, err := s.ch.QueueDeclare(
-		"AuthPatientCreated", true, false, false, false, nil, // durable, non-exclusive, non-auto-delete
+		"",                            // empty name, RabbitMQ akan generate nama unik
+		false, true, true, false, nil, // exclusive, auto-delete
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to declare reply queue: %v", err)
