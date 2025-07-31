@@ -431,6 +431,83 @@ func (x *PaymentUpdateRequest) GetStatus() string {
 	return ""
 }
 
+// Buatkan message untuk menangani webhook baik dari payment gateway atau pihak ketiga lainnya, sertakan id unik sebagai identifier id dari pihak ketiga
+type PaymentWebhookRequest struct {
+	state         protoimpl.MessageState  `protogen:"open.v1"`
+	Id            string                  `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                   // unique identifier for the webhook
+	ExternalId    string                  `protobuf:"bytes,2,opt,name=external_id,json=externalId,proto3" json:"external_id,omitempty"` // ID unik dari pihak ketiga
+	PaymentId     string                  `protobuf:"bytes,3,opt,name=payment_id,json=paymentId,proto3" json:"payment_id,omitempty"`    // ID pembayaran terkait
+	EventType     string                  `protobuf:"bytes,4,opt,name=event_type,json=eventType,proto3" json:"event_type,omitempty"`    // Jenis event dari webhook, misalnya "payment_success", "payment_failed"
+	Payload       *wrapperspb.StringValue `protobuf:"bytes,5,opt,name=payload,proto3" json:"payload,omitempty"`                         // Payload JSON dari webhook
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PaymentWebhookRequest) Reset() {
+	*x = PaymentWebhookRequest{}
+	mi := &file_proto_consultation_payment_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PaymentWebhookRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PaymentWebhookRequest) ProtoMessage() {}
+
+func (x *PaymentWebhookRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_consultation_payment_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PaymentWebhookRequest.ProtoReflect.Descriptor instead.
+func (*PaymentWebhookRequest) Descriptor() ([]byte, []int) {
+	return file_proto_consultation_payment_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *PaymentWebhookRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *PaymentWebhookRequest) GetExternalId() string {
+	if x != nil {
+		return x.ExternalId
+	}
+	return ""
+}
+
+func (x *PaymentWebhookRequest) GetPaymentId() string {
+	if x != nil {
+		return x.PaymentId
+	}
+	return ""
+}
+
+func (x *PaymentWebhookRequest) GetEventType() string {
+	if x != nil {
+		return x.EventType
+	}
+	return ""
+}
+
+func (x *PaymentWebhookRequest) GetPayload() *wrapperspb.StringValue {
+	if x != nil {
+		return x.Payload
+	}
+	return nil
+}
+
 var File_proto_consultation_payment_proto protoreflect.FileDescriptor
 
 const file_proto_consultation_payment_proto_rawDesc = "" +
@@ -484,11 +561,21 @@ const file_proto_consultation_payment_proto_rawDesc = "" +
 	"\x14PaymentUpdateRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
 	"\x06amount\x18\x02 \x01(\x01R\x06amount\x12\x16\n" +
-	"\x06status\x18\x03 \x01(\tR\x06status2\x8d\x02\n" +
+	"\x06status\x18\x03 \x01(\tR\x06status\"\xbe\x01\n" +
+	"\x15PaymentWebhookRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n" +
+	"\vexternal_id\x18\x02 \x01(\tR\n" +
+	"externalId\x12\x1d\n" +
+	"\n" +
+	"payment_id\x18\x03 \x01(\tR\tpaymentId\x12\x1d\n" +
+	"\n" +
+	"event_type\x18\x04 \x01(\tR\teventType\x126\n" +
+	"\apayload\x18\x05 \x01(\v2\x1c.google.protobuf.StringValueR\apayload2\xec\x02\n" +
 	"\x0ePaymentService\x12P\n" +
 	"\x11CreatePaymentGRPC\x12\x1c.consultation.PaymentRequest\x1a\x1d.consultation.PaymentResponse\x12Q\n" +
 	"\x12GetPaymentByIdGRPC\x12\x1c.google.protobuf.StringValue\x1a\x1d.consultation.PaymentResponse\x12V\n" +
-	"\x11UpdatePaymentGRPC\x12\".consultation.PaymentUpdateRequest\x1a\x1d.consultation.PaymentResponseB;Z9consultation-service/internal/payment/delivery/grpc/pb;pbb\x06proto3"
+	"\x11UpdatePaymentGRPC\x12\".consultation.PaymentUpdateRequest\x1a\x1d.consultation.PaymentResponse\x12]\n" +
+	"\x18HandlePaymentWebhookGRPC\x12#.consultation.PaymentWebhookRequest\x1a\x1c.google.protobuf.StringValueB;Z9consultation-service/internal/payment/delivery/grpc/pb;pbb\x06proto3"
 
 var (
 	file_proto_consultation_payment_proto_rawDescOnce sync.Once
@@ -502,47 +589,51 @@ func file_proto_consultation_payment_proto_rawDescGZIP() []byte {
 	return file_proto_consultation_payment_proto_rawDescData
 }
 
-var file_proto_consultation_payment_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_proto_consultation_payment_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_proto_consultation_payment_proto_goTypes = []any{
 	(*PaymentLog)(nil),             // 0: consultation.PaymentLog
 	(*PaymentRequest)(nil),         // 1: consultation.PaymentRequest
 	(*PaymentResponse)(nil),        // 2: consultation.PaymentResponse
 	(*PaymentUpdateRequest)(nil),   // 3: consultation.PaymentUpdateRequest
-	(*wrapperspb.StringValue)(nil), // 4: google.protobuf.StringValue
-	(*timestamppb.Timestamp)(nil),  // 5: google.protobuf.Timestamp
+	(*PaymentWebhookRequest)(nil),  // 4: consultation.PaymentWebhookRequest
+	(*wrapperspb.StringValue)(nil), // 5: google.protobuf.StringValue
+	(*timestamppb.Timestamp)(nil),  // 6: google.protobuf.Timestamp
 }
 var file_proto_consultation_payment_proto_depIdxs = []int32{
-	4,  // 0: consultation.PaymentLog.response:type_name -> google.protobuf.StringValue
-	5,  // 1: consultation.PaymentLog.created_at:type_name -> google.protobuf.Timestamp
-	5,  // 2: consultation.PaymentLog.updated_at:type_name -> google.protobuf.Timestamp
-	5,  // 3: consultation.PaymentResponse.consultation_date:type_name -> google.protobuf.Timestamp
-	4,  // 4: consultation.PaymentResponse.patient_name:type_name -> google.protobuf.StringValue
-	4,  // 5: consultation.PaymentResponse.doctor_name:type_name -> google.protobuf.StringValue
-	4,  // 6: consultation.PaymentResponse.method:type_name -> google.protobuf.StringValue
-	4,  // 7: consultation.PaymentResponse.gateway:type_name -> google.protobuf.StringValue
+	5,  // 0: consultation.PaymentLog.response:type_name -> google.protobuf.StringValue
+	6,  // 1: consultation.PaymentLog.created_at:type_name -> google.protobuf.Timestamp
+	6,  // 2: consultation.PaymentLog.updated_at:type_name -> google.protobuf.Timestamp
+	6,  // 3: consultation.PaymentResponse.consultation_date:type_name -> google.protobuf.Timestamp
+	5,  // 4: consultation.PaymentResponse.patient_name:type_name -> google.protobuf.StringValue
+	5,  // 5: consultation.PaymentResponse.doctor_name:type_name -> google.protobuf.StringValue
+	5,  // 6: consultation.PaymentResponse.method:type_name -> google.protobuf.StringValue
+	5,  // 7: consultation.PaymentResponse.gateway:type_name -> google.protobuf.StringValue
 	0,  // 8: consultation.PaymentResponse.payment_log:type_name -> consultation.PaymentLog
-	4,  // 9: consultation.PaymentResponse.status:type_name -> google.protobuf.StringValue
-	4,  // 10: consultation.PaymentResponse.created_by:type_name -> google.protobuf.StringValue
-	4,  // 11: consultation.PaymentResponse.created_name:type_name -> google.protobuf.StringValue
-	4,  // 12: consultation.PaymentResponse.created_email:type_name -> google.protobuf.StringValue
-	4,  // 13: consultation.PaymentResponse.created_role:type_name -> google.protobuf.StringValue
-	5,  // 14: consultation.PaymentResponse.created_at:type_name -> google.protobuf.Timestamp
-	4,  // 15: consultation.PaymentResponse.updated_by:type_name -> google.protobuf.StringValue
-	4,  // 16: consultation.PaymentResponse.updated_name:type_name -> google.protobuf.StringValue
-	4,  // 17: consultation.PaymentResponse.updated_email:type_name -> google.protobuf.StringValue
-	4,  // 18: consultation.PaymentResponse.updated_role:type_name -> google.protobuf.StringValue
-	5,  // 19: consultation.PaymentResponse.updated_at:type_name -> google.protobuf.Timestamp
-	1,  // 20: consultation.PaymentService.CreatePaymentGRPC:input_type -> consultation.PaymentRequest
-	4,  // 21: consultation.PaymentService.GetPaymentByIdGRPC:input_type -> google.protobuf.StringValue
-	3,  // 22: consultation.PaymentService.UpdatePaymentGRPC:input_type -> consultation.PaymentUpdateRequest
-	2,  // 23: consultation.PaymentService.CreatePaymentGRPC:output_type -> consultation.PaymentResponse
-	2,  // 24: consultation.PaymentService.GetPaymentByIdGRPC:output_type -> consultation.PaymentResponse
-	2,  // 25: consultation.PaymentService.UpdatePaymentGRPC:output_type -> consultation.PaymentResponse
-	23, // [23:26] is the sub-list for method output_type
-	20, // [20:23] is the sub-list for method input_type
-	20, // [20:20] is the sub-list for extension type_name
-	20, // [20:20] is the sub-list for extension extendee
-	0,  // [0:20] is the sub-list for field type_name
+	5,  // 9: consultation.PaymentResponse.status:type_name -> google.protobuf.StringValue
+	5,  // 10: consultation.PaymentResponse.created_by:type_name -> google.protobuf.StringValue
+	5,  // 11: consultation.PaymentResponse.created_name:type_name -> google.protobuf.StringValue
+	5,  // 12: consultation.PaymentResponse.created_email:type_name -> google.protobuf.StringValue
+	5,  // 13: consultation.PaymentResponse.created_role:type_name -> google.protobuf.StringValue
+	6,  // 14: consultation.PaymentResponse.created_at:type_name -> google.protobuf.Timestamp
+	5,  // 15: consultation.PaymentResponse.updated_by:type_name -> google.protobuf.StringValue
+	5,  // 16: consultation.PaymentResponse.updated_name:type_name -> google.protobuf.StringValue
+	5,  // 17: consultation.PaymentResponse.updated_email:type_name -> google.protobuf.StringValue
+	5,  // 18: consultation.PaymentResponse.updated_role:type_name -> google.protobuf.StringValue
+	6,  // 19: consultation.PaymentResponse.updated_at:type_name -> google.protobuf.Timestamp
+	5,  // 20: consultation.PaymentWebhookRequest.payload:type_name -> google.protobuf.StringValue
+	1,  // 21: consultation.PaymentService.CreatePaymentGRPC:input_type -> consultation.PaymentRequest
+	5,  // 22: consultation.PaymentService.GetPaymentByIdGRPC:input_type -> google.protobuf.StringValue
+	3,  // 23: consultation.PaymentService.UpdatePaymentGRPC:input_type -> consultation.PaymentUpdateRequest
+	4,  // 24: consultation.PaymentService.HandlePaymentWebhookGRPC:input_type -> consultation.PaymentWebhookRequest
+	2,  // 25: consultation.PaymentService.CreatePaymentGRPC:output_type -> consultation.PaymentResponse
+	2,  // 26: consultation.PaymentService.GetPaymentByIdGRPC:output_type -> consultation.PaymentResponse
+	2,  // 27: consultation.PaymentService.UpdatePaymentGRPC:output_type -> consultation.PaymentResponse
+	5,  // 28: consultation.PaymentService.HandlePaymentWebhookGRPC:output_type -> google.protobuf.StringValue
+	25, // [25:29] is the sub-list for method output_type
+	21, // [21:25] is the sub-list for method input_type
+	21, // [21:21] is the sub-list for extension type_name
+	21, // [21:21] is the sub-list for extension extendee
+	0,  // [0:21] is the sub-list for field type_name
 }
 
 func init() { file_proto_consultation_payment_proto_init() }
@@ -556,7 +647,7 @@ func file_proto_consultation_payment_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_consultation_payment_proto_rawDesc), len(file_proto_consultation_payment_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

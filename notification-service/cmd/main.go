@@ -1,11 +1,12 @@
 package main
 
 import (
+	"ehSehat/libs/utils/rabbitmqown"
 	"ehSehat/notification-service/config"
-	"ehSehat/notification-service/internal/notification/domain"
-	"encoding/json"
+	"ehSehat/notification-service/internal/notification/app"
+	"ehSehat/notification-service/internal/notification/delivery/listener"
+	"ehSehat/notification-service/internal/notification/infra"
 	"log"
-	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -19,11 +20,14 @@ func main() {
 	if db == nil {
 		log.Fatal("Failed to initialize MySQL connection")
 	}
-	conn, ch, err := config.InitRabbitMQ()
+
+	consultationInfra := infra.NewMySQLNotification(db)
+	consultationApp := app.NewNotificationApp(consultationInfra)
+
+	conn, ch, err := rabbitmqown.InitRabbitMQ()
 	if err != nil {
 		log.Fatalf("Failed to initialize RabbitMQ: %v", err)
 	}
-
 	defer func() {
 		if err := conn.Close(); err != nil {
 			log.Printf("Failed to close RabbitMQ connection: %v", err)
@@ -33,22 +37,10 @@ func main() {
 		}
 	}()
 
-	msgs, err := config.ConsumeQueue(ch, os.Getenv("RABBITMQ_QUEUE"))
-	if err != nil {
-		log.Fatalf("Failed to consume RabbitMQ messages: %v", err)
-	}
+	consultationListener := listener.NewConsultationListener(consultationApp, ch)
+	consultationListener.Start()
 
-	go func() {
-		for msg := range msgs {
-			var payload domain.Notification
-			if err := json.Unmarshal(msg.Body, &payload); err != nil {
-				log.Printf("Failed to unmarshal RabbitMQ message: %v", err)
-				continue
-			} else {
-				// listener
-				log.Printf("Received message: %s", msg.Body)
-			}
-		}
-	}()
 	log.Println("Notification service is running...")
+	select {}
+
 }

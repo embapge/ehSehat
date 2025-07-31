@@ -12,11 +12,11 @@ type QueueApp interface {
 	UpdateQueue(ctx context.Context, queue *domain.QueueModel) error
 	GenerateNextQueue(
 		ctx context.Context,
-		doctorID uint,
-		userID uint,
-		userName, userRole string,
+		doctorID string,
+		userID string,
+		userName, userRole, userEmail string,
 		appointmentID *uint,
-		patientID *uint,
+		patientID *string,
 		patientName *string,
 		doctorName, doctorSpecialization, queueType string,
 	) (*domain.QueueModel, error)
@@ -48,11 +48,11 @@ func (app *queueApp) UpdateQueue(ctx context.Context, queue *domain.QueueModel) 
 
 func (app *queueApp) GenerateNextQueue(
 	ctx context.Context,
-	doctorID uint,
-	userID uint,
-	userName, userRole string,
+	doctorID string,
+	userID string,
+	userName, userRole, userEmail string,
 	appointmentID *uint,
-	patientID *uint,
+	patientID *string,
 	patientName *string,
 	doctorName, doctorSpecialization, queueType string,
 ) (*domain.QueueModel, error) {
@@ -62,6 +62,7 @@ func (app *queueApp) GenerateNextQueue(
 		userID,
 		userName,
 		userRole,
+		userEmail,
 		appointmentID,
 		patientID,
 		patientName,

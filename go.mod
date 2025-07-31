@@ -4,6 +4,7 @@ go 1.24.4
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.2.3
+	github.com/rabbitmq/amqp091-go v1.10.0
 	go.mongodb.org/mongo-driver v1.17.4
 	google.golang.org/grpc v1.74.2
 )

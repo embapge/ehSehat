@@ -2,8 +2,15 @@ package app
 
 import (
 	"clinic-data-service/internal/clinicdata/domain"
+	"ehSehat/libs/utils/rabbitmqown"
+	"encoding/json"
+	"fmt"
 	"log"
+	"os"
 	"strings"
+	"time"
+
+	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 // Interface yang didefinisikan di domain service
@@ -18,11 +25,12 @@ type PatientService interface {
 // Implementasi struct service
 type patientService struct {
 	repo domain.PatientRepository
+	ch   *amqp.Channel
 }
 
 // Constructor untuk service
-func NewPatientService(r domain.PatientRepository) PatientService {
-	return &patientService{repo: r}
+func NewPatientService(r domain.PatientRepository, ch *amqp.Channel) PatientService {
+	return &patientService{repo: r, ch: ch}
 }
 
 // Create inserts a new patient after validating required fields and email uniqueness
@@ -49,7 +57,99 @@ func (s *patientService) Create(p *domain.Patient) (*domain.Patient, error) {
 		return nil, ErrEmailAlreadyExists
 	}
 
-	return s.repo.Create(p)
+	// Buatkan command reply rabbitMQ untuk membuat data user terlebih dahulu dengan menyertakan domain.Doctor dan mengembalikan userId
+	replyQueue, err := s.ch.QueueDeclare(
+		"AuthPatientCreated", true, false, false, false, nil, // durable, non-exclusive, non-auto-delete
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to declare reply queue: %v", err)
+	}
+
+	msgs, err := s.ch.Consume(
+		replyQueue.Name, "", true, false, false, false, nil, // consumer tag kosong, non-exclusive
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to consume reply queue: %v", err)
+	}
+
+	userBody := rabbitmqown.AuthRabbitBody{
+		ID:    p.ID,
+		Name:  p.Name,
+		Email: p.Email,
+		Role:  "patient",
+	}
+	body, _ := json.Marshal(userBody)
+	err = s.ch.Publish(
+		"",               // default exchange
+		"PatientCreated", // queue name
+		false, false,
+		amqp.Publishing{
+			ContentType: "application/json",
+			ReplyTo:     replyQueue.Name,
+			Body:        body,
+		},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to publish message: %v", err)
+	}
+
+	timeout := time.After(5 * time.Second)
+	var resp rabbitmqown.AuthRabbitBody
+	for {
+		select {
+		case d := <-msgs:
+			if err := json.Unmarshal(d.Body, &resp); err != nil {
+				return nil, fmt.Errorf("failed to parse response: %v", err)
+			}
+
+			if resp.ID == "" {
+				return nil, fmt.Errorf("auth-service error: empty user_id")
+			}
+
+			p.UserID = &resp.ID
+			patientNew, err := s.repo.Create(p)
+			if err != nil {
+				log.Printf("ERROR creating patient: %v", err)
+				return nil, fmt.Errorf("failed to create patient: %v", err)
+			}
+
+			patientContext, _ := json.Marshal(patientNew)
+			payload := rabbitmqown.NotificationPayload{
+				Channel: "email",
+				// Recipient:     consultation.Patient.ID, // Assuming recipient is the patient ID
+				Recipient:     "baratagusti.bg@gmail.com", // Assuming recipient is the patient ID
+				TemplateName:  "patientCreated",           // Example template name
+				Subject:       "Patient Created!",
+				Body:          fmt.Sprintf("Your patient profile has been created. Please login into %v to consultate, queue and make appointment with email: %v, password: temansehat", os.Getenv("APP_URL"), patientNew.Email),
+				SourceService: "clinicDataService",
+				Context:       patientContext, // Additional context can be added here if needed
+				Status:        "pending",      // Initial status
+				ErrorMessage:  "",             // No error message initially
+				RetryCount:    0,              // Initial retry count
+			}
+
+			payloadBytes, _ := json.Marshal(payload)
+
+			err = s.ch.Publish(
+				"",                        // default exchange
+				os.Getenv("RABBIT_QUEUE"), // routing key (queue name)
+				false,                     // mandatory
+				false,                     // immediate
+				amqp.Publishing{
+					ContentType: "application/json",
+					Body:        payloadBytes,
+				},
+			)
+
+			if err != nil {
+				return nil, err
+			}
+			return patientNew, nil
+		case <-timeout:
+			return nil, fmt.Errorf("timeout waiting for auth-service")
+		}
+	}
+
 }
 
 // GetByID returns a patient by ID

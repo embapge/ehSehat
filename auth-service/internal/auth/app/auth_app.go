@@ -3,19 +3,23 @@ package app
 import (
 	"context"
 	"ehSehat/auth-service/internal/auth/domain"
+
+	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 type AuthApp struct {
 	UserRepo       domain.UserRepository
 	PasswordHasher PasswordHasher
 	JWTManager     JWTManager
+	ch             *amqp.Channel
 }
 
-func NewAuthApp(repo domain.UserRepository, hasher PasswordHasher, jwt JWTManager) *AuthApp {
+func NewAuthApp(repo domain.UserRepository, hasher PasswordHasher, jwt JWTManager, ch *amqp.Channel) *AuthApp {
 	return &AuthApp{
 		UserRepo:       repo,
 		PasswordHasher: hasher,
 		JWTManager:     jwt,
+		ch:             ch,
 	}
 }
 

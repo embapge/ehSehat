@@ -2,6 +2,8 @@ package domain
 
 import (
 	"context"
+	"database/sql"
+	"fmt"
 	"time"
 
 	"ehSehat/libs/utils"
@@ -14,7 +16,7 @@ type QueueRepository interface {
 	FindTodayByDoctor(ctx context.Context, doctorID uint) ([]*QueueModel, error)
 	Create(ctx context.Context, queue *QueueModel) error
 	Update(ctx context.Context, queue *QueueModel) error
-	GetNextQueueNumber(ctx context.Context, doctorID uint) (int, error)
+	GetNextQueueNumber(ctx context.Context, doctorID string) (int64, time.Time, error)
 }
 type queueRepository struct {
 	db *gorm.DB
@@ -46,8 +48,6 @@ func (r *queueRepository) FindTodayByDoctor(ctx context.Context, doctorID uint) 
 }
 
 func (r *queueRepository) Create(ctx context.Context, q *QueueModel) error {
-	now := time.Now()
-	q.CreatedAt = now
 	if err := r.db.WithContext(ctx).Create(q).Error; err != nil {
 		return err
 	}
@@ -55,25 +55,35 @@ func (r *queueRepository) Create(ctx context.Context, q *QueueModel) error {
 }
 
 func (r *queueRepository) Update(ctx context.Context, q *QueueModel) error {
-	q.CreatedAt = time.Now() // jika yang dimaksud updatedAt sebaiknya buat field khusus
 	if err := r.db.WithContext(ctx).Save(q).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *queueRepository) GetNextQueueNumber(ctx context.Context, doctorID uint) (int, error) {
+func (r *queueRepository) GetNextQueueNumber(ctx context.Context, doctorID string) (int64, time.Time, error) {
 	start, end := utils.TodayStartEnd()
 
-	var maxQueueNumber int
+	type result struct {
+		MaxQueueNumber sql.NullInt64
+		StartFrom      sql.NullTime
+	}
+	var res result
 	err := r.db.WithContext(ctx).
 		Model(&QueueModel{}).
-		Select("MAX(queue_number)").
-		Where("doctor_id = ? AND created_at BETWEEN ? AND ?", doctorID, start, end).
-		Scan(&maxQueueNumber).Error
-	if err != nil {
-		return 0, err
+		Select("queue_number as max_queue_number, start_from").
+		Where("created_at BETWEEN ? AND ?", start, end).
+		Order("queue_number DESC").
+		Limit(1).
+		Row().
+		Scan(&res.MaxQueueNumber, &res.StartFrom)
+
+	// jika error dikarenakan tidak ada data, set nilai default
+	if err == sql.ErrNoRows {
+		return 0, time.Time{}, nil
 	}
 
-	return maxQueueNumber + 1, nil
+	fmt.Println("Lewat sini")
+
+	return res.MaxQueueNumber.Int64, res.StartFrom.Time, nil
 }

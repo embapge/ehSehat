@@ -11,17 +11,18 @@ message Queue {
   uint32 user_id = 2;
   string user_name = 3;
   string user_role = 4;
-  optional uint32 patient_id = 5;
-  optional string patient_name = 6;
-  uint32 doctor_id = 7;
-  string doctor_name = 8;
-  string doctor_specialization = 9;
-  optional uint32 appointment_id = 10;
-  string type = 11;
-  int32 queue_number = 12;
-  string start_from = 13;
-  string status = 14;
-  string created_at = 15;
+  string user_email = 5;
+  optional uint32 patient_id = 6;
+  optional string patient_name = 7;
+  uint32 doctor_id = 8;
+  string doctor_name = 9;
+  string doctor_specialization = 10;
+  optional uint32 appointment_id = 11;
+  string type = 12;
+  int32 queue_number = 13;
+  string start_from = 14;
+  string status = 15;
+  string created_at = 16;
 }
 
 message QueueIDRequest {
@@ -45,12 +46,13 @@ message GenerateQueueRequest {
   uint32 user_id = 2;
   string user_name = 3;
   string user_role = 4;
-  optional uint32 appointment_id = 5;
-  optional uint32 patient_id = 6;
-  optional string patient_name = 7;
-  string doctor_name = 8;
-  string doctor_specialization = 9;
-  string type = 10;
+  string user_email = 5;
+  optional uint32 appointment_id = 6;
+  optional uint32 patient_id = 7;
+  optional string patient_name = 8;
+  string doctor_name = 9;
+  string doctor_specialization = 10;
+  string type = 11;
 }
 
 message QueueResponse {

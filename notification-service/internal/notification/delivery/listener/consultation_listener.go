@@ -1,21 +1,42 @@
 package listener
 
-import "ehSehat/notification-service/internal/notification/domain"
+import (
+	"ehSehat/libs/utils/rabbitmqown"
+	"ehSehat/notification-service/internal/notification/domain"
+	"encoding/json"
+	"log"
+
+	amqp "github.com/rabbitmq/amqp091-go"
+)
 
 type consultationListener struct {
-	// Add fields as necessary for the listener
-	payload *domain.Notification
-	app     domain.NotificationService
+	app domain.NotificationService
+	ch  *amqp.Channel
 }
 
-func NewConsultationListener(payload *domain.Notification, app domain.NotificationService) *consultationListener {
-	return &consultationListener{
-		payload: payload,
-		app:     app,
+func NewConsultationListener(app domain.NotificationService, ch *amqp.Channel) *consultationListener {
+	return &consultationListener{app: app, ch: ch}
+}
+
+func (l *consultationListener) Start() {
+	queueName := "TemanSehatNotification"
+	_, err := rabbitmqown.DeclareQueue(l.ch, queueName)
+	if err != nil {
+		log.Fatalf("Failed to declare RabbitMQ queue: %v", err)
 	}
-}
-
-func (l *consultationListener) Handle() error {
-
-	return nil
+	msgs, err := rabbitmqown.ConsumeQueue(l.ch, queueName)
+	if err != nil {
+		log.Fatalf("Failed to consume RabbitMQ messages: %v", err)
+	}
+	go func() {
+		for msg := range msgs {
+			var payload rabbitmqown.NotificationPayload
+			if err := json.Unmarshal(msg.Body, &payload); err != nil {
+				log.Printf("Failed to unmarshal RabbitMQ message: %v", err)
+				continue
+			}
+			l.app.CreateNotification(&payload)
+			log.Printf("Received message")
+		}
+	}()
 }

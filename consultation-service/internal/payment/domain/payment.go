@@ -50,3 +50,23 @@ type UpdatePaymentRequest struct {
 	UpdatedRole  *string   `json:"updated_role"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }
+
+// webhook := &domain.PaymentWebhook{
+// 		ID:         req.Id,
+// 		ExternalID: req.ExternalId,
+// 		PaymentID:  req.PaymentId,
+// 		EventType:  req.EventType,
+// 		Payload:    req.Payload.GetValue(),
+// 	}
+
+// 	err := h.app.HandlePaymentWebhook(ctx, webhook)
+// 	if err != nil {
+// 		return nil, utils.GRPCErrorToHTTPError(err)
+// 	}
+type PaymentWebhook struct {
+	ID         string `json:"id"`
+	ExternalID string `json:"external_id"`
+	PaymentID  string `json:"payment_id"`
+	EventType  string `json:"event_type"`
+	Payload    string `json:"payload"`
+}

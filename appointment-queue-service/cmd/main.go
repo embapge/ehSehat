@@ -4,67 +4,75 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
+
+	"google.golang.org/grpc"
 
 	"appointment-queue-service/config"
 
-	// Queue layers
-	queueApp "appointment-queue-service/internal/queue/app"
-	queueHTTP "appointment-queue-service/internal/queue/delivery/http"
-	queueDomain "appointment-queue-service/internal/queue/domain"
-	queueRepo "appointment-queue-service/internal/queue/domain"
-
-	// Appointment layers
+	// Appointment
 	appointmentApp "appointment-queue-service/internal/appointment/app"
 	appointmentGRPC "appointment-queue-service/internal/appointment/delivery/grpc"
-	"appointment-queue-service/internal/appointment/delivery/grpc/pb"
 	appointmentHTTP "appointment-queue-service/internal/appointment/delivery/http"
-	appointmentDomain "appointment-queue-service/internal/appointment/domain"
 	appointmentRepo "appointment-queue-service/internal/appointment/domain"
 
+	// Queue
+	queueApp "appointment-queue-service/internal/queue/app"
+	queueHTTP "appointment-queue-service/internal/queue/delivery/http"
+	queueRepo "appointment-queue-service/internal/queue/domain"
+
+	"appointment-queue-service/internal/appointment/delivery/grpc/pb"
+
 	"github.com/julienschmidt/httprouter"
-	"google.golang.org/grpc"
 )
 
 func main() {
-	// Load .env or fallback to OS environment
+	// Load .env or OS env
 	config.LoadEnv()
 
-	// Initialize DB
+	// DB
 	db := config.DBInit()
 
-	// -------------------- Queue Setup --------------------
+	grpcPort := os.Getenv("GRPC_PORT")
+	if grpcPort == "" {
+		log.Fatal("gRPC port is empty")
+	}
+
+	queuePort := os.Getenv("QUEUE_PORT")
+	if queuePort == "" {
+		log.Fatal("Queue port is empty")
+	}
+
+	// --- Queue ---
 	qRepo := queueRepo.NewQueueRepository(db)
-	qService := queueDomain.NewQueueService(qRepo)
+	qService := queueRepo.NewQueueService(qRepo)
 	qApp := queueApp.NewQueueApp(qService)
 
-	// -------------------- Appointment Setup --------------------
+	// --- Appointment ---
 	aRepo := appointmentRepo.NewAppointmentRepository(db)
-	aService := appointmentDomain.NewAppointmentService(aRepo)
+	aService := appointmentRepo.NewAppointmentService(aRepo)
 	aApp := appointmentApp.NewAppointmentApp(aService)
 
-	// -------------------- HTTP Setup --------------------
+	// --- HTTP Router ---
 	router := httprouter.New()
 	queueHTTP.NewQueueHandler(router, qApp)
 	appointmentHTTP.NewAppointmentHandler(router, aApp)
 
-	// -------------------- gRPC Setup --------------------
+	// --- gRPC Server ---
 	go func() {
-		lis, err := net.Listen("tcp", ":50051")
+		lis, err := net.Listen("tcp", ":"+grpcPort)
 		if err != nil {
-			log.Fatalf("❌ Failed to listen on port 50051: %v", err)
+			log.Fatalf("❌ Failed to listen: %v", err)
 		}
-
 		grpcServer := grpc.NewServer()
-		grpcHandler := appointmentGRPC.NewAppointmentHandler(aApp)
-		pb.RegisterAppointmentServiceServer(grpcServer, grpcHandler)
-
-		log.Println("✅ gRPC server running at :50051")
+		pb.RegisterAppointmentServiceServer(grpcServer, appointmentGRPC.NewAppointmentHandler(aApp))
+		log.Println("🚀 gRPC server running at :" + grpcPort)
 		if err := grpcServer.Serve(lis); err != nil {
 			log.Fatalf("❌ Failed to serve gRPC: %v", err)
 		}
 	}()
 
-	// -------------------- Start HTTP --------------------
-	log.Println("✅ HTTP server running at :8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	// --- Start HTTP Server ---
+	log.Println("✅ HTTP server running at :" + queuePort)
+	log.Fatal(http.ListenAndServe(":"+queuePort, router))
 }

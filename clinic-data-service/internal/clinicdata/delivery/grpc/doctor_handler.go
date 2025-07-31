@@ -37,6 +37,7 @@ func (h *GRPCHandler) CreateDoctor(ctx context.Context, req *clinicdatapb.Create
 	if err != nil {
 		return nil, mapErrorToStatus(err)
 	}
+
 	return mapDoctorToPB(created), nil
 }
 
