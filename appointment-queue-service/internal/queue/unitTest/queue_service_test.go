@@ -36,27 +36,30 @@ func (m *MockQueueRepo) Update(ctx context.Context, q *domain.QueueModel) error 
 	return args.Error(0)
 }
 
-func (m *MockQueueRepo) GetNextQueueNumber(ctx context.Context, doctorID uint) (int, error) {
+func (m *MockQueueRepo) GetNextQueueNumber(ctx context.Context, doctorID string) (int64, time.Time, error) {
 	args := m.Called(ctx, doctorID)
-	return args.Int(0), args.Error(1)
+	return args.Get(0).(int64), args.Get(1).(time.Time), args.Error(2)
 }
 
 func TestGenerateNextQueue_Success(t *testing.T) {
 	mockRepo := new(MockQueueRepo)
 	service := domain.NewQueueService(mockRepo)
 
-	doctorID := uint(1)
-	userID := uint(2)
+	doctorID := "1"
+	userID := "2"
 	userName := "John"
 	userRole := "user"
+	userEmail := "john@example.com"
 	doctorName := "Dr. Smith"
 	doctorSpecialization := "Umum"
 	queueType := "appointment"
 	appointmentID := uint(99)
-	patientID := uint(3)
+	patientID := "3"
 	patientName := "Anak John"
 
-	mockRepo.On("GetNextQueueNumber", mock.Anything, doctorID).Return(5, nil)
+	expectedTime := time.Now()
+
+	mockRepo.On("GetNextQueueNumber", mock.Anything, doctorID).Return(int64(5), expectedTime, nil)
 	mockRepo.On("Create", mock.Anything, mock.AnythingOfType("*domain.QueueModel")).Return(nil)
 
 	q, err := service.GenerateNextQueue(
@@ -65,6 +68,7 @@ func TestGenerateNextQueue_Success(t *testing.T) {
 		userID,
 		userName,
 		userRole,
+		userEmail,
 		&appointmentID,
 		&patientID,
 		&patientName,
@@ -74,7 +78,7 @@ func TestGenerateNextQueue_Success(t *testing.T) {
 	)
 
 	assert.NoError(t, err)
-	assert.Equal(t, 5, q.QueueNumber)
+	assert.Equal(t, 6, q.QueueNumber)
 	assert.Equal(t, "active", q.Status)
 	mockRepo.AssertExpectations(t)
 }
@@ -85,7 +89,17 @@ func TestGenerateNextQueue_MissingRequiredData(t *testing.T) {
 
 	_, err := service.GenerateNextQueue(
 		context.Background(),
-		0, 0, "", "", nil, nil, nil, "", "", "",
+		"",  // doctorID string
+		"",  // userID string
+		"",  // userName string
+		"",  // userRole string
+		"",  // userEmail string
+		nil, // appointmentID *uint
+		nil, // patientID *string
+		nil, // patientName *string
+		"",  // doctorName string
+		"",  // doctorSpecialization string
+		"",  // queueType string
 	)
 
 	assert.Error(t, err)
@@ -95,14 +109,28 @@ func TestGenerateNextQueue_QueueNumberError(t *testing.T) {
 	mockRepo := new(MockQueueRepo)
 	service := domain.NewQueueService(mockRepo)
 
-	mockRepo.On("GetNextQueueNumber", mock.Anything, uint(1)).Return(0, errors.New("db error"))
+	doctorID := "1"
+	patientID := "10"
+	patientName := "Anak"
+
+	mockRepo.On("GetNextQueueNumber", mock.Anything, doctorID).
+		Return(int64(0), time.Time{}, errors.New("db error"))
 
 	_, err := service.GenerateNextQueue(
 		context.Background(),
-		1, 1, "User", "user", nil, nil, nil, "Dr", "Spesialis", "appointment",
+		doctorID,         // doctorID
+		"1",              // userID
+		"User",           // userName
+		"user",           // userRole
+		"user@email.com", // userEmail
+		nil,
+		&patientID,
+		&patientName,
+		"Dr", "Spesialis", "appointment",
 	)
 
 	assert.Error(t, err)
+	assert.Equal(t, "db error", err.Error())
 }
 
 func TestCreateQueue_Success(t *testing.T) {
@@ -112,10 +140,10 @@ func TestCreateQueue_Success(t *testing.T) {
 	now := time.Now()
 	patientName := "Budi"
 	queue := &domain.QueueModel{
-		UserID:               1,
+		UserID:               "1",
 		UserName:             "John",
 		UserRole:             "member",
-		DoctorID:             2,
+		DoctorID:             "2",
 		DoctorName:           "Dr. Smith",
 		DoctorSpecialization: "Umum",
 		Type:                 "online",
@@ -123,12 +151,12 @@ func TestCreateQueue_Success(t *testing.T) {
 		StartFrom:            now,
 	}
 
-	mockRepo.On("GetNextQueueNumber", mock.Anything, queue.DoctorID).Return(10, nil)
+	mockRepo.On("GetNextQueueNumber", mock.Anything, queue.DoctorID).Return(int64(10), now, nil)
 	mockRepo.On("Create", mock.Anything, mock.AnythingOfType("*domain.QueueModel")).Return(nil)
 
 	err := service.CreateQueue(context.Background(), queue)
 	assert.NoError(t, err)
-	assert.Equal(t, 10, queue.QueueNumber)
+	assert.Equal(t, 11, queue.QueueNumber)
 	assert.Equal(t, "active", queue.Status)
 	mockRepo.AssertExpectations(t)
 }
@@ -144,24 +172,27 @@ func TestCreateQueue_MissingData(t *testing.T) {
 	assert.Contains(t, err.Error(), "data user, dokter, dan tipe antrian wajib diisi")
 }
 
-func TestCreateQueue_MissingPatient(t *testing.T) {
+func TestCreateQueue_MissingPatient_NotRequired(t *testing.T) {
 	mockRepo := new(MockQueueRepo)
 	service := domain.NewQueueService(mockRepo)
 
 	queue := &domain.QueueModel{
-		UserID:               1,
+		UserID:               "1",
 		UserName:             "John",
 		UserRole:             "member",
-		DoctorID:             2,
+		DoctorID:             "2",
 		DoctorName:           "Dr. Smith",
 		DoctorSpecialization: "Umum",
 		Type:                 "online",
-		// PatientName dan PatientID nil
+		// PatientName dan PatientID nil (sekarang valid)
 	}
 
+	mockRepo.On("GetNextQueueNumber", mock.Anything, queue.DoctorID).Return(int64(3), time.Now(), nil)
+	mockRepo.On("Create", mock.Anything, mock.AnythingOfType("*domain.QueueModel")).Return(nil)
+
 	err := service.CreateQueue(context.Background(), queue)
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "pasien harus diisi")
+	assert.NoError(t, err)
+	mockRepo.AssertExpectations(t)
 }
 
 func TestGetQueueByID_Success(t *testing.T) {
@@ -182,8 +213,8 @@ func TestGetTodayQueuesByDoctor(t *testing.T) {
 	service := domain.NewQueueService(mockRepo)
 
 	expected := []*domain.QueueModel{
-		{ID: 1, DoctorID: 2},
-		{ID: 2, DoctorID: 2},
+		{ID: 1, DoctorID: "2"},
+		{ID: 2, DoctorID: "2"},
 	}
 
 	mockRepo.On("FindTodayByDoctor", mock.Anything, uint(2)).Return(expected, nil)
