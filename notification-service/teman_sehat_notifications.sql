@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS teman_sehat_notifications;
 
 USE teman_sehat_notifications;
 
-CREATE TABLE notifications (
+CREATE TABLE IF NOT EXISTS notifications (
     id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     channel VARCHAR(30) NOT NULL,
     recipient VARCHAR(255) NOT NULL,

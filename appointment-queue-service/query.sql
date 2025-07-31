@@ -1,8 +1,8 @@
-CREATE DATABASE teman_sehat_appointment_queues;
+CREATE DATABASE IF NOT EXISTS teman_sehat_appointment_queues;
 
 USE teman_sehat_appointment_queues;
 
-CREATE TABLE appointments (
+CREATE TABLE IF NOT EXISTS appointments (
     id SERIAL PRIMARY KEY,
     user_id INTEGER,
     user_full_name VARCHAR(100),
@@ -16,7 +16,7 @@ CREATE TABLE appointments (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE queues (
+CREATE TABLE IF NOT EXISTS queues (
     id SERIAL PRIMARY KEY,
     user_id VARCHAR(36),
     user_name VARCHAR(100),

@@ -27,7 +27,7 @@ func DBInit() *gorm.DB {
 	port := os.Getenv("DB_PORT")
 	dbname := os.Getenv("DB_NAME")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&loc=Asia%%2FJakarta",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&loc=Local",
 		user, pass, host, port, dbname)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})

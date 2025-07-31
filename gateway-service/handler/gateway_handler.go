@@ -12,6 +12,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"google.golang.org/grpc/metadata"
+
+	// "google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
@@ -244,7 +246,32 @@ func (h *GatewayHandler) ProxyToClinicDataService(c echo.Context) error {
 			return c.JSON(http.StatusCreated, resp)
 		}
 	case http.MethodGet:
-		if strings.HasPrefix(path, "/clinics/patients/") && len(path) > len("/clinics/patients/") {
+		// Berikan method untuk GetAllPatients, GetAllDoctors, GetAllSpecializations, GetAllRooms, GetAllScheduleFixed
+		if path == "/clinics/patients" {
+			resp, err := h.GRPC.ClinicDataClient.GetAllPatients(ctx, &allPb.Empty{})
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+			}
+			return c.JSON(http.StatusOK, resp)
+		} else if path == "/clinics/doctors" {
+			resp, err := h.GRPC.ClinicDataClient.GetAllDoctors(ctx, &allPb.Empty{})
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+			}
+			return c.JSON(http.StatusOK, resp)
+		} else if path == "/clinics/specializations" {
+			resp, err := h.GRPC.ClinicDataClient.GetAllSpecializations(ctx, &allPb.Empty{})
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+			}
+			return c.JSON(http.StatusOK, resp)
+		} else if path == "/clinics/rooms" {
+			resp, err := h.GRPC.ClinicDataClient.GetAllRooms(ctx, &allPb.Empty{})
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+			}
+			return c.JSON(http.StatusOK, resp)
+		} else if strings.HasPrefix(path, "/clinics/patients/") && len(path) > len("/clinics/patients/") {
 			id := strings.TrimPrefix(path, "/clinics/patients/")
 			resp, err := h.GRPC.ClinicDataClient.GetPatientByID(ctx, &allPb.GetPatientByIDRequest{Id: id})
 			if err != nil {
@@ -331,11 +358,7 @@ func (h *GatewayHandler) ProxyToClinicDataService(c echo.Context) error {
 			return c.JSON(http.StatusOK, resp)
 		}
 	default:
-		if strings.HasPrefix(path, "/clinics/patients") || strings.HasPrefix(path, "/clinics/doctors") ||
-			strings.HasPrefix(path, "/clinics/specializations") || strings.HasPrefix(path, "/clinics/rooms") ||
-			strings.HasPrefix(path, "/clinics/schedule-fixed") {
-			return c.NoContent(http.StatusMethodNotAllowed)
-		}
+		return c.NoContent(http.StatusMethodNotAllowed)
 	}
 	return c.NoContent(http.StatusMethodNotAllowed)
 }

@@ -101,7 +101,7 @@ func (s *doctorService) Create(doctor *domain.Doctor) (*domain.Doctor, error) {
 		return nil, fmt.Errorf("failed to publish message: %v", err)
 	}
 
-	timeout := time.After(5 * time.Second)
+	timeout := time.After(15 * time.Second)
 	var resp rabbitmqown.AuthRabbitBody
 	for {
 		select {
