@@ -61,6 +61,13 @@ func (h *QueueHandler) CreateQueue(w http.ResponseWriter, r *http.Request, _ htt
 		http.Error(w, "invalid JSON", http.StatusBadRequest)
 		return
 	}
+	// Ambil value dari header
+	if userIDStr := r.Header.Get("ts-user-id"); userIDStr != "" {
+		q.UserID = userIDStr // UUID sebagai string
+	}
+	q.UserName = r.Header.Get("ts-user-name")
+	q.UserRole = r.Header.Get("ts-user-role")
+	q.UserEmail = r.Header.Get("ts-user-email")
 
 	if err := h.App.CreateQueue(r.Context(), &q); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -106,6 +113,7 @@ func (h *QueueHandler) GenerateNextQueue(w http.ResponseWriter, r *http.Request,
 		req.UserID,
 		req.UserName,
 		req.UserRole,
+		req.UserEmail,
 		req.AppointmentID,
 		req.PatientID,
 		req.PatientName,

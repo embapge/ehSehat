@@ -53,8 +53,18 @@ message PaymentUpdateRequest {
   string status = 3; // updated status
 }
 
+// Buatkan message untuk menangani webhook baik dari payment gateway atau pihak ketiga lainnya, sertakan id unik sebagai identifier id dari pihak ketiga
+message PaymentWebhookRequest {
+  string id = 1; // unique identifier for the webhook
+  string external_id = 2; // ID unik dari pihak ketiga
+  string payment_id = 3; // ID pembayaran terkait
+  string event_type = 4; // Jenis event dari webhook, misalnya "payment_success", "payment_failed"
+  google.protobuf.StringValue payload = 5; // Payload JSON dari webhook
+}
+
 service PaymentService {
   rpc CreatePaymentGRPC(PaymentRequest) returns (PaymentResponse);
   rpc GetPaymentByIdGRPC(google.protobuf.StringValue) returns (PaymentResponse);
   rpc UpdatePaymentGRPC(PaymentUpdateRequest) returns (PaymentResponse);
+  rpc HandlePaymentWebhookGRPC(PaymentWebhookRequest) returns (google.protobuf.StringValue);
 }

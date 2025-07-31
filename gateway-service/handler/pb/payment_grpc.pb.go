@@ -20,9 +20,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PaymentService_CreatePaymentGRPC_FullMethodName  = "/consultation.PaymentService/CreatePaymentGRPC"
-	PaymentService_GetPaymentByIdGRPC_FullMethodName = "/consultation.PaymentService/GetPaymentByIdGRPC"
-	PaymentService_UpdatePaymentGRPC_FullMethodName  = "/consultation.PaymentService/UpdatePaymentGRPC"
+	PaymentService_CreatePaymentGRPC_FullMethodName        = "/consultation.PaymentService/CreatePaymentGRPC"
+	PaymentService_GetPaymentByIdGRPC_FullMethodName       = "/consultation.PaymentService/GetPaymentByIdGRPC"
+	PaymentService_UpdatePaymentGRPC_FullMethodName        = "/consultation.PaymentService/UpdatePaymentGRPC"
+	PaymentService_HandlePaymentWebhookGRPC_FullMethodName = "/consultation.PaymentService/HandlePaymentWebhookGRPC"
 )
 
 // PaymentServiceClient is the client API for PaymentService service.
@@ -32,6 +33,7 @@ type PaymentServiceClient interface {
 	CreatePaymentGRPC(ctx context.Context, in *PaymentRequest, opts ...grpc.CallOption) (*PaymentResponse, error)
 	GetPaymentByIdGRPC(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*PaymentResponse, error)
 	UpdatePaymentGRPC(ctx context.Context, in *PaymentUpdateRequest, opts ...grpc.CallOption) (*PaymentResponse, error)
+	HandlePaymentWebhookGRPC(ctx context.Context, in *PaymentWebhookRequest, opts ...grpc.CallOption) (*wrapperspb.StringValue, error)
 }
 
 type paymentServiceClient struct {
@@ -72,6 +74,16 @@ func (c *paymentServiceClient) UpdatePaymentGRPC(ctx context.Context, in *Paymen
 	return out, nil
 }
 
+func (c *paymentServiceClient) HandlePaymentWebhookGRPC(ctx context.Context, in *PaymentWebhookRequest, opts ...grpc.CallOption) (*wrapperspb.StringValue, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(wrapperspb.StringValue)
+	err := c.cc.Invoke(ctx, PaymentService_HandlePaymentWebhookGRPC_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PaymentServiceServer is the server API for PaymentService service.
 // All implementations must embed UnimplementedPaymentServiceServer
 // for forward compatibility.
@@ -79,6 +91,7 @@ type PaymentServiceServer interface {
 	CreatePaymentGRPC(context.Context, *PaymentRequest) (*PaymentResponse, error)
 	GetPaymentByIdGRPC(context.Context, *wrapperspb.StringValue) (*PaymentResponse, error)
 	UpdatePaymentGRPC(context.Context, *PaymentUpdateRequest) (*PaymentResponse, error)
+	HandlePaymentWebhookGRPC(context.Context, *PaymentWebhookRequest) (*wrapperspb.StringValue, error)
 	mustEmbedUnimplementedPaymentServiceServer()
 }
 
@@ -97,6 +110,9 @@ func (UnimplementedPaymentServiceServer) GetPaymentByIdGRPC(context.Context, *wr
 }
 func (UnimplementedPaymentServiceServer) UpdatePaymentGRPC(context.Context, *PaymentUpdateRequest) (*PaymentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePaymentGRPC not implemented")
+}
+func (UnimplementedPaymentServiceServer) HandlePaymentWebhookGRPC(context.Context, *PaymentWebhookRequest) (*wrapperspb.StringValue, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandlePaymentWebhookGRPC not implemented")
 }
 func (UnimplementedPaymentServiceServer) mustEmbedUnimplementedPaymentServiceServer() {}
 func (UnimplementedPaymentServiceServer) testEmbeddedByValue()                        {}
@@ -173,6 +189,24 @@ func _PaymentService_UpdatePaymentGRPC_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PaymentService_HandlePaymentWebhookGRPC_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PaymentWebhookRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentServiceServer).HandlePaymentWebhookGRPC(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentService_HandlePaymentWebhookGRPC_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentServiceServer).HandlePaymentWebhookGRPC(ctx, req.(*PaymentWebhookRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PaymentService_ServiceDesc is the grpc.ServiceDesc for PaymentService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -191,6 +225,10 @@ var PaymentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdatePaymentGRPC",
 			Handler:    _PaymentService_UpdatePaymentGRPC_Handler,
+		},
+		{
+			MethodName: "HandlePaymentWebhookGRPC",
+			Handler:    _PaymentService_HandlePaymentWebhookGRPC_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -3,22 +3,23 @@ package domain
 import "time"
 
 type QueueModel struct {
-	ID                   uint      `gorm:"primaryKey" json:"id"`
-	UserID               uint      `json:"user_id"`      // user yang create antrian
-	UserName             string    `json:"user_name"`    // snapshot
-	UserRole             string    `json:"user_role"`    // admin/member
-	PatientID            *uint     `json:"patient_id"`   // optional
-	PatientName          *string   `json:"patient_name"` // optional
-	DoctorID             uint      `json:"doctor_id"`
-	DoctorName           string    `json:"doctor_name"`
-	DoctorSpecialization string    `json:"doctor_specialization"`
-	AppointmentID        *uint     `json:"appointment_id"` // nullable
-	Type                 string    `json:"type"`           // online / offline
-	QueueNumber          int       `json:"queue_number"`   // di-generate per dokter/hari
-	StartFrom            time.Time `json:"start_from"`     // estimasi masuk ruangan
-	Status               string    `json:"status"`         // active, fail, done
-	CreatedAt            time.Time `json:"created_at"`
-	UpdatedAt            time.Time `json:"updated_at"`
+	ID                   uint      `gorm:"primaryKey" json:"id,omitempty"`
+	UserID               string    `json:"user_id,omitempty"`      // user yang create antrian
+	UserName             string    `json:"user_name,omitempty"`    // snapshot
+	UserRole             string    `json:"user_role,omitempty"`    // admin/member
+	UserEmail            string    `json:"user_email,omitempty"`   // admin/member
+	PatientID            *string   `json:"patient_id,omitempty"`   // optional
+	PatientName          *string   `json:"patient_name,omitempty"` // optional
+	DoctorID             string    `json:"doctor_id,omitempty"`
+	DoctorName           string    `json:"doctor_name,omitempty"`
+	DoctorSpecialization string    `json:"doctor_specialization,omitempty"`
+	AppointmentID        *uint     `json:"appointment_id,omitempty"` // nullable
+	Type                 string    `json:"type,omitempty"`           // online / offline
+	QueueNumber          int       `json:"queue_number,omitempty"`   // di-generate per dokter/hari
+	StartFrom            time.Time `json:"start_from,omitempty"`     // estimasi masuk ruangan
+	Status               string    `json:"status,omitempty"`         // active, fail, done
+	CreatedAt            time.Time `json:"created_at,omitempty"`
+	UpdatedAt            time.Time `json:"updated_at,omitempty"`
 }
 
 func (QueueModel) TableName() string {

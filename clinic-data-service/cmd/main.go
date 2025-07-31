@@ -13,6 +13,7 @@ import (
 	grpcHandler "clinic-data-service/internal/clinicdata/delivery/grpc"
 	"clinic-data-service/internal/clinicdata/delivery/grpc/clinicdatapb"
 	"clinic-data-service/internal/clinicdata/infra"
+	"ehSehat/libs/utils/rabbitmqown"
 )
 
 func main() {
@@ -21,6 +22,26 @@ func main() {
 
 	// STEP 2: Init DB
 	db := infra.InitDB(env)
+
+	conn, ch, err := rabbitmqown.InitRabbitMQ()
+	if err != nil {
+		log.Fatalf("Failed to initialize RabbitMQ: %v", err)
+	}
+
+	defer func() {
+		if err := conn.Close(); err != nil {
+			log.Printf("Failed to close RabbitMQ connection: %v", err)
+		}
+		if err := ch.Close(); err != nil {
+			log.Printf("Failed to close RabbitMQ channel: %v", err)
+		}
+	}()
+
+	queueName := os.Getenv("RABBIT_QUEUE")
+	_, err = rabbitmqown.DeclareQueue(ch, queueName)
+	if err != nil {
+		log.Fatalf("Failed to declare RabbitMQ queue: %v", err)
+	}
 
 	// STEP 3: Init Repositories (infra layer)
 	patientRepo := infra.NewPGPatientRepository(db)
@@ -31,8 +52,8 @@ func main() {
 	scheduleOverrideRepo := infra.NewPGScheduleOverrideRepository(db)
 
 	// STEP 4: Init Services (app layer)
-	patientService := app.NewPatientService(patientRepo)
-	doctorService := app.NewDoctorService(doctorRepo)
+	patientService := app.NewPatientService(patientRepo, ch)
+	doctorService := app.NewDoctorService(doctorRepo, ch)
 	specService := app.NewSpecializationService(specRepo)
 	roomService := app.NewRoomService(roomRepo)
 	scheduleFixedService := app.NewScheduleFixedService(scheduleFixedRepo)

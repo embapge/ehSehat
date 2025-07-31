@@ -3,6 +3,7 @@ package domain
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -11,7 +12,7 @@ type QueueService interface {
 	GetTodayQueuesByDoctor(ctx context.Context, doctorID uint) ([]*QueueModel, error)
 	CreateQueue(ctx context.Context, q *QueueModel) error
 	UpdateQueue(ctx context.Context, q *QueueModel) error
-	GenerateNextQueue(ctx context.Context, doctorID uint, userID uint, userName, userRole string, appointmentID *uint, patientID *uint, patientName *string, doctorName, doctorSpecialization, queueType string) (*QueueModel, error)
+	GenerateNextQueue(ctx context.Context, doctorID string, userID string, userName, userRole, userEmail string, appointmentID *uint, patientID *string, patientName *string, doctorName, doctorSpecialization, queueType string) (*QueueModel, error)
 }
 
 type queueService struct {
@@ -31,23 +32,38 @@ func (s *queueService) GetTodayQueuesByDoctor(ctx context.Context, doctorID uint
 }
 
 func (s *queueService) CreateQueue(ctx context.Context, q *QueueModel) error {
-	if q.DoctorID == 0 || q.UserID == 0 || q.UserName == "" || q.UserRole == "" || q.DoctorName == "" || q.DoctorSpecialization == "" || q.Type == "" {
+	if q.Type == "" {
 		return errors.New("data user, dokter, dan tipe antrian wajib diisi")
 	}
-	if q.PatientName == nil && q.PatientID == nil {
-		return errors.New("pasien harus diisi")
-	}
+	// if q.PatientName == nil && q.PatientID == nil {
+	// 	return errors.New("pasien harus diisi")
+	// }
 	q.Status = "active"
-	q.CreatedAt = time.Now()
-	if q.StartFrom.IsZero() {
-		q.StartFrom = time.Now().Add(5 * time.Minute)
-	}
+	// if q.StartFrom.IsZero() {
+	// 	q.StartFrom = time.Now().Add(5 * time.Minute)
+	// }
 	// Ambil nomor antrian berikutnya
-	nextNumber, err := s.repo.GetNextQueueNumber(ctx, q.DoctorID)
-	if err != nil {
-		return err
+	queueNumber, startFrom, _ := s.repo.GetNextQueueNumber(ctx, q.DoctorID)
+
+	fmt.Println("Cek nilai startFromStr:", startFrom)
+
+	if queueNumber == 0 {
+		queueNumber = 1 // Default to 1 if no previous queue number exists
+		// set startFrom to 10 minutes from now
+		startFrom = time.Now().Add(10 * time.Minute)
+	} else if queueNumber > 0 {
+		queueNumber++ // Increment the queue number
+		if startFrom.Before(time.Now()) {
+			startFrom = time.Now().Add(10 * time.Minute)
+		} else {
+			startFrom = startFrom.Add(40 * time.Minute)
+		}
 	}
-	q.QueueNumber = nextNumber
+
+	q.QueueNumber = int(queueNumber)
+	q.StartFrom = startFrom // dummy estimasi
+
+	fmt.Println("Cek nilai startFromStr2:", startFrom, queueNumber)
 
 	return s.repo.Create(ctx, q)
 }
@@ -61,15 +77,15 @@ func (s *queueService) UpdateQueue(ctx context.Context, q *QueueModel) error {
 
 func (s *queueService) GenerateNextQueue(
 	ctx context.Context,
-	doctorID uint,
-	userID uint,
-	userName, userRole string,
+	doctorID string,
+	userID string,
+	userName, userRole, userEmail string,
 	appointmentID *uint,
-	patientID *uint,
+	patientID *string,
 	patientName *string,
 	doctorName, doctorSpecialization, queueType string,
 ) (*QueueModel, error) {
-	if doctorID == 0 || userID == 0 || userName == "" || userRole == "" || doctorName == "" || doctorSpecialization == "" || queueType == "" {
+	if doctorID == "" || userID == "" || userName == "" || userRole == "" || userEmail == "" || doctorName == "" || doctorSpecialization == "" || queueType == "" {
 		return nil, errors.New("data wajib tidak lengkap")
 	}
 
@@ -77,15 +93,29 @@ func (s *queueService) GenerateNextQueue(
 		return nil, errors.New("pasien harus diisi")
 	}
 
-	nextNumber, err := s.repo.GetNextQueueNumber(ctx, doctorID)
+	// Ambil nomor antrian berikutnya dari repository
+	queueNumber, startFrom, err := s.repo.GetNextQueueNumber(ctx, doctorID)
 	if err != nil {
-		return nil, err
+		return &QueueModel{}, err
+	}
+
+	fmt.Println("Cek nilai startFromStr:", startFrom)
+
+	if queueNumber == 0 {
+		queueNumber = 1 // Default to 1 if no previous queue number exists
+		// set startFrom to 10 minutes from now
+		startFrom = time.Now().Add(10 * time.Minute)
+	} else if queueNumber > 0 {
+		queueNumber++ // Increment the queue number
+		// tambah estimasi masuk ruangan 40 menit
+		startFrom = startFrom.Add(40 * time.Minute)
 	}
 
 	q := &QueueModel{
 		UserID:               userID,
 		UserName:             userName,
 		UserRole:             userRole,
+		UserEmail:            userEmail,
 		PatientID:            patientID,
 		PatientName:          patientName,
 		DoctorID:             doctorID,
@@ -93,10 +123,9 @@ func (s *queueService) GenerateNextQueue(
 		DoctorSpecialization: doctorSpecialization,
 		AppointmentID:        appointmentID,
 		Type:                 queueType,
-		QueueNumber:          nextNumber,
+		QueueNumber:          int(queueNumber),
 		Status:               "active",
-		StartFrom:            time.Now().Add(time.Minute * 5), // dummy estimasi
-		CreatedAt:            time.Now(),
+		StartFrom:            startFrom, // dummy estimasi
 	}
 
 	if err := s.repo.Create(ctx, q); err != nil {

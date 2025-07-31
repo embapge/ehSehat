@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type RabbitPayload struct {
+type NotificationPayload struct {
 	ID            string          `json:"id"`
 	Channel       string          `json:"channel"`        // e.g., "email", "sms", "push"
 	Recipient     string          `json:"recipient"`      // e.g., email address, phone number, or device token

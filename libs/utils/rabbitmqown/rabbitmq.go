@@ -7,6 +7,13 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
+type AuthRabbitBody struct {
+	ID    string `json:"id,omitempty"`
+	Name  string `json:"name,omitempty"`
+	Email string `json:"email,omitempty"`
+	Role  string `json:"role,omitempty"`
+}
+
 var MQConn *amqp.Connection
 
 func InitRabbitMQ() (*amqp.Connection, *amqp.Channel, error) {

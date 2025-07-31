@@ -81,7 +81,7 @@ func (h *paymentHandler) CreatePaymentGRPC(ctx context.Context, req *paymentPb.P
 	}
 
 	consultationContext, _ := json.Marshal(paymentResponse)
-	payload := rabbitmqown.RabbitPayload{
+	payload := rabbitmqown.NotificationPayload{
 		Channel: "email",
 		// Recipient:     consultation.Patient.ID, // Assuming recipient is the patient ID
 		Recipient:     "baratagusti.bg@gmail.com", // Assuming recipient is the patient ID
@@ -89,7 +89,6 @@ func (h *paymentHandler) CreatePaymentGRPC(ctx context.Context, req *paymentPb.P
 		Subject:       "Payment Created!",
 		Body:          fmt.Sprintf("Your payment has been created. Please refer to this link to paid consultation: %v, sebesar %v", invoiceURL, paymentResponse.Amount),
 		SourceService: "consultationService",
-		ReferenceID:   paymentResponse.ID,  // Use the ID field directly from paymentResponse
 		Context:       consultationContext, // Additional context can be added here if needed
 		Status:        "pending",           // Initial status
 		ErrorMessage:  "",                  // No error message initially
@@ -147,4 +146,68 @@ func (h *paymentHandler) GetPaymentByIdGRPC(ctx context.Context, req *wrapperspb
 		Gateway:        wrapperspb.String(payment.Gateway),
 		Status:         wrapperspb.String(payment.Status),
 	}, nil
+}
+
+func (h *paymentHandler) HandlePaymentWebhookGRPC(ctx context.Context, req *paymentPb.PaymentWebhookRequest) (*wrapperspb.StringValue, error) {
+	if req == nil || req.ExternalId == "" || req.PaymentId == "" || req.EventType == "" {
+		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Invalid webhook request"))
+	}
+
+	webhook := &domain.PaymentWebhook{
+		ExternalID: req.ExternalId,
+		PaymentID:  req.PaymentId,
+		EventType:  req.EventType,
+		Payload:    req.Payload.GetValue(),
+	}
+
+	err := h.app.HandlePaymentWebhook(ctx, webhook)
+	if err != nil {
+		return nil, utils.GRPCErrorToHTTPError(err)
+	}
+
+	if webhook.EventType == "PAID" {
+		// webhook.Payload is a string, so unmarshal it to get the amount
+		var payloadMap map[string]interface{}
+		if err := json.Unmarshal([]byte(webhook.Payload), &payloadMap); err != nil {
+			return nil, utils.NewBadRequestError("Invalid payload format")
+		}
+		amountFloat, ok := payloadMap["amount"].(float64)
+		if !ok {
+			return nil, utils.NewBadRequestError("Amount field missing or invalid in payload")
+		}
+
+		paymentContext, _ := json.Marshal(payloadMap)
+		payload := rabbitmqown.NotificationPayload{
+			Channel: "email",
+			// Recipient:     consultation.Patient.ID, // Assuming recipient is the patient ID
+			Recipient:     "baratagusti.bg@gmail.com", // Assuming recipient is the patient ID
+			TemplateName:  "paymentPaid",              // Example template name
+			Subject:       "Payment Paid!",
+			Body:          fmt.Sprintf("Thanks for consultation with us. Your payment Rp. %v has been processed successfully.", amountFloat),
+			SourceService: "consultationService",
+			Context:       paymentContext, // Additional context can be added here if needed
+			Status:        "pending",      // Initial status
+			ErrorMessage:  "",             // No error message initially
+			RetryCount:    0,              // Initial retry count
+		}
+
+		payloadBytes, _ := json.Marshal(payload)
+
+		err = h.ch.Publish(
+			"",                        // default exchange
+			os.Getenv("RABBIT_QUEUE"), // routing key (queue name)
+			false,                     // mandatory
+			false,                     // immediate
+			amqp.Publishing{
+				ContentType: "application/json",
+				Body:        payloadBytes,
+			},
+		)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return wrapperspb.String("Webhook processed successfully"), nil
 }
