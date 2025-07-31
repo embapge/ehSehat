@@ -6,6 +6,7 @@ import (
 	"ehSehat/consultation-service/internal/consultation/domain"
 	"ehSehat/libs/utils"
 	"ehSehat/libs/utils/grpcmetadata"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -27,9 +28,25 @@ func NewConsultationHandler(app domain.ConsultationService, ch *amqp.Channel) *c
 }
 
 func (h *consultationHandler) CreateConsultation(ctx context.Context, req *consultationPb.ConsultationRequest) (*consultationPb.ConsultationResponse, error) {
+	// Berikut message consultation request saya:
+	// message ConsultationRequest {
+	// 	string id = 1;
+	// 	string queue_id = 2;
+	// 	string appointment_id = 3;
+	// 	PatientSnapshot patient = 4; // from master-service
+	// 	DoctorSnapshot doctor = 5; // from master-service
+	// 	RoomSnapshot room = 6; // from master-service
+	// 	string symptoms = 7;
+	// 	repeated Prescription prescription = 8; // list of prescriptions
+	// 	string diagnosis = 9;
+	// 	string date = 10; // date of the consultation
+	// 	string amount = 11; // amount for the consultation
+	// 	}
+
 	if req == nil {
 		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Request cannot be nil"))
 	}
+	fmt.Println("check amount:", req.Amount)
 	if req.Patient == nil || req.Patient.Id == "" || req.Patient.Name == "" {
 		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Patient fields are required"))
 	}
@@ -50,6 +67,9 @@ func (h *consultationHandler) CreateConsultation(ctx context.Context, req *consu
 	}
 	if len(req.Prescription) == 0 {
 		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Prescription is required"))
+	}
+	if req.Amount == "" {
+		return nil, utils.GRPCErrorToHTTPError(utils.NewBadRequestError("Amount is required"))
 	}
 
 	md, _ := grpcmetadata.GetMetadataFromContext(ctx)
@@ -122,6 +142,13 @@ func (h *consultationHandler) CreateConsultation(ctx context.Context, req *consu
 		Name: req.Room.Name,
 	}
 
+	amountFloat64 := float64(0)
+	if req.Amount != "" {
+		if amt, err := strconv.ParseFloat(req.Amount, 64); err == nil {
+			amountFloat64 = amt
+		}
+	}
+
 	consultation := &domain.Consultation{
 		QueueID:       req.QueueId,
 		AppointmentID: req.AppointmentId,
@@ -134,6 +161,7 @@ func (h *consultationHandler) CreateConsultation(ctx context.Context, req *consu
 		Prescription:  prescriptionFormatted,
 		Diagnosis:     req.Diagnosis,
 		Date:          dateFormatted,
+		Amount:        amountFloat64,
 	}
 
 	err := h.app.CreateConsultation(ctx, consultation)
@@ -162,7 +190,6 @@ func (h *consultationHandler) CreateConsultation(ctx context.Context, req *consu
 		Patient: &consultationPb.PatientSnapshot{
 			Id:   patientSnapshot.ID,
 			Name: patientSnapshot.Name,
-			Age:  strconv.Itoa(int(patientSnapshot.Age)),
 		},
 		Doctor: &consultationPb.DoctorSnapshot{
 			Id:             doctorSnapshot.ID,
@@ -178,6 +205,7 @@ func (h *consultationHandler) CreateConsultation(ctx context.Context, req *consu
 		Diagnosis:    consultation.Diagnosis,
 		Date:         consultation.Date.Format("2006-01-02"),
 		Status:       consultation.Status,
+		Amount:       strconv.FormatFloat(consultation.Amount, 'f', -1, 64),
 	}, nil
 }
 

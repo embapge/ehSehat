@@ -8,25 +8,6 @@ import "google/protobuf/timestamp.proto";
 
 import "google/protobuf/wrappers.proto";
 
-// Base Structure
-// {
-//   "_id": "consul_12345",
-//   "patient_id": "cust_001",
-//   "patient_name": "John Doe",
-//   "doctor_id": "doc_456",
-//   "doctor_name": "dr. Rahmat",
-//   "room_id": "room_78",
-//   "room_name": "Ruang Konsul 1",
-//   "created_by": "user_999",
-//   "symptoms": "Demam dan batuk",
-//   "diagnosis": "Infeksi saluran pernapasan",
-//   "prescription": [
-//     { "name": "Paracetamol", "dose": "3x sehari" },
-//     { "name": "OBH", "dose": "2x sehari" }
-//   ],
-//   "created_at": "2025-07-21T14:00:00Z"
-// }
-
 message UserSnapshot {
   string id = 1; // unique identifier for the user
   string name = 2; // name of the user
@@ -51,7 +32,6 @@ message RoomSnapshot {
   string name = 2; // name of the room
 }
 
-// ConsultationRequest represents a request for a consultation
 message Prescription {
   string name = 1; // name of the medicine
   string dose = 2; // dosage instructions
@@ -68,6 +48,7 @@ message ConsultationRequest {
   repeated Prescription prescription = 8; // list of prescriptions
   string diagnosis = 9;
   string date = 10; // date of the consultation
+  string amount = 11; // amount for the consultation
 }
 
 message ConsultationResponse {
@@ -83,9 +64,11 @@ message ConsultationResponse {
     string diagnosis = 10;
     string date = 11;
     string status = 12;
-    
-    google.protobuf.Timestamp created_at = 13;
-    google.protobuf.Timestamp updated_at = 14;
+    string amount = 13; // amount for the consultation
+    string total_payment = 14; // total payment amount
+
+    google.protobuf.Timestamp created_at = 15;
+    google.protobuf.Timestamp updated_at = 16;
 }
 
 message ConsultationIDRequest {

@@ -3,8 +3,7 @@ package app
 import (
 	"context"
 	"ehSehat/consultation-service/internal/consultation/domain"
-	"ehSehat/libs/utils"
-	"fmt"
+	"time"
 )
 
 type consultationApp struct {
@@ -20,16 +19,14 @@ func NewConsultationApp(repo domain.ConsultationRepository) *consultationApp {
 // 	UpdateConsultation(ctx context.Context, consultation *Consultation) error
 
 func (app *consultationApp) FindByIDConsultation(ctx context.Context, id string) (*domain.Consultation, error) {
-	fmt.Println("id consultation:", id)
 	return app.repo.FindByID(ctx, id)
 }
 
 func (app *consultationApp) CreateConsultation(ctx context.Context, consultation *domain.Consultation) error {
-	if consultation.Patient.ID == "" || consultation.Room.ID == "" || consultation.Doctor.ID == "" {
-		return utils.NewBadRequestError("All fields are required")
-	}
-
 	consultation.Status = "unpaid"
+	now := time.Now()
+	consultation.CreatedAt = now
+	consultation.UpdatedAt = now
 	return app.repo.Create(ctx, consultation)
 }
 
