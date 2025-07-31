@@ -25,6 +25,15 @@ func NewQueueHandler(router *httprouter.Router, app app.QueueApp) {
 	router.POST("/queues/generate", handler.GenerateNextQueue)
 }
 
+// @Summary Get queue by ID
+// @Description Get queue detail by ID
+// @Tags queues
+// @Produce json
+// @Param id path int true "Queue ID"
+// @Success 200 {object} domain.QueueModel
+// @Failure 400 {string} string "invalid id"
+// @Failure 404 {string} string "queue not found"
+// @Router /queues/{id} [get]
 func (h *QueueHandler) FindByIDQueue(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := strconv.Atoi(ps.ByName("id"))
 	if err != nil {
@@ -40,6 +49,15 @@ func (h *QueueHandler) FindByIDQueue(w http.ResponseWriter, r *http.Request, ps 
 	json.NewEncoder(w).Encode(q)
 }
 
+// @Summary Get today's queues by doctor
+// @Description Get all today's queues for a specific doctor
+// @Tags queues
+// @Produce json
+// @Param doctor_id path int true "Doctor ID"
+// @Success 200 {array} domain.QueueModel
+// @Failure 400 {string} string "invalid doctor_id"
+// @Failure 500 {string} string "internal server error"
+// @Router /queues-today/{doctor_id} [get]
 func (h *QueueHandler) FindTodayByDoctor(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	doctorID, err := strconv.Atoi(ps.ByName("doctor_id"))
 	if err != nil {
@@ -55,6 +73,15 @@ func (h *QueueHandler) FindTodayByDoctor(w http.ResponseWriter, r *http.Request,
 	json.NewEncoder(w).Encode(queues)
 }
 
+// @Summary Create a queue
+// @Description Create a new queue record
+// @Tags queues
+// @Accept json
+// @Produce json
+// @Param queue body domain.QueueModel true "Queue data"
+// @Success 201 {object} domain.QueueModel
+// @Failure 400 {string} string "invalid JSON or validation error"
+// @Router /queues [post]
 func (h *QueueHandler) CreateQueue(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var q domain.QueueModel
 	if err := json.NewDecoder(r.Body).Decode(&q); err != nil {
@@ -78,6 +105,16 @@ func (h *QueueHandler) CreateQueue(w http.ResponseWriter, r *http.Request, _ htt
 	json.NewEncoder(w).Encode(q)
 }
 
+// @Summary Update queue
+// @Description Update an existing queue by ID
+// @Tags queues
+// @Accept json
+// @Produce json
+// @Param id path int true "Queue ID"
+// @Param queue body domain.QueueModel true "Updated queue data"
+// @Success 200 {object} domain.QueueModel
+// @Failure 400 {string} string "invalid input"
+// @Router /queues/{id} [put]
 func (h *QueueHandler) UpdateQueue(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var q domain.QueueModel
 	if err := json.NewDecoder(r.Body).Decode(&q); err != nil {
@@ -100,6 +137,15 @@ func (h *QueueHandler) UpdateQueue(w http.ResponseWriter, r *http.Request, ps ht
 	json.NewEncoder(w).Encode(q)
 }
 
+// @Summary Generate next queue number
+// @Description Automatically generate the next queue number for a doctor and create a queue
+// @Tags queues
+// @Accept json
+// @Produce json
+// @Param data body dto.GenerateQueueRequest true "Queue generation input"
+// @Success 201 {object} domain.QueueModel
+// @Failure 400 {string} string "invalid request or generation failed"
+// @Router /queues/generate [post]
 func (h *QueueHandler) GenerateNextQueue(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var req dto.GenerateQueueRequest // ⬅️ pakai struct dari dto
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {

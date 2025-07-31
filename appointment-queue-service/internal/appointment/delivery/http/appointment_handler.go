@@ -26,6 +26,13 @@ func NewAppointmentHandler(router *httprouter.Router, app app.AppointmentApp) {
 	router.PUT("/appointments/:id/mark-paid", handler.MarkAsPaid)
 }
 
+// @Summary Get all appointments
+// @Description Get a list of all appointments
+// @Tags appointments
+// @Produce json
+// @Success 200 {array} domain.AppointmentModel
+// @Failure 500 {object} map[string]string
+// @Router /appointments [get]
 func (h *AppointmentHandler) FindAll(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	appointments, err := h.App.FindAll(r.Context())
 	if err != nil {
@@ -35,7 +42,15 @@ func (h *AppointmentHandler) FindAll(w http.ResponseWriter, r *http.Request, _ h
 	json.NewEncoder(w).Encode(appointments)
 }
 
-// GET /appointments/:id
+// @Summary Get appointment by ID
+// @Description Get detail of an appointment by its ID
+// @Tags appointments
+// @Produce json
+// @Param id path int true "Appointment ID"
+// @Success 200 {object} domain.AppointmentModel
+// @Failure 400 {string} string "invalid appointment id"
+// @Failure 404 {string} string "appointment not found"
+// @Router /appointments/{id} [get]
 func (h *AppointmentHandler) FindByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := strconv.Atoi(ps.ByName("id"))
 	if err != nil {
@@ -52,7 +67,15 @@ func (h *AppointmentHandler) FindByID(w http.ResponseWriter, r *http.Request, ps
 	json.NewEncoder(w).Encode(a)
 }
 
-// GET /appointments/user/:user_id
+// @Summary Get appointments by user ID
+// @Description Get list of appointments for a specific user
+// @Tags appointments
+// @Produce json
+// @Param user_id path int true "User ID"
+// @Success 200 {array} domain.AppointmentModel
+// @Failure 400 {string} string "invalid user_id"
+// @Failure 500 {string} string "internal server error"
+// @Router /appointments-by-user/{user_id} [get]
 func (h *AppointmentHandler) FindByUserID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	userID, err := strconv.Atoi(ps.ByName("user_id"))
 	if err != nil {
@@ -69,7 +92,15 @@ func (h *AppointmentHandler) FindByUserID(w http.ResponseWriter, r *http.Request
 	json.NewEncoder(w).Encode(list)
 }
 
-// POST /appointments
+// @Summary Create new appointment
+// @Description Create a new appointment
+// @Tags appointments
+// @Accept json
+// @Produce json
+// @Param appointment body domain.AppointmentModel true "Appointment Data"
+// @Success 201 {object} domain.AppointmentModel
+// @Failure 400 {string} string "invalid JSON or business rule error"
+// @Router /appointments [post]
 func (h *AppointmentHandler) CreateAppointment(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var a domain.AppointmentModel
 	if err := json.NewDecoder(r.Body).Decode(&a); err != nil {
@@ -87,7 +118,17 @@ func (h *AppointmentHandler) CreateAppointment(w http.ResponseWriter, r *http.Re
 	json.NewEncoder(w).Encode(created)
 }
 
-// PATCH /appointments/:id
+// @Summary Update specific fields of an appointment
+// @Description Partially update an appointment (PATCH)
+// @Tags appointments
+// @Accept json
+// @Produce json
+// @Param id path int true "Appointment ID"
+// @Param fields body object true "Fields to update"
+// @Success 200 {object} domain.AppointmentModel
+// @Failure 400 {string} string "invalid request"
+// @Failure 404 {string} string "appointment not found"
+// @Router /appointments/{id} [patch]
 func (h *AppointmentHandler) PatchAppointment(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := strconv.Atoi(ps.ByName("id"))
 	if err != nil {
@@ -137,7 +178,15 @@ func (h *AppointmentHandler) PatchAppointment(w http.ResponseWriter, r *http.Req
 	json.NewEncoder(w).Encode(updated)
 }
 
-// PUT /appointments/:id/mark-paid
+// @Summary Mark appointment as paid
+// @Description Update status of an appointment to paid
+// @Tags appointments
+// @Produce json
+// @Param id path int true "Appointment ID"
+// @Success 200 {object} domain.AppointmentModel
+// @Failure 400 {string} string "invalid id or update failed"
+// @Failure 500 {string} string "failed to retrieve updated data"
+// @Router /appointments/{id}/mark-paid [put]
 func (h *AppointmentHandler) MarkAsPaid(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := strconv.Atoi(ps.ByName("id"))
 	if err != nil {
