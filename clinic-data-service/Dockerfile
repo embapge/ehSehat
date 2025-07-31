@@ -11,7 +11,7 @@ RUN go build -o clinic-data-service cmd/main.go
 FROM alpine:latest
 WORKDIR /app
 COPY --from=build /app/clinic-data-service/clinic-data-service ./clinic-data-service
-COPY clinic-data-service/.env .env
+# COPY clinic-data-service/.env .env
 
 EXPOSE 50052
 CMD ["/app/clinic-data-service"]

@@ -11,6 +11,6 @@ RUN go build -o appointment-queue-service cmd/main.go
 FROM alpine:latest
 WORKDIR /app
 COPY --from=build /app/appointment-queue-service/appointment-queue-service ./appointment-queue-service
-COPY appointment-queue-service/.env .env
+# COPY appointment-queue-service/.env .env
 EXPOSE 8080 50053
 CMD ["./appointment-queue-service"]

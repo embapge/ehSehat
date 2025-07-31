@@ -11,7 +11,7 @@ RUN go build -o auth-service cmd/main.go
 FROM alpine:latest
 WORKDIR /app
 COPY --from=build /app/auth-service/auth-service ./auth-service
-COPY auth-service/.env .env
+# COPY auth-service/.env .env
 
 EXPOSE 50051
 CMD ["./auth-service"]

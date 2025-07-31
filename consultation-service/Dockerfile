@@ -11,7 +11,7 @@ RUN go build -o consultation-service cmd/main.go
 FROM alpine:latest
 WORKDIR /app
 COPY --from=build /app/consultation-service/consultation-service ./consultation-service
-COPY consultation-service/.env .env
+# COPY consultation-service/.env .env
 
 EXPOSE 50054
 CMD ["./consultation-service"]
