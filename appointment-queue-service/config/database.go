@@ -10,13 +10,6 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetEnv(key, fallback string) string {
-	if value := os.Getenv(key); value != "" {
-		return value
-	}
-	return fallback
-}
-
 func LoadEnv() {
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found, pakai environment bawaan OS")

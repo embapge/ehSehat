@@ -58,10 +58,6 @@ func main() {
 	queueHTTP.NewQueueHandler(router, qApp)
 	appointmentHTTP.NewAppointmentHandler(router, aApp)
 
-	// Get ports from env
-	httpPort := config.GetEnv("HTTP_PORT", "8080")
-	grpcPort := config.GetEnv("GRPC_PORT", "50051")
-
 	// --- gRPC Server ---
 	go func() {
 		lis, err := net.Listen("tcp", ":"+grpcPort)

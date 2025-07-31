@@ -461,7 +461,7 @@ func (h *GatewayHandler) ProxyToAppointmentQueueService(c echo.Context) error {
 	case http.MethodGet:
 		if strings.HasPrefix(path, "/queues/") && len(path) > len("/queues/") {
 			id := strings.TrimPrefix(path, "/queues/")
-			req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://localhost:8080/queues/%s", id), nil)
+			req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://appointment-queue-service:8080/queues/%s", id), nil)
 			if err != nil {
 				return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 			}
@@ -475,7 +475,7 @@ func (h *GatewayHandler) ProxyToAppointmentQueueService(c echo.Context) error {
 			return c.Stream(resp.StatusCode, resp.Header.Get("Content-Type"), resp.Body)
 		} else if strings.HasPrefix(path, "/queues-today/") && len(path) > len("/queues-today/") {
 			doctorID := strings.TrimPrefix(path, "/queues-today/")
-			req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://localhost:8080/queues-today/%s", doctorID), nil)
+			req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://appointment-queue-service:8080/queues-today/%s", doctorID), nil)
 			if err != nil {
 				return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 			}
@@ -490,7 +490,7 @@ func (h *GatewayHandler) ProxyToAppointmentQueueService(c echo.Context) error {
 		}
 	case http.MethodPost:
 		if path == "/queues" {
-			req, err := http.NewRequest(http.MethodPost, "http://localhost:8080/queues", c.Request().Body)
+			req, err := http.NewRequest(http.MethodPost, "http://appointment-queue-service:8080/queues", c.Request().Body)
 			if err != nil {
 				return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 			}
@@ -504,7 +504,7 @@ func (h *GatewayHandler) ProxyToAppointmentQueueService(c echo.Context) error {
 			defer resp.Body.Close()
 			return c.Stream(resp.StatusCode, resp.Header.Get("Content-Type"), resp.Body)
 		} else if path == "/queues/generate" {
-			req, err := http.NewRequest(http.MethodPost, "http://localhost:8080/queues/generate", c.Request().Body)
+			req, err := http.NewRequest(http.MethodPost, "http://appointment-queue-service:8080/queues/generate", c.Request().Body)
 			if err != nil {
 				return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 			}
@@ -521,7 +521,7 @@ func (h *GatewayHandler) ProxyToAppointmentQueueService(c echo.Context) error {
 	case http.MethodPut:
 		if strings.HasPrefix(path, "/queues/") && len(path) > len("/queues/") {
 			id := strings.TrimPrefix(path, "/queues/")
-			req, err := http.NewRequest(http.MethodPut, fmt.Sprintf("http://localhost:8080/queues/%s", id), c.Request().Body)
+			req, err := http.NewRequest(http.MethodPut, fmt.Sprintf("http://appointment-queue-service:8080/queues/%s", id), c.Request().Body)
 			if err != nil {
 				return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 			}
