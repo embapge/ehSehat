@@ -33,3 +33,14 @@ CREATE TABLE IF NOT EXISTS payment_logs (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+-- Buatkan struktur tabel untuk menangani webhook baik dari payment gateway atau pihak ketiga lainnya, sertakan id unik sebagai identifier id dari pihak ketiga
+-- yang akan digunakan untuk mengidentifikasi pembayaran yang terkait dengan webhook tersebut.
+CREATE TABLE IF NOT EXISTS payment_webhooks (
+    id VARCHAR(36) PRIMARY KEY,
+    external_id VARCHAR(36) NOT NULL -- ID unik dari pihak ketiga,
+    payment_id VARCHAR(36) NOT NULL,
+    event_type VARCHAR(100) NOT NULL,
+    payload JSON NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

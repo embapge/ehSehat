@@ -1,0 +1,323 @@
+syntax = "proto3";
+
+package clinicdata;
+
+option go_package = "internal/clinicdata/delivery/grpc/pb";
+
+// COMMON
+message Empty {}
+
+// PATIENT
+message Patient {
+  string id = 1;
+  string user_id = 2;
+  string name = 3;
+  string email = 4;
+  string birth_date = 5;
+  string gender = 6;
+  string phone_number = 7;
+  string address = 8;
+}
+
+message CreatePatientRequest {
+  string name = 1;
+  string email = 2;
+  string birth_date = 3;
+  string gender = 4;
+  string phone_number = 5;
+  string address = 6;
+}
+
+message UpdatePatientRequest {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string birth_date = 4;
+  string gender = 5;
+  string phone_number = 6;
+  string address = 7;
+}
+
+message GetPatientByIDRequest {
+  string id = 1;
+}
+
+message DeletePatientRequest {
+  string id = 1;
+}
+
+message ListPatientsResponse {
+  repeated Patient patients = 1;
+}
+
+message DeletePatientResponse {
+  string id = 1;
+  string user_id = 2;
+  string name = 3;
+  string email = 4;
+  string message = 5;
+}
+
+message UpdatePatientResponse {
+  string id = 1;
+  string user_id = 2;
+  string name = 3;
+  string email = 4;
+  string message = 5;
+}
+
+// DOCTOR
+message Doctor {
+  string id = 1;
+  string user_id = 2;
+  string name = 3;
+  string email = 4;
+  string specialization_id = 5;
+  int32 age = 6;
+  double consultation_fee = 7;
+  int32 years_of_experience = 8;
+  string license_number = 9;
+  string phone_number = 10;
+  bool is_active = 11;
+}
+
+message CreateDoctorRequest {
+  string name = 1;
+  string email = 2;
+  string specialization_id = 3;
+  int32 age = 4;
+  double consultation_fee = 5;
+  int32 years_of_experience = 6;
+  string license_number = 7;
+  string phone_number = 8;
+}
+
+message UpdateDoctorRequest {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string specialization_id = 4;
+  int32 age = 5;
+  double consultation_fee = 6;
+  int32 years_of_experience = 7;
+  string license_number = 8;
+  string phone_number = 9;
+  bool is_active = 10;
+}
+
+message GetDoctorByIDRequest {
+  string id = 1;
+}
+
+message DeleteDoctorRequest {
+  string id = 1;
+}
+
+message ListDoctorsResponse {
+  repeated Doctor doctors = 1;
+}
+
+message UpdateDoctorResponse {
+  string id = 1;
+  string user_id = 2;
+  string name = 3;
+  string email = 4;
+  string message = 5;
+}
+
+message DeleteDoctorResponse {
+  string id = 1;
+  string user_id = 2;
+  string name = 3;
+  string email = 4;
+  string message = 5;
+}
+
+// SPECIALIZATION
+message Specialization {
+  string id = 1;
+  string name = 2;
+}
+
+message CreateSpecializationRequest {
+  string name = 1;
+}
+
+message UpdateSpecializationRequest {
+  string id = 1;
+  string name = 2;
+}
+
+message GetSpecializationByIDRequest {
+  string id = 1;
+}
+
+message DeleteSpecializationRequest {
+  string id = 1;
+}
+
+message UpdateSpecializationResponse {
+  string id = 1;
+  string name = 2;
+  string message = 3;
+}
+
+message DeleteSpecializationResponse {
+  string id = 1;
+  string name = 2;
+  string message = 3;
+}
+
+message ListSpecializationsResponse {
+  repeated Specialization specializations = 1;
+}
+
+// ROOM
+message Room {
+  string id = 1;
+  string name = 2;
+  bool is_active = 3;
+}
+
+message CreateRoomRequest {
+  string name = 1;
+}
+
+message GetRoomByIDRequest {
+  string id = 1;
+}
+
+message ListRoomsResponse {
+  repeated Room rooms = 1;
+}
+
+// SCHEDULE FIXED
+message ScheduleFixed {
+  string id = 1;
+  string doctor_id = 2;
+  string room_id = 3;
+  int32 day_of_week = 4;
+  string start_time = 5;
+  string end_time = 6;
+  string status = 7;
+}
+
+message CreateScheduleFixedRequest {
+  string doctor_id = 1;
+  string room_id = 2;
+  int32 day_of_week = 3;
+  string start_time = 4;
+  string end_time = 5;
+  string status = 6;
+}
+
+message UpdateScheduleFixedRequest {
+  string id = 1;
+  string room_id = 2;
+  int32 day_of_week = 3;
+  string start_time = 4;
+  string end_time = 5;
+  string status = 6;
+}
+
+message GetFixedSchedulesByDoctorIDRequest {
+  string doctor_id = 1;
+}
+
+message ListScheduleFixedResponse {
+  repeated ScheduleFixed schedules = 1;
+}
+
+// SCHEDULE OVERRIDE
+message ScheduleOverride {
+  string id = 1;
+  string doctor_id = 2;
+  string room_id = 3;
+  int32 day_of_week = 4;
+  string start_time = 5;
+  string end_time = 6;
+  string status = 7;
+}
+
+message CreateScheduleOverrideRequest {
+  string doctor_id = 1;
+  string room_id = 2;
+  int32 day_of_week = 3;
+  string start_time = 4;
+  string end_time = 5;
+  string status = 6;
+}
+
+message UpdateScheduleOverrideRequest {
+  string id = 1;
+  string room_id = 2;
+  string start_time = 3;
+  string end_time = 4;
+  string status = 5;
+}
+
+message DeleteScheduleOverrideRequest {
+  string id = 1;
+}
+
+message GetOverrideByDoctorIDRequest {
+  string doctor_id = 1;
+}
+
+message ListScheduleOverrideResponse {
+  repeated ScheduleOverride overrides = 1;
+}
+
+message UpdateScheduleOverrideResponse {
+  string id = 1;
+  string doctor_id = 2;
+  int32 day_of_week = 3;
+  string message = 4;
+}
+
+message DeleteScheduleOverrideResponse {
+  string id = 1;
+  string doctor_id = 2;
+  int32 day_of_week = 3;
+  string message = 4;
+}
+
+// SERVICE
+service ClinicDataService {
+  // PATIENT
+  rpc CreatePatient(CreatePatientRequest) returns (Patient);
+  rpc GetPatientByID(GetPatientByIDRequest) returns (Patient);
+  rpc GetAllPatients(Empty) returns (ListPatientsResponse);
+  rpc UpdatePatient(UpdatePatientRequest) returns (UpdatePatientResponse);
+  rpc DeletePatient(DeletePatientRequest) returns (DeletePatientResponse);
+
+  // DOCTOR
+  rpc CreateDoctor(CreateDoctorRequest) returns (Doctor);
+  rpc GetDoctorByID(GetDoctorByIDRequest) returns (Doctor);
+  rpc GetAllDoctors(Empty) returns (ListDoctorsResponse);
+  rpc UpdateDoctor(UpdateDoctorRequest) returns (UpdateDoctorResponse);
+  rpc DeleteDoctor(DeleteDoctorRequest) returns (DeleteDoctorResponse);
+
+  // SPECIALIZATION
+  rpc CreateSpecialization(CreateSpecializationRequest) returns (Specialization);
+  rpc GetSpecializationByID(GetSpecializationByIDRequest) returns (Specialization);
+  rpc GetAllSpecializations(Empty) returns (ListSpecializationsResponse);
+  rpc UpdateSpecialization(UpdateSpecializationRequest) returns (UpdateSpecializationResponse);
+  rpc DeleteSpecialization(DeleteSpecializationRequest) returns (DeleteSpecializationResponse);
+
+  // ROOM
+  rpc CreateRoom(CreateRoomRequest) returns (Room);
+  rpc GetRoomByID(GetRoomByIDRequest) returns (Room);
+  rpc GetAllRooms(Empty) returns (ListRoomsResponse);
+
+  // SCHEDULE FIXED
+  rpc CreateScheduleFixed(CreateScheduleFixedRequest) returns (ScheduleFixed);
+  rpc GetFixedSchedulesByDoctorID(GetFixedSchedulesByDoctorIDRequest) returns (ListScheduleFixedResponse);
+  rpc UpdateScheduleFixed(UpdateScheduleFixedRequest) returns (ScheduleFixed);
+
+  // SCHEDULE OVERRIDE
+  rpc CreateScheduleOverride(CreateScheduleOverrideRequest) returns (ScheduleOverride);
+  rpc GetOverrideByDoctorID(GetOverrideByDoctorIDRequest) returns (ListScheduleOverrideResponse);
+  rpc UpdateScheduleOverride(UpdateScheduleOverrideRequest) returns (UpdateScheduleOverrideResponse);
+  rpc DeleteScheduleOverride(DeleteScheduleOverrideRequest) returns (DeleteScheduleOverrideResponse);
+}

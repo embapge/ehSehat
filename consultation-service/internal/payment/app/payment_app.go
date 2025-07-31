@@ -5,8 +5,12 @@ import (
 	"database/sql"
 	consultationDomain "ehSehat/consultation-service/internal/consultation/domain"
 	"ehSehat/consultation-service/internal/payment/domain"
+	"ehSehat/libs/utils"
 	"ehSehat/libs/utils/grpcmetadata"
 	"fmt"
+	"log"
+
+	"github.com/google/uuid"
 )
 
 type paymentApp struct {
@@ -122,6 +126,37 @@ func (app *paymentApp) FindByIDPayment(ctx context.Context, id string) (*domain.
 	}
 
 	return payment, nil
+}
+
+func (app *paymentApp) HandlePaymentWebhook(ctx context.Context, webhook *domain.PaymentWebhook) error {
+	if webhook == nil || webhook.ExternalID == "" || webhook.PaymentID == "" || webhook.EventType == "" {
+		return utils.NewBadRequestError("Invalid webhook request")
+	}
+
+	// Lakukan pencarian pada external ID untuk memastikan tidak ada duplikasi
+	existingWebhook, err := app.paymentRepo.FindWebhookByExternalID(ctx, webhook.ExternalID)
+	if err != nil {
+		return err
+	}
+
+	if existingWebhook != nil {
+		log.Printf("Webhook with external ID %s already exists", webhook.ExternalID)
+		return utils.NewBadRequestError("Webhook with this external ID already exists")
+	}
+
+	uuid, err := uuid.NewUUID()
+	if err != nil {
+		return err
+	}
+
+	webhook.ID = uuid.String()
+
+	err = app.paymentRepo.HandlePaymentWebhook(ctx, webhook)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func toPtr(s string) *string { return &s }

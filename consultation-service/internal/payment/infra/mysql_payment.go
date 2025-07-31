@@ -97,3 +97,37 @@ func (m *mysqlPayment) FindByID(ctx context.Context, id string) (*domain.Payment
 
 	return payment, nil
 }
+
+func (m *mysqlPayment) HandlePaymentWebhook(ctx context.Context, webhook *domain.PaymentWebhook) error {
+	payloadJSON, err := json.Marshal(webhook.Payload)
+	if err != nil {
+		return err
+	}
+
+	_, err = m.db.ExecContext(ctx, `
+		INSERT INTO payment_webhooks (id, external_id, payment_id, event_type, payload)
+		VALUES (?, ?, ?, ?, ?)`, webhook.ID, webhook.ExternalID, webhook.PaymentID, webhook.EventType, string(payloadJSON))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *mysqlPayment) FindWebhookByExternalID(ctx context.Context, externalID string) (*domain.PaymentWebhook, error) {
+	row := m.db.QueryRow("SELECT id, external_id, payment_id, event_type, payload FROM payment_webhooks WHERE external_id = ?", externalID)
+
+	webhook := &domain.PaymentWebhook{}
+	var payload string
+	err := row.Scan(&webhook.ID, &webhook.ExternalID, &webhook.PaymentID, &webhook.EventType, &payload)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	webhook.Payload = payload
+	return webhook, nil
+}
