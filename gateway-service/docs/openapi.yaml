@@ -1,0 +1,974 @@
+openapi: 3.0.3
+info:
+  title: ehSehat API
+  description: API for managing healthcare services including users, doctors, patients, consultations, and payments.
+  version: 1.0.0
+  contact:
+    email: support@ehsehat.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://34.128.97.235:8000
+    description: Production server
+
+paths:
+  /login:
+    post:
+      summary: Authenticate a user
+      description: Logs in a user and returns a JWT token for authentication.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  {
+                    type: string,
+                    format: email,
+                    description: User's email address,
+                  }
+                password:
+                  {
+                    type: string,
+                    format: password,
+                    description: User's password,
+                  }
+      responses:
+        "200":
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    { type: string, description: JWT token for authentication }
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid credentials
+  /register:
+    post:
+      summary: Register a new user
+      description: Registers a new user with the system and returns a confirmation message.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password, role]
+              properties:
+                name:
+                  type: string
+                  description: Full name of the user
+                email:
+                  type: string
+                  format: email
+                  description: Email address of the user
+                password:
+                  type: string
+                  format: password
+                  description: Password for the account
+                role:
+                  type: string
+                  enum: [admin, doctor, patient]
+                  description: Role assigned to the user
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User registered successfully
+        "400":
+          description: Invalid input or user already exists
+  /clinics/specializations:
+    post:
+      summary: Create a new specialization
+      description: Creates a new medical specialization (requires authentication).
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, description: Name of the specialization }
+      responses:
+        "201":
+          description: Specialization created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Specialization"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid or missing token
+
+    get:
+      summary: Get all specializations
+      description: Retrieves a list of all specializations (requires authentication).
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of specializations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Specialization"
+        "401":
+          description: Unauthorized - Invalid or missing token
+
+  /clinics/specializations/{id}:
+    get:
+      summary: Get a specialization by ID
+      description: Retrieves a specific specialization by its ID (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the specialization
+      responses:
+        "200":
+          description: Specialization details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Specialization"
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Specialization not found
+
+    put:
+      summary: Update a specialization
+      description: Updates an existing specialization (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the specialization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, description: Name of the specialization }
+      responses:
+        "200":
+          description: Specialization updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Specialization"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Specialization not found
+
+    delete:
+      summary: Delete a specialization
+      description: Deletes a specific specialization by its ID (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the specialization
+      responses:
+        "204":
+          description: Specialization deleted successfully
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Specialization not found
+
+  /clinics/doctors:
+    post:
+      summary: Create a new doctor
+      description: Adds a new doctor to the system (requires authentication).
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Doctor"
+      responses:
+        "201":
+          description: Doctor created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Doctor"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid or missing token
+
+    get:
+      summary: Get all doctors
+      description: Retrieves a list of all doctors (requires authentication).
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of doctors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Doctor"
+        "401":
+          description: Unauthorized - Invalid or missing token
+
+  /clinics/doctors/{id}:
+    get:
+      summary: Get a doctor by ID
+      description: Retrieves a specific doctor by their ID (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the doctor
+      responses:
+        "200":
+          description: Doctor details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Doctor"
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Doctor not found
+
+    put:
+      summary: Update a doctor
+      description: Updates an existing doctor's information (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the doctor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Doctor"
+      responses:
+        "200":
+          description: Doctor updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Doctor"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Doctor not found
+
+    delete:
+      summary: Delete a doctor
+      description: Deletes a specific doctor by their ID (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the doctor
+      responses:
+        "204":
+          description: Doctor deleted successfully
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Doctor not found
+
+  /clinics/patients:
+    post:
+      summary: Create a new patient
+      description: Adds a new patient to the system (requires authentication).
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Patient"
+      responses:
+        "201":
+          description: Patient created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patient"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid or missing token
+
+    get:
+      summary: Get all patients
+      description: Retrieves a list of all patients (requires authentication).
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of patients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Patient"
+        "401":
+          description: Unauthorized - Invalid or missing token
+
+  /clinics/patients/{id}:
+    get:
+      summary: Get a patient by ID
+      description: Retrieves a specific patient by their ID (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the patient
+      responses:
+        "200":
+          description: Patient details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patient"
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Patient not found
+
+    put:
+      summary: Update a patient
+      description: Updates an existing patient's information (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the patient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Patient"
+      responses:
+        "200":
+          description: Patient updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patient"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Patient not found
+
+    delete:
+      summary: Delete a patient
+      description: Deletes a specific patient by their ID (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the patient
+      responses:
+        "204":
+          description: Patient deleted successfully
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Patient not found
+
+  /queues:
+    post:
+      summary: Create a new queue
+      description: Creates a new queue entry (requires authentication).
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [type]
+              properties:
+                type:
+                  {
+                    type: string,
+                    enum: [consultation, checkup],
+                    description: Type of queue,
+                  }
+      responses:
+        "201":
+          description: Queue created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string, description: Queue ID }
+                  type: { type: string, description: Type of queue }
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid or missing token
+
+  /consultations:
+    post:
+      summary: Create a new consultation
+      description: Creates a new consultation record (requires authentication).
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [patient, doctor, room, date]
+              properties:
+                queue_id: { type: string, description: Queue id }
+                patient:
+                  type: object
+                  required: [id, name]
+                  properties:
+                    id: { type: string, description: Patient ID }
+                    name: { type: string, description: Patient's name }
+                doctor:
+                  type: object
+                  required: [id, name]
+                  properties:
+                    id: { type: string, description: Doctor ID }
+                    name: { type: string, description: Doctor's name }
+                room:
+                  type: object
+                  required: [id, name]
+                  properties:
+                    id: { type: string, description: Room ID }
+                    name: { type: string, description: Room name }
+                symptoms: { type: string, description: Patient's symptoms }
+                prescription:
+                  type: array
+                  items:
+                    type: object
+                    required: [name, dose]
+                    properties:
+                      name: { type: string, description: Medication name }
+                      dose: { type: string, description: Medication dosage }
+                diagnosis: { type: string, description: Doctor's diagnosis }
+                date:
+                  { type: string, format: date, description: Consultation date }
+                amount: { type: integer, description: Consultation cost }
+      responses:
+        "201":
+          description: Consultation created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string, description: Consultation ID }
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid or missing token
+
+  /payments:
+    post:
+      summary: Create a new payment
+      description: Creates a new payment record for a consultation (requires authentication).
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [consultation_id, amount]
+              properties:
+                consultation_id:
+                  { type: string, description: ID of the consultation }
+                amount: { type: integer, description: Payment amount }
+      responses:
+        "201":
+          description: Payment created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string, description: Payment ID }
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Consultation not found
+
+  /rooms:
+    post:
+      summary: Create a new room
+      description: Creates a new room (requires authentication).
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, description: Name of the room }
+      responses:
+        "201":
+          description: Room created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid or missing token
+
+    get:
+      summary: Get all rooms
+      description: Retrieves a list of all rooms (requires authentication).
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of rooms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Room"
+        "401":
+          description: Unauthorized - Invalid or missing token
+
+  /rooms/{id}:
+    get:
+      summary: Get a room by ID
+      description: Retrieves a specific room by its ID (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the room
+      responses:
+        "200":
+          description: Room details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Room not found
+
+  /schedules/fixed:
+    post:
+      summary: Create a fixed schedule
+      description: Creates a new fixed schedule for a doctor (requires authentication).
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScheduleFixed"
+      responses:
+        "201":
+          description: Fixed schedule created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScheduleFixed"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid or missing token
+
+  /schedules/fixed/doctor/{doctor_id}:
+    get:
+      summary: Get fixed schedules by doctor ID
+      description: Retrieves all fixed schedules for a specific doctor (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: doctor_id
+          required: true
+          schema:
+            type: string
+          description: ID of the doctor
+      responses:
+        "200":
+          description: List of fixed schedules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ScheduleFixed"
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Doctor not found
+
+  /schedules/fixed/{id}:
+    put:
+      summary: Update a fixed schedule
+      description: Updates an existing fixed schedule (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the fixed schedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScheduleFixed"
+      responses:
+        "200":
+          description: Fixed schedule updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScheduleFixed"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Schedule not found
+
+  /schedules/override:
+    post:
+      summary: Create an override schedule
+      description: Creates a new override schedule for a doctor (requires authentication).
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScheduleOverride"
+      responses:
+        "201":
+          description: Override schedule created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScheduleOverride"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid or missing token
+
+  /schedules/override/doctor/{doctor_id}:
+    get:
+      summary: Get override schedules by doctor ID
+      description: Retrieves all override schedules for a specific doctor (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: doctor_id
+          required: true
+          schema:
+            type: string
+          description: ID of the doctor
+      responses:
+        "200":
+          description: List of override schedules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ScheduleOverride"
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Doctor not found
+
+  /schedules/override/{id}:
+    put:
+      summary: Update an override schedule
+      description: Updates an existing override schedule (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the override schedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScheduleOverride"
+      responses:
+        "200":
+          description: Override schedule updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScheduleOverride"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Schedule not found
+
+    delete:
+      summary: Delete an override schedule
+      description: Deletes a specific override schedule by its ID (requires authentication).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the override schedule
+      responses:
+        "204":
+          description: Override schedule deleted successfully
+        "401":
+          description: Unauthorized - Invalid or missing token
+        "404":
+          description: Schedule not found
+
+components:
+  schemas:
+    Patient:
+      type: object
+      required: [name, email, birth_date, gender, phone_number]
+      properties:
+        id: { type: string, description: Unique identifier for the patient }
+        name: { type: string, description: Patient's full name }
+        email:
+          { type: string, format: email, description: Patient's email address }
+        birth_date:
+          { type: string, format: date, description: Patient's birth date }
+        gender:
+          {
+            type: string,
+            enum: [male, female, other],
+            description: Patient's gender,
+          }
+        phone_number: { type: string, description: Patient's phone number }
+        address: { type: string, description: Patient's address }
+
+    Doctor:
+      type: object
+      required:
+        [
+          name,
+          email,
+          specialization_id,
+          age,
+          consultation_fee,
+          years_of_experience,
+          license_number,
+          phone_number,
+        ]
+      properties:
+        id: { type: string, description: Unique identifier for the doctor }
+        name: { type: string, description: Doctor's full name }
+        email:
+          { type: string, format: email, description: Doctor's email address }
+        specialization_id:
+          { type: string, description: ID of the doctor's specialization }
+        age: { type: integer, description: Doctor's age }
+        consultation_fee: { type: integer, description: Fee for a consultation }
+        years_of_experience:
+          { type: integer, description: Years of professional experience }
+        license_number: { type: string, description: Doctor's license number }
+        phone_number: { type: string, description: Doctor's phone number }
+        is_active:
+          { type: boolean, description: Indicates if the doctor is active }
+
+    Specialization:
+      type: object
+      required: [name]
+      properties:
+        id:
+          {
+            type: string,
+            description: Unique identifier for the specialization,
+          }
+        name: { type: string, description: Name of the specialization }
+
+    Room:
+      type: object
+      required: [name]
+      properties:
+        id: { type: string, description: Unique identifier for the room }
+        name: { type: string, description: Name of the room }
+
+    ScheduleFixed:
+      type: object
+      required: [doctor_id, room_id, day_of_week, start_time, end_time, status]
+      properties:
+        id:
+          {
+            type: string,
+            description: Unique identifier for the fixed schedule,
+          }
+        doctor_id: { type: string, description: ID of the doctor }
+        room_id: { type: string, description: ID of the room }
+        day_of_week:
+          type: integer
+          minimum: 0
+          maximum: 6
+          description: Day of the week (0=Sunday, 6=Saturday)
+        start_time:
+          {
+            type: string,
+            format: time,
+            description: Start time of the schedule,
+          }
+        end_time:
+          { type: string, format: time, description: End time of the schedule }
+        status:
+          {
+            type: string,
+            enum: [active, inactive],
+            description: Status of the schedule,
+          }
+
+    ScheduleOverride:
+      type: object
+      required: [doctor_id, room_id, day_of_week, start_time, end_time, status]
+      properties:
+        id:
+          {
+            type: string,
+            description: Unique identifier for the override schedule,
+          }
+        doctor_id: { type: string, description: ID of the doctor }
+        room_id: { type: string, description: ID of the room }
+        day_of_week:
+          type: integer
+          minimum: 0
+          maximum: 6
+          description: Day of the week (0=Sunday, 6=Saturday)
+        start_time:
+          {
+            type: string,
+            format: time,
+            description: Start time of the schedule,
+          }
+        end_time:
+          { type: string, format: time, description: End time of the schedule }
+        status:
+          {
+            type: string,
+            enum: [active, inactive],
+            description: Status of the schedule,
+          }
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
