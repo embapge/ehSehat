@@ -1,0 +1,4 @@
+# Ignore only what's unnecessary
+*.log
+*.tmp
+vendor/

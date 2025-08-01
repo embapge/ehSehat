@@ -169,6 +169,42 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+ 
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    working_dir: /app
+    depends_on:
+      - mysql
+      - rabbitmq
+    volumes:
+      - "C:/Users/bagus/Documents/hacktiv8/Phase 3 Project/ehSehat:/app"
+    command: >
+      sh -c '
+        set -e
+        echo "[ RUNNING ALL UNIT TESTS... ]"
+        FAILED=0
+        find . -name "go.mod" | while read gomod; do
+          moddir=$$(dirname "$$gomod")
+          echo ""
+          echo "===> Module: $$moddir"
+          cd "$$moddir"
+          go mod tidy
+          if ! go test ./... -v; then
+            echo "❌ FAILED: $$moddir"
+            FAILED=1
+          fi
+          cd - > /dev/null
+        done
+        echo ""
+        if [ $$FAILED -eq 1 ]; then
+          echo "[❌ SOME TESTS FAILED]"
+          exit 1
+        else
+          echo "[✅ ALL TESTS PASSED]"
+        fi
+      '
 
 volumes:
   mysql_data:

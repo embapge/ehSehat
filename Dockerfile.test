@@ -1,0 +1,9 @@
+# Dockerfile.test - Root context
+FROM golang:1.24-alpine
+
+WORKDIR /app
+# COPY . .
+
+# go mod download dilakukan di dalam container saat run, bukan saat build
+# CMD ["sh", "-c", "echo 'Ready to run tests'"]
+CMD ["sh"]
