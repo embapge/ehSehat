@@ -25,7 +25,8 @@ func NewAppointmentHandler(app app.AppointmentApp) pb.AppointmentServiceServer {
 func (h *AppointmentHandler) GetAppointmentByID(ctx context.Context, req *pb.AppointmentIDRequest) (*pb.AppointmentResponse, error) {
 	appt, err := h.App.FindByIDAppointment(ctx, uint(req.Id))
 	if err != nil {
-		return nil, status.Errorf(codes.NotFound, err.Error())
+		// return nil, status.Errorf(codes.NotFound, err.Error())
+		return nil, status.Errorf(codes.InvalidArgument, "%s", err.Error())
 	}
 
 	return &pb.AppointmentResponse{
@@ -36,7 +37,8 @@ func (h *AppointmentHandler) GetAppointmentByID(ctx context.Context, req *pb.App
 func (h *AppointmentHandler) GetAppointmentsByUserID(ctx context.Context, req *pb.UserAppointmentsRequest) (*pb.AppointmentListResponse, error) {
 	appointments, err := h.App.FindByUserID(ctx, uint(req.UserId))
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
+		// return nil, status.Errorf(codes.Internal, err.Error())
+		return nil, status.Errorf(codes.InvalidArgument, "%s", err.Error())
 	}
 
 	var protoAppointments []*pb.Appointment
@@ -60,7 +62,8 @@ func (h *AppointmentHandler) CreateAppointment(ctx context.Context, req *pb.Crea
 
 	createdAppt, err := h.App.CreateAppointment(ctx, appt)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+		// return nil, status.Errorf(codes.InvalidArgument, err.Error())
+		return nil, status.Errorf(codes.InvalidArgument, "%s", err.Error())
 	}
 
 	return &pb.AppointmentResponse{
@@ -80,7 +83,8 @@ func (h *AppointmentHandler) UpdateAppointment(ctx context.Context, req *pb.Upda
 
 	updatedAppt, err := h.App.UpdateAppointment(ctx, appt.ID, appt)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+		// return nil, status.Errorf(codes.InvalidArgument, err.Error())
+		return nil, status.Errorf(codes.InvalidArgument, "%s", err.Error())
 	}
 
 	return &pb.AppointmentResponse{
@@ -91,7 +95,8 @@ func (h *AppointmentHandler) UpdateAppointment(ctx context.Context, req *pb.Upda
 func (h *AppointmentHandler) MarkAppointmentAsPaid(ctx context.Context, req *pb.MarkAsPaidRequest) (*pb.EmptyResponse, error) {
 	err := h.App.MarkAsPaid(ctx, uint(req.Id))
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
+		// return nil, status.Errorf(codes.Internal, err.Error())
+		return nil, status.Errorf(codes.InvalidArgument, "%s", err.Error())
 	}
 
 	return &pb.EmptyResponse{}, nil
