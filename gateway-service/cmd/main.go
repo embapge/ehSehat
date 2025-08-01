@@ -26,6 +26,8 @@ func main() {
 	e := echo.New()
 	e.POST("/login", h.ProxyToAuthService, middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(10)))
 	e.POST("/register", h.ProxyToAuthService)
+	e.Static("/docs", "docs")
+
 	e.POST("/xendit-payment-webhook", func(c echo.Context) error {
 		paymentID := c.FormValue("payment_id")
 		captureID := c.FormValue("capture_id")
