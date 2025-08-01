@@ -189,9 +189,3 @@ Error dikembalikan dengan gRPC status code via `mapErrorToStatus()`:
 
 ---
 
-## 🔮 Roadmap Pengembangan
-
-- [ ] Validasi konflik jadwal per ruangan dan dokter
-- [ ] Unit test untuk setiap service
-- [ ] Dockerfile & docker-compose untuk deployment
-- [ ] Diagram ERD & Swagger gateway opsional
