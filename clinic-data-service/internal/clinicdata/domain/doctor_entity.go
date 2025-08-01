@@ -54,3 +54,12 @@ type DoctorRepository interface {
 	Update(doctor *Doctor) (*Doctor, error)
 	Delete(id string) error
 }
+
+// ====== Tambahan untuk refactor RABBITMQ abstraction ======
+
+// DoctorEventPublisher adalah abstraction event untuk Doctor.
+// Dipanggil ketika Create doctor berhasil validasi, untuk sinkronisasi ke Auth Service.
+type DoctorEventPublisher interface {
+	// Mengirim event "doctor created", mengembalikan userID hasil response Auth Service.
+	PublishDoctorCreated(doctor *Doctor) (userID string, err error)
+}

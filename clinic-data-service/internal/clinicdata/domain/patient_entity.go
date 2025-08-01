@@ -59,3 +59,8 @@ type PatientRepository interface {
 	Update(patient *Patient) (*Patient, error)
 	Delete(id string) error
 }
+
+// PatientEventPublisher defines event publisher behavior for patient entity (request-reply pattern)
+type PatientEventPublisher interface {
+	PublishPatientCreated(patient *Patient) (string, error)
+}

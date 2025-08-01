@@ -23,6 +23,7 @@ func main() {
 	// STEP 2: Init DB
 	db := infra.InitDB(env)
 
+	// STEP 2b: Init RabbitMQ connection & channel
 	conn, ch, err := rabbitmqown.InitRabbitMQ()
 	if err != nil {
 		log.Fatalf("Failed to initialize RabbitMQ: %v", err)
@@ -51,15 +52,19 @@ func main() {
 	scheduleFixedRepo := infra.NewPGScheduleFixedRepository(db)
 	scheduleOverrideRepo := infra.NewPGScheduleOverrideRepository(db)
 
-	// STEP 4: Init Services (app layer)
-	patientService := app.NewPatientService(patientRepo, ch)
-	doctorService := app.NewDoctorService(doctorRepo, ch)
+	// STEP 4: Init Publishers (infra layer)
+	patientPublisher := infra.NewRabbitPatientPublisher(ch)
+	doctorPublisher := infra.NewRabbitDoctorPublisher(ch)
+
+	// STEP 5: Init Services (app layer)
+	patientService := app.NewPatientService(patientRepo, patientPublisher)
+	doctorService := app.NewDoctorService(doctorRepo, doctorPublisher)
 	specService := app.NewSpecializationService(specRepo)
 	roomService := app.NewRoomService(roomRepo)
 	scheduleFixedService := app.NewScheduleFixedService(scheduleFixedRepo)
 	scheduleOverrideService := app.NewScheduleOverrideService(scheduleOverrideRepo)
 
-	// STEP 5: Init Handler (delivery layer)
+	// STEP 6: Init Handler (delivery layer)
 	handler := grpcHandler.NewGRPCHandler(
 		patientService,
 		doctorService,
@@ -69,7 +74,7 @@ func main() {
 		scheduleOverrideService,
 	)
 
-	// STEP 6: Setup gRPC server
+	// STEP 7: Setup gRPC server
 	port := os.Getenv("GRPC_PORT")
 	if port == "" {
 		port = "50052"

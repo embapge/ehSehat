@@ -42,10 +42,23 @@ func (m *MockDoctorRepo) Delete(id string) error {
 	return args.Error(0)
 }
 
+// --------- MOCK PUBLISHER (RabbitMQ/Event) ---------
+type MockDoctorPublisher struct {
+	mock.Mock
+}
+
+// Implementasi interface DoctorEventPublisher
+func (m *MockDoctorPublisher) PublishDoctorCreated(doctor *domain.Doctor) (string, error) {
+	args := m.Called(doctor)
+	return args.String(0), args.Error(1)
+}
+
 // --------- UNIT TESTS ---------
+
 func TestCreateDoctor_Success(t *testing.T) {
 	mockRepo := new(MockDoctorRepo)
-	service := NewDoctorService(mockRepo)
+	mockPublisher := new(MockDoctorPublisher)
+	service := NewDoctorService(mockRepo, mockPublisher)
 
 	doctor := &domain.Doctor{
 		Name:              "dr. Budi",
@@ -59,17 +72,20 @@ func TestCreateDoctor_Success(t *testing.T) {
 
 	// Setup: email tidak ada
 	mockRepo.On("GetByEmail", "budi@klinik.com").Return(nil, nil)
+	mockPublisher.On("PublishDoctorCreated", doctor).Return("user-123", nil) // <- userID yang didapat dari event
 	mockRepo.On("Create", doctor).Return(doctor, nil)
 
 	result, err := service.Create(doctor)
 	assert.NoError(t, err)
 	assert.Equal(t, doctor, result)
 	mockRepo.AssertExpectations(t)
+	mockPublisher.AssertExpectations(t)
 }
 
 func TestCreateDoctor_MissingField(t *testing.T) {
 	mockRepo := new(MockDoctorRepo)
-	service := NewDoctorService(mockRepo)
+	mockPublisher := new(MockDoctorPublisher)
+	service := NewDoctorService(mockRepo, mockPublisher)
 
 	doctor := &domain.Doctor{
 		Name:              "", // missing
@@ -87,7 +103,8 @@ func TestCreateDoctor_MissingField(t *testing.T) {
 
 func TestCreateDoctor_EmailAlreadyExists(t *testing.T) {
 	mockRepo := new(MockDoctorRepo)
-	service := NewDoctorService(mockRepo)
+	mockPublisher := new(MockDoctorPublisher)
+	service := NewDoctorService(mockRepo, mockPublisher)
 
 	doctor := &domain.Doctor{
 		Name:              "dr. Budi",
@@ -107,7 +124,8 @@ func TestCreateDoctor_EmailAlreadyExists(t *testing.T) {
 
 func TestDoctorGetByID_Success(t *testing.T) {
 	mockRepo := new(MockDoctorRepo)
-	service := NewDoctorService(mockRepo)
+	mockPublisher := new(MockDoctorPublisher)
+	service := NewDoctorService(mockRepo, mockPublisher)
 
 	doctor := &domain.Doctor{ID: "id-1", Name: "Budi"}
 	mockRepo.On("GetByID", "id-1").Return(doctor, nil)
@@ -119,7 +137,8 @@ func TestDoctorGetByID_Success(t *testing.T) {
 
 func TestDoctorGetByID_MissingID(t *testing.T) {
 	mockRepo := new(MockDoctorRepo)
-	service := NewDoctorService(mockRepo)
+	mockPublisher := new(MockDoctorPublisher)
+	service := NewDoctorService(mockRepo, mockPublisher)
 
 	result, err := service.GetByID("")
 	assert.ErrorIs(t, err, ErrMissingID)
@@ -128,7 +147,8 @@ func TestDoctorGetByID_MissingID(t *testing.T) {
 
 func TestUpdateDoctor_Success(t *testing.T) {
 	mockRepo := new(MockDoctorRepo)
-	service := NewDoctorService(mockRepo)
+	mockPublisher := new(MockDoctorPublisher)
+	service := NewDoctorService(mockRepo, mockPublisher)
 
 	doctor := &domain.Doctor{ID: "id-1", Name: "Update"}
 	mockRepo.On("Update", doctor).Return(doctor, nil)
@@ -140,7 +160,8 @@ func TestUpdateDoctor_Success(t *testing.T) {
 
 func TestUpdateDoctor_MissingID(t *testing.T) {
 	mockRepo := new(MockDoctorRepo)
-	service := NewDoctorService(mockRepo)
+	mockPublisher := new(MockDoctorPublisher)
+	service := NewDoctorService(mockRepo, mockPublisher)
 
 	doctor := &domain.Doctor{ID: "", Name: "NoID"}
 	result, err := service.Update(doctor)
@@ -150,7 +171,8 @@ func TestUpdateDoctor_MissingID(t *testing.T) {
 
 func TestDeleteDoctor_Success(t *testing.T) {
 	mockRepo := new(MockDoctorRepo)
-	service := NewDoctorService(mockRepo)
+	mockPublisher := new(MockDoctorPublisher)
+	service := NewDoctorService(mockRepo, mockPublisher)
 
 	mockRepo.On("Delete", "321").Return(nil)
 	err := service.Delete("321")
@@ -159,7 +181,8 @@ func TestDeleteDoctor_Success(t *testing.T) {
 
 func TestDeleteDoctor_MissingID(t *testing.T) {
 	mockRepo := new(MockDoctorRepo)
-	service := NewDoctorService(mockRepo)
+	mockPublisher := new(MockDoctorPublisher)
+	service := NewDoctorService(mockRepo, mockPublisher)
 
 	err := service.Delete("")
 	assert.ErrorIs(t, err, ErrMissingID)
@@ -167,7 +190,8 @@ func TestDeleteDoctor_MissingID(t *testing.T) {
 
 func TestGetAllDoctors_Success(t *testing.T) {
 	mockRepo := new(MockDoctorRepo)
-	service := NewDoctorService(mockRepo)
+	mockPublisher := new(MockDoctorPublisher)
+	service := NewDoctorService(mockRepo, mockPublisher)
 
 	list := []domain.Doctor{{Name: "A"}, {Name: "B"}}
 	mockRepo.On("GetAll").Return(list, nil)
