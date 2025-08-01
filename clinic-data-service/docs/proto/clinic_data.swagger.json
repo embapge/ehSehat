@@ -1,0 +1,420 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "proto/clinic_data.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ClinicDataService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "clinicdataDeleteDoctorResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "clinicdataDeletePatientResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "clinicdataDeleteScheduleOverrideResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "doctorId": {
+          "type": "string"
+        },
+        "dayOfWeek": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "clinicdataDeleteSpecializationResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "clinicdataDoctor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "specializationId": {
+          "type": "string"
+        },
+        "age": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "consultationFee": {
+          "type": "number",
+          "format": "double"
+        },
+        "yearsOfExperience": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "licenseNumber": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        }
+      },
+      "title": "DOCTOR"
+    },
+    "clinicdataListDoctorsResponse": {
+      "type": "object",
+      "properties": {
+        "doctors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/clinicdataDoctor"
+          }
+        }
+      }
+    },
+    "clinicdataListPatientsResponse": {
+      "type": "object",
+      "properties": {
+        "patients": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/clinicdataPatient"
+          }
+        }
+      }
+    },
+    "clinicdataListRoomsResponse": {
+      "type": "object",
+      "properties": {
+        "rooms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/clinicdataRoom"
+          }
+        }
+      }
+    },
+    "clinicdataListScheduleFixedResponse": {
+      "type": "object",
+      "properties": {
+        "schedules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/clinicdataScheduleFixed"
+          }
+        }
+      }
+    },
+    "clinicdataListScheduleOverrideResponse": {
+      "type": "object",
+      "properties": {
+        "overrides": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/clinicdataScheduleOverride"
+          }
+        }
+      }
+    },
+    "clinicdataListSpecializationsResponse": {
+      "type": "object",
+      "properties": {
+        "specializations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/clinicdataSpecialization"
+          }
+        }
+      }
+    },
+    "clinicdataPatient": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "birthDate": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        }
+      },
+      "title": "PATIENT"
+    },
+    "clinicdataRoom": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        }
+      },
+      "title": "ROOM"
+    },
+    "clinicdataScheduleFixed": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "doctorId": {
+          "type": "string"
+        },
+        "roomId": {
+          "type": "string"
+        },
+        "dayOfWeek": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "startTime": {
+          "type": "string"
+        },
+        "endTime": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "SCHEDULE FIXED"
+    },
+    "clinicdataScheduleOverride": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "doctorId": {
+          "type": "string"
+        },
+        "roomId": {
+          "type": "string"
+        },
+        "dayOfWeek": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "startTime": {
+          "type": "string"
+        },
+        "endTime": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "SCHEDULE OVERRIDE"
+    },
+    "clinicdataSpecialization": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "SPECIALIZATION"
+    },
+    "clinicdataUpdateDoctorResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "clinicdataUpdatePatientResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "clinicdataUpdateScheduleOverrideResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "doctorId": {
+          "type": "string"
+        },
+        "dayOfWeek": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "clinicdataUpdateSpecializationResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
