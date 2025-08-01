@@ -12,6 +12,7 @@ FROM alpine:latest
 WORKDIR /app
 COPY --from=build /app/gateway-service/gateway-service ./gateway-service
 COPY gateway-service/.env .env
+COPY gateway-service/docs ./docs
 
 EXPOSE 8000
 CMD ["./gateway-service"]
